@@ -1,4 +1,4 @@
-package me.mingshan;
+package me.mingshan.common;
 
 /**
  * Hello world!

@@ -1,4 +1,4 @@
-package me.mingshan;
+package me.mingshan.rpc;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
