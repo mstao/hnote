@@ -48,7 +48,41 @@
             </div>
 
             <div class="operation-list">
-              
+              <ul class="accordion-ul">
+                <li><div><img src="./assets/new-doc.png"><span>最新文档</span></div></li>
+                <li>
+                  <div class="link" v-on:click="dropdown($event)"><img src="./assets/folder.png"><span>我的文件夹</span></div>
+                  <div class="submenu">
+                    <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                  </div>
+                </li>
+                <li>
+                  <div class="link" v-on:click="dropdown($event)"><img src="./assets/tag.png"><span>我的标签</span></div>
+                  <div class="submenu tag-menu">
+                    <el-tag
+                      :key="tag"
+                      v-for="tag in dynamicTags"
+                      closable
+                      :disable-transitions="false"
+                      @close="handleClose(tag)">
+                      {{tag}}
+                    </el-tag>
+                    <el-input
+                      class="input-new-tag"
+                      v-if="inputVisible"
+                      v-model="inputValue"
+                      ref="saveTagInput"
+                      size="small"
+                      @keyup.enter.native="handleInputConfirm"
+                      @blur="handleInputConfirm"
+                    >
+                    </el-input>
+                    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+                  </div>
+                </li>
+                <li><div><img src="./assets/share.png"><span>我的分享</span></div></li>
+                <li><div><img src="./assets/garbage.png"><span>废纸篓</span></div></li>
+              </ul>
             </div>
 
         </el-aside>
@@ -60,10 +94,86 @@
 </template>
 
 <script>
+  export default {
+    name: 'app',
+    data() {
+      return {
+        folder: [{
+          label: '一级 1',
+          children: [{
+            label: '二级 1-1',
+            children: [{
+              label: '三级 1-1-1'
+            }]
+          }]
+        }, {
+          label: '一级 2',
+          children: [{
+            label: '二级 2-1',
+            children: [{
+              label: '三级 2-1-1'
+            }]
+          }, {
+            label: '二级 2-2',
+            children: [{
+              label: '三级 2-2-1'
+            }]
+          }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        },
+        dynamicTags: ['标签一', '标签二', '标签三'],
+        inputVisible: false,
+        inputValue: ''
+      };
+    },
+    methods: {
+      handleNodeClick(data) {
+        console.log(data);
+      },
+      dropdown(event) {
+        var el = event.currentTarget;
+        var $this = $(el);
+        var $next = $this.next();
+        $next.slideToggle();
+      },
+      handleClose(tag) {
+        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      },
 
-export default {
-  name: 'app'
-}
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+
+      handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.dynamicTags.push(inputValue);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+      }
+    }
+  };
+
 </script>
 
 <style>
@@ -151,10 +261,82 @@ body{margin: 0;}
   margin: 20px auto;
 }
 
+.el-dropdown-link {
+  cursor: pointer;
+}
+
 .el-dropdown-link .add-image {
   position: relative;
   top: 8px;
   margin-right: 5px;
+}
+
+.operation-list {
+  border-top:1px solid #EBEBEB; 
+}
+
+.operation-list ul li {
+  list-style-type: none;
+  cursor: pointer;
+}
+
+.operation-list ul li > div:first-child {
+    margin-left: -40px;
+    padding-left: 40px;
+    padding-bottom: 10px;
+}
+
+.operation-list ul li > div:first-child:hover {
+  background: #D2E2FF;
+  border-left: 4px solid #5576BD;
+  padding-left: 36px;
+}
+
+.operation-list ul li > .submenu {
+  display: none;
+}
+ 
+.operation-list ul li img {
+  position: relative;
+  top: 7px;
+  margin-right: 10px;
+}
+
+.operation-list ul li .tag-menu {
+  margin-left: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.operation-list ul li .tag-menu .el-tag {
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.operation-list ul li .tag-menu .button-new-tag {
+  margin-top: 5px;
+}
+
+.operation-list ul li .tag-menu .button-new-tag:hover {
+  margin-top: 5px;
+}
+
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 
 .aside-list {
