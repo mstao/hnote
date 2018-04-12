@@ -49,7 +49,7 @@
 
             <div class="operation-list">
               <ul class="accordion-ul">
-                <li><div><img src="./assets/new-doc.png"><span>最新文档</span></div></li>
+                <li><div><img src="./assets/new-doc.png" /><span>最新文档</span></div></li>
                 <li>
                   <div class="link" v-on:click="dropdown($event)"><img src="./assets/folder.png"><span>我的文件夹</span></div>
                   <div class="submenu">
@@ -57,7 +57,7 @@
                   </div>
                 </li>
                 <li>
-                  <div class="link" v-on:click="dropdown($event)"><img src="./assets/tag.png"><span>我的标签</span></div>
+                  <div class="link" v-on:click="dropdown($event)"><img src="./assets/tag.png" /><span>我的标签</span></div>
                   <div class="submenu tag-menu">
                     <el-tag
                       :key="tag"
@@ -80,14 +80,34 @@
                     <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
                   </div>
                 </li>
-                <li><div><img src="./assets/share.png"><span>我的分享</span></div></li>
-                <li><div><img src="./assets/garbage.png"><span>废纸篓</span></div></li>
+                <li><div><img src="./assets/share.png" /><span>我的分享</span></div></li>
+                <li><div><img src="./assets/garbage.png" /><span>废纸篓</span></div></li>
               </ul>
             </div>
 
         </el-aside>
-        <el-aside width="20%" class="aside-list">Aside</el-aside>
-        <el-main><router-view class="view"></router-view></el-main>
+        <el-aside width="20%" class="aside-list">
+          <div class="navi-list-container">
+            <div class="navi-list">
+              <img src="./assets/back.png" class="back" />
+              <el-input v-model="input" placeholder="搜索内容"></el-input>
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  <img src="./assets/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown" class="navi-list-dropdown-menu">
+                  <el-dropdown-item><span>摘要</span><img src="./assets/selected.png" /></el-dropdown-item>
+                  <el-dropdown-item><span>列表</span></el-dropdown-item>
+                  <el-dropdown-item divided><span>创建时间</span><img src="./assets/asc.png" /></el-dropdown-item>
+                  <el-dropdown-item><span>修改时间</span></el-dropdown-item>
+                  <el-dropdown-item><span>文件名称</span></el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </div>
+          <router-view class="view"></router-view>
+        </el-aside>
+        <el-main></el-main>
       </el-container>
     </el-container>
   </div>
@@ -202,8 +222,8 @@ body{margin: 0;}
 
 .el-header .refresh {
   float: left;
-    line-height: 50px;
-    margin-left: 50px;
+  line-height: 50px;
+  margin-left: 50px;
 }
 
 .el-header .operation {
@@ -341,6 +361,46 @@ body{margin: 0;}
 
 .aside-list {
   background: #FAFAFA;
+}
+
+.aside-list .navi-list-container {
+  border-bottom: 1px solid #EBEBEB;
+  z-index: 100;
+  position: static;
+}
+
+.aside-list .navi-list {
+  width: 350px;
+  margin: 17.5px auto;
+}
+
+.aside-list .navi-list .back, .el-input, .el-dropdown {
+  display: inline;
+}
+
+.aside-list .navi-list .back {
+  position: relative;
+  top: 6px;
+  margin-left: 10px;
+}
+
+.aside-list .navi-list .el-input {
+  margin-left: 20px;
+}
+
+.aside-list .navi-list .el-dropdown {
+  margin-left: 30px;
+
+}
+
+.aside-list .navi-list .el-dropdown .sort-option-img {
+  position: relative;
+  top: 6px;
+}
+
+.aside-list .navi-list .el-input__inner {
+  width: 200px;
+  height: 30px;
 }
 
 .el-main {
