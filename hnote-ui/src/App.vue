@@ -105,9 +105,17 @@
               </el-dropdown>
             </div>
           </div>
-          <router-view class="view"></router-view>
+          <div class="list-content-container">
+            <div class="list-content" v-bind:key="item.index" v-for="item in lists">
+              <img src="./assets/word.png" />
+              <span class="title">{{item.title}}</span>
+              <span class="date">{{item.date}}</span>
+            </div>
+          </div>
         </el-aside>
-        <el-main></el-main>
+        <el-main>
+          <router-view class="view"></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -152,6 +160,45 @@
               label: '三级 3-2-1'
             }]
           }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
         }],
         defaultProps: {
           children: 'children',
@@ -159,7 +206,77 @@
         },
         dynamicTags: ['标签一', '标签二', '标签三'],
         inputVisible: false,
-        inputValue: ''
+        inputValue: '',
+        lists: [{
+          title: 'Git 提交的正确姿势',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        },{
+          title: 'Git合并多个commit',
+          date: '03-20'
+        }]
       };
     },
     methods: {
@@ -274,6 +391,7 @@ body{margin: 0;}
 
 .aside-operation {
   background: #ffffff;
+  overflow: hidden;
 }
 
 .aside-operation .add-new-doc {
@@ -293,11 +411,16 @@ body{margin: 0;}
 
 .operation-list {
   border-top:1px solid #EBEBEB; 
+  height: 100%;
+  overflow: auto;
 }
 
 .operation-list ul li {
   list-style-type: none;
   cursor: pointer;
+}
+.operation-list ul li:last-child {
+  margin-bottom: 100px;
 }
 
 .operation-list ul li > div:first-child {
@@ -361,12 +484,13 @@ body{margin: 0;}
 
 .aside-list {
   background: #FAFAFA;
+  overflow: hidden;
 }
 
 .aside-list .navi-list-container {
   border-bottom: 1px solid #EBEBEB;
   z-index: 100;
-  position: static;
+  position: fixed;
 }
 
 .aside-list .navi-list {
@@ -401,6 +525,37 @@ body{margin: 0;}
 .aside-list .navi-list .el-input__inner {
   width: 200px;
   height: 30px;
+}
+
+.aside-list .list-content-container {
+  margin-top: 73px;
+  overflow: auto;
+  height: 100%;
+}
+
+.aside-list .list-content {
+  height: 50px;
+  line-height: 50px;
+  color: #8590A6;
+}
+.aside-list .list-content:last-child {
+  margin-bottom: 80px;
+}
+
+.aside-list .list-content:hover {
+  background: #F2F2F2;
+}
+
+.aside-list .list-content img {
+  margin-left: 20px;
+  position: relative;
+  top: 3px;
+}
+
+.aside-list .list-content .date {
+  color: #B2B2CB;
+  float: right;
+  margin-right: 20px;
 }
 
 .el-main {
