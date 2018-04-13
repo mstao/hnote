@@ -491,11 +491,15 @@ body{margin: 0;}
   border-bottom: 1px solid #EBEBEB;
   z-index: 100;
   position: fixed;
+  height: 72px;
+  width: 20%;
+  overflow-y: hidden;
 }
 
 .aside-list .navi-list {
   width: 350px;
-  margin: 17.5px auto;
+  margin: 0 auto;
+  line-height: 72px;
 }
 
 .aside-list .navi-list .back, .el-input, .el-dropdown {
@@ -559,9 +563,9 @@ body{margin: 0;}
 }
 
 .el-main {
-  background-color: #E9EEF3;
+  background-color: #ffffff;
   color: #333;
-  text-align: center;
+  padding: 0;
 }
 
 #content {
