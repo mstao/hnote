@@ -11,16 +11,27 @@
                 <img :src="morePic" class="more" @mouseover="morePic = morePicBlue" @mouseout="morePic = morePic1" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
-                <el-dropdown-item>狮子头</el-dropdown-item>
-                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+                <el-dropdown-item>移动到</el-dropdown-item>
+                <el-dropdown-item>下载</el-dropdown-item>
+                <el-dropdown-item>删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <img :src="infoPic" class="info" @mouseover="infoPic = infoPicBlue" @mouseout="infoPic = infoPic1" />
+            <img :src="infoPic" class="info"  v-popover:popoverInfo @mouseover="infoPic = infoPicBlue" @mouseout="infoPic = infoPic1" />
+            <el-popover
+              ref="popoverInfo"
+              placement="top-start"
+              width="200"
+              trigger="hover">
+              <div>
+
+              </div>
+            </el-popover>
         </div>
       </div>
+    </div>
+    <br/>
+    <div class="edit-content">
+        <mavon-editor style="height: 100%"></mavon-editor>
     </div>
   </div>
 </template>
@@ -54,10 +65,22 @@
   cursor: pointer;
 }
 
+.edit-content {
+  margin-top: 54px;
+  position: fixed;
+  height: 87%;
+  width: 60%;
+}
+
 </style>
 
 <script>
+  // Local Registration
+  import { mavonEditor } from 'mavon-editor'
+  import 'mavon-editor/dist/css/index.css'
+
   export default {
+    name: 'editor',
     data() {
       return {
         editPic: "../static/img/edit.png",
@@ -71,10 +94,15 @@
         morePicBlue: "../static/img/more-blue.png",
         infoPic: "../static/img/info.png",
         infoPic1: "../static/img/info.png",
-        infoPicBlue: "../static/img/info-blue.png"
+        infoPicBlue: "../static/img/info-blue.png",
+        value: ''
       }
     },
     methods: {
+    },
+    components: {
+        mavonEditor
+        // or 'mavon-editor': mavonEditor
     }
   };
 

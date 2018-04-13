@@ -14,7 +14,7 @@
         <div class="profile">
           <el-dropdown>
             <div class="avatar el-dropdown-link">
-              <img src="./assets/avatar.jpg" class="avatar-img" />
+              <img src="/static/img/avatar.jpg" class="avatar-img" />
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人信息</el-dropdown-item>
@@ -36,7 +36,7 @@
             <div class="add-new-doc">
               <el-dropdown class="add-new-doc-dropdown">
                 <span class="el-dropdown-link">
-                  <img src="./assets/add.png" class="add-image">新文档<i class="el-icon-arrow-down el-icon--right"></i>
+                  <img src="/static/img/add.png" class="add-image">新文档<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>新建笔记</el-dropdown-item>
@@ -49,15 +49,15 @@
 
             <div class="operation-list">
               <ul class="accordion-ul">
-                <li><div><img src="./assets/new-doc.png" /><span>最新文档</span></div></li>
+                <li><div><img src="/static/img/new-doc.png" /><span>最新文档</span></div></li>
                 <li>
-                  <div class="link" v-on:click="dropdown($event)"><img src="./assets/folder.png"><span>我的文件夹</span></div>
+                  <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
                   <div class="submenu">
                     <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
                   </div>
                 </li>
                 <li>
-                  <div class="link" v-on:click="dropdown($event)"><img src="./assets/tag.png" /><span>我的标签</span></div>
+                  <div class="link" v-on:click="dropdown($event)"><img src="/static/img/tag.png" /><span>我的标签</span></div>
                   <div class="submenu tag-menu">
                     <el-tag
                       :key="tag"
@@ -80,8 +80,8 @@
                     <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
                   </div>
                 </li>
-                <li><div><img src="./assets/share.png" /><span>我的分享</span></div></li>
-                <li><div><img src="./assets/garbage.png" /><span>废纸篓</span></div></li>
+                <li><div><img src="/static/img/share.png" /><span>我的分享</span></div></li>
+                <li><div><img src="/static/img/garbage.png" /><span>废纸篓</span></div></li>
               </ul>
             </div>
 
@@ -89,16 +89,16 @@
         <el-aside width="20%" class="aside-list">
           <div class="navi-list-container">
             <div class="navi-list">
-              <img src="./assets/back.png" class="back" />
+              <img src="/static/img/back.png" class="back" />
               <el-input v-model="input" placeholder="搜索内容"></el-input>
               <el-dropdown>
                 <span class="el-dropdown-link">
-                  <img src="./assets/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
+                  <img src="/static/img/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown" class="navi-list-dropdown-menu">
-                  <el-dropdown-item><span>摘要</span><img src="./assets/selected.png" /></el-dropdown-item>
+                  <el-dropdown-item><span>摘要</span><img src="/static/img/selected.png" /></el-dropdown-item>
                   <el-dropdown-item><span>列表</span></el-dropdown-item>
-                  <el-dropdown-item divided><span>创建时间</span><img src="./assets/asc.png" /></el-dropdown-item>
+                  <el-dropdown-item divided><span>创建时间</span><img src="/static/img/asc.png" /></el-dropdown-item>
                   <el-dropdown-item><span>修改时间</span></el-dropdown-item>
                   <el-dropdown-item><span>文件名称</span></el-dropdown-item>
                 </el-dropdown-menu>
@@ -107,7 +107,7 @@
           </div>
           <div class="list-content-container">
             <div class="list-content" v-bind:key="item.index" v-for="item in lists">
-              <img src="./assets/word.png" />
+              <img src="/static/img/word.png" />
               <span class="title">{{item.title}}</span>
               <span class="date">{{item.date}}</span>
             </div>
