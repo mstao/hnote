@@ -113,7 +113,7 @@
             </div>
           </div>
         </el-aside>
-        <el-main>
+        <el-main width="60%">
           <router-view class="view"></router-view>
         </el-main>
       </el-container>
@@ -411,7 +411,7 @@ body{margin: 0;}
 
 .operation-list {
   border-top:1px solid #EBEBEB; 
-  height: 100%;
+  height: 92%;
   overflow: auto;
 }
 
@@ -420,7 +420,7 @@ body{margin: 0;}
   cursor: pointer;
 }
 .operation-list ul li:last-child {
-  margin-bottom: 100px;
+  margin-bottom: 20px;
 }
 
 .operation-list ul li > div:first-child {
@@ -489,7 +489,6 @@ body{margin: 0;}
 
 .aside-list .navi-list-container {
   border-bottom: 1px solid #EBEBEB;
-  z-index: 100;
   position: fixed;
   height: 72px;
   width: 20%;
@@ -534,7 +533,7 @@ body{margin: 0;}
 .aside-list .list-content-container {
   margin-top: 73px;
   overflow: auto;
-  height: 100%;
+  height: 92%;
 }
 
 .aside-list .list-content {
@@ -543,7 +542,7 @@ body{margin: 0;}
   color: #8590A6;
 }
 .aside-list .list-content:last-child {
-  margin-bottom: 80px;
+  margin-bottom: 20px;
 }
 
 .aside-list .list-content:hover {
@@ -566,6 +565,7 @@ body{margin: 0;}
   background-color: #ffffff;
   color: #333;
   padding: 0;
+  overflow: hidden;
 }
 
 #content {
