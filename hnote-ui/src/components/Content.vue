@@ -75,14 +75,13 @@
   position: fixed;
   height: 87%;
   width: 60%;
-  display: none;
 }
 
 .html-content {
   margin-top: 54px;
-  height: 500px;
   padding-left: 20px;
   overflow: auto;
+  display: none;
 }
 </style>
 

@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-  
     <el-container>
       <el-header>
         <div class="logo">
@@ -111,6 +110,16 @@
               <span class="title">{{item.title}}</span>
               <span class="date">{{item.date}}</span>
             </div>
+
+            <div class="list-item-operation-box">
+              <ul>
+                <li>重命名</li>
+                <li>移动到</li>
+                <li>删除</li>
+                <li>下载</li>
+                <li>分享</li>
+              </ul>
+            </div>
           </div>
         </el-aside>
         <el-main width="60%">
@@ -118,6 +127,7 @@
         </el-main>
       </el-container>
     </el-container>
+    
   </div>
 </template>
 
@@ -279,7 +289,22 @@
         }]
       };
     },
+    mounted() {
+       this.init()
+    },
     methods: {
+      init() {
+        $(".list-content").contextmenu(
+            function(e) {
+              $(".list-item-operation-box")
+                .css("left", e.pageX)
+                .css("top", e.pageY - 40)
+                .show();
+              console.log("zzzzzzzzzzzzzzzzz")
+              e.preventDefault();  // return false; also works
+            }
+          );
+      },
       handleNodeClick(data) {
         console.log(data);
       },
@@ -311,6 +336,13 @@
     }
   };
 
+  $.fn.contextmenu = function(func) {
+    return this.bind("contextmenu", func);
+  }
+
+	$(document).click(function(){
+		$(".list-item-operation-box").hide();
+	});
 </script>
 
 <style>
@@ -424,9 +456,9 @@ body{margin: 0;}
 }
 
 .operation-list ul li > div:first-child {
-    margin-left: -40px;
-    padding-left: 40px;
-    padding-bottom: 10px;
+  margin-left: -40px;
+  padding-left: 40px;
+  padding-bottom: 10px;
 }
 
 .operation-list ul li > div:first-child:hover {
@@ -559,6 +591,46 @@ body{margin: 0;}
   color: #B2B2CB;
   float: right;
   margin-right: 20px;
+}
+
+.aside-list .list-item-operation-box {
+  position: absolute;
+  display: none;
+  z-index: 200;
+  background-color: #fff;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+
+.aside-list .list-item-operation-box ul {
+  display: block;
+  list-style-type: disc;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 40px;
+  margin-left: -40px;
+}
+
+.aside-list .list-item-operation-box ul li {
+  list-style: none;
+  line-height: 36px;
+  padding: 0 20px;
+  margin: 0;
+  font-size: 14px;
+  color: #606266;
+  cursor: pointer;
+  outline: 0;
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+
+.aside-list .list-item-operation-box ul li:hover {
+  background-color: #ecf5ff;
+  color: #66b1ff;
 }
 
 .el-main {
