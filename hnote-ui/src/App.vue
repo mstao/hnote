@@ -114,7 +114,7 @@
             <div class="list-item-operation-box">
               <ul>
                 <li>重命名</li>
-                <li>移动到</li>
+                <li @click="dialogVisible = true">移动到</li>
                 <li>删除</li>
                 <li>下载</li>
                 <li>分享</li>
@@ -128,6 +128,24 @@
       </el-container>
     </el-container>
     
+    <!-- 移动到文件夹dialog -->
+    <el-dialog
+      title="移动到"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleDailogClose">
+      <div>
+        <img src="/static/img/word.png" />
+        <span class="title">Git 提交的正确姿势</span>
+      </div>
+      <div class="submenu">
+        <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -286,7 +304,8 @@
         },{
           title: 'Git合并多个commit',
           date: '03-20'
-        }]
+        }],
+        dialogVisible: false
       };
     },
     mounted() {
@@ -296,11 +315,21 @@
       init() {
         $(".list-content").contextmenu(
             function(e) {
-              $(".list-item-operation-box")
-                .css("left", e.pageX)
-                .css("top", e.pageY - 40)
-                .show();
-              console.log("zzzzzzzzzzzzzzzzz")
+              var clientHeight = window.innerHeight;
+              console.log(clientHeight);
+              console.log(e.pageY);
+              if (clientHeight - e.pageY > 250) {
+                $(".list-item-operation-box")
+                  .css("left", e.pageX)
+                  .css("top", e.pageY - 40)
+                  .show();
+              } else {
+                $(".list-item-operation-box")
+                  .css("left", e.pageX)
+                  .css("top", e.pageY - 240)
+                  .show();
+              }
+            
               e.preventDefault();  // return false; also works
             }
           );
@@ -332,6 +361,13 @@
         }
         this.inputVisible = false;
         this.inputValue = '';
+      },
+      handleDialogClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
       }
     }
   };
