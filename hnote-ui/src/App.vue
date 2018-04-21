@@ -1,35 +1,9 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header>
-        <div class="logo">
-          <span>H-Note</span>
-
-        </div>
-        <div class="refresh">
-          <i class="el-icon-refresh"></i> 
-          <span>同步</span>
-        </div>
-        <div class="profile">
-          <el-dropdown>
-            <div class="avatar el-dropdown-link">
-              <img src="/static/img/avatar.jpg" class="avatar-img" />
-            </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人信息</el-dropdown-item>
-              <el-dropdown-item>帐户设置</el-dropdown-item>
-              <el-dropdown-item>导入笔记</el-dropdown-item>
-              <el-dropdown-item>帮助</el-dropdown-item>
-              <el-dropdown-item divided>注销登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-        
-        <div class="operation">
-          <span class="write-mode">写作模式</span>
-          <span class="write-mode">探索</span>
-        </div>
-      </el-header>
+      <!-- S header -->
+      <h-header/>
+      <!-- E header -->
       <el-container id="content">
         <el-aside width="20%" class="aside-operation">
             <div class="add-new-doc">
@@ -145,26 +119,14 @@
     </el-container>
     
     <!-- 移动到文件夹dialog -->
-    <el-dialog
-      title="移动到"
-      :visible.sync="dialogVisible"
-      width="30%">
-      <div class="mf-title">
-        <img src="/static/img/word.png" />
-        <span class="title">Git 提交的正确姿势</span>
-      </div>
-      <div class="submenu mf-folder">
-        <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
+    <move-to-folder-dialog/>
   </div>
 </template>
 
 <script>
+  import h_header from './components/header.vue'
+  import move_to_folder_dialog from './components/move_to_folder_dialog.vue'
+
   export default {
     name: 'app',
     data() {
@@ -324,8 +286,12 @@
         showExpandNewDiv: false
       };
     },
+    components: {
+      'h-header': h_header,
+      'move-to-folder-dialog': move_to_folder_dialog
+    },
     mounted() {
-       this.init()
+      this.init()
     },
     methods: {
       init() {
