@@ -52,10 +52,17 @@
                 <li>
                   <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
                   <div class="submenu">
-                    <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                    <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick" @node-expand="handleNodeExpandCollapse" @node-collapse="handleNodeExpandCollapse"></el-tree>
                     <div class="folder-item-operation-box item-operation-box">
                       <ul>
-                        <li>新建</li>
+                        <li  @mouseover="showExpandNewDiv = true"  @mouseout="showExpandNewDiv = false">新建<img src="/static/img/right-expand.png" />
+                          <div v-if="showExpandNewDiv" class="expand-new-div">
+                            <ul>
+                              <li>文件夾</li>
+                              <li>Markdown</li>
+                            </ul>
+                          </div>
+                        </li>
                         <li>重命名</li>
                         <li @click="dialogVisible = true">移动到</li>
                         <li>删除</li>
@@ -98,7 +105,7 @@
           <div class="navi-list-container">
             <div class="navi-list">
               <img src="/static/img/back.png" class="back" />
-              <el-input v-model="input" placeholder="搜索内容"></el-input>
+              <el-input  placeholder="搜索内容"></el-input>
               <el-dropdown>
                 <span class="el-dropdown-link">
                   <img src="/static/img/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
@@ -141,8 +148,7 @@
     <el-dialog
       title="移动到"
       :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleDailogClose">
+      width="30%">
       <div class="mf-title">
         <img src="/static/img/word.png" />
         <span class="title">Git 提交的正确姿势</span>
@@ -314,7 +320,8 @@
           title: 'Git合并多个commit',
           date: '03-20'
         }],
-        dialogVisible: false
+        dialogVisible: false,
+        showExpandNewDiv: false
       };
     },
     mounted() {
@@ -325,8 +332,7 @@
         $(".list-content").contextmenu(
             function(e) {
               var clientHeight = window.innerHeight;
-              console.log(clientHeight);
-              console.log(e.pageY);
+
               if (clientHeight - e.pageY > 250) {
                 $(".list-item-operation-box")
                   .css("left", e.pageX)
@@ -342,9 +348,29 @@
               e.preventDefault();  // return false; also works
             }
           );
+
+          $(document).on("contextmenu", ".el-tree-node__content", function(e) {
+              var clientHeight = window.innerHeight;
+              if (clientHeight - e.pageY > 250) {
+                $(".folder-item-operation-box")
+                  .css("left", e.pageX)
+                  .css("top", e.pageY - 40)
+                  .show();
+              } else {
+                $(".folder-item-operation-box")
+                  .css("left", e.pageX)
+                  .css("top", e.pageY - 240)
+                  .show();
+              }
+            
+              e.preventDefault();  // return false; also works
+          });
       },
       handleNodeClick(data) {
         console.log(data);
+      },
+      handleNodeExpandCollapse() {
+        $(".item-operation-box").hide();
       },
       dropdown(event) {
         var el = event.currentTarget;
@@ -386,7 +412,7 @@
   }
 
 	$(document).click(function(){
-		$(".list-item-operation-box").hide();
+    $(".item-operation-box").hide();
 	});
 </script>
 
@@ -516,8 +542,26 @@ body{margin: 0;}
   display: none;
 }
 
-.operation-list ul li > .submenu > .folder-item-operation-box {
+.operation-list .folder-item-operation-box {
   display: none;
+}
+
+.operation-list .folder-item-operation-box img {
+  position: relative;
+  top: 3px;
+  margin-left: 15px;
+}
+
+.operation-list .folder-item-operation-box .expand-new-div {
+  position: absolute;
+  top: 0px;
+  left: 110px;
+  z-index: 200;
+  background-color: #fff;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 }
 
 .operation-list ul li img {
@@ -642,7 +686,7 @@ body{margin: 0;}
   margin-right: 20px;
 }
 
-.aside-list .list-item-operation-box {
+.item-operation-box {
   position: absolute;
   display: none;
   z-index: 200;
@@ -690,12 +734,12 @@ body{margin: 0;}
 }
 
 #content {
-    background-color: #cc85d9;
-    width: 100%;
-    position: absolute;
-    top: 50px;
-    bottom: 0px;
-    left: 0px;
+  background-color: #cc85d9;
+  width: 100%;
+  position: absolute;
+  top: 50px;
+  bottom: 0px;
+  left: 0px;
 }
 
 .mf-title {
