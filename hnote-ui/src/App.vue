@@ -53,6 +53,15 @@
                   <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
                   <div class="submenu">
                     <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                    <div class="folder-item-operation-box item-operation-box">
+                      <ul>
+                        <li>新建</li>
+                        <li>重命名</li>
+                        <li @click="dialogVisible = true">移动到</li>
+                        <li>删除</li>
+                        <li>分享</li>
+                      </ul>
+                    </div>
                   </div>
                 </li>
                 <li>
@@ -111,7 +120,7 @@
               <span class="date">{{item.date}}</span>
             </div>
 
-            <div class="list-item-operation-box">
+            <div class="list-item-operation-box item-operation-box">
               <ul>
                 <li>重命名</li>
                 <li @click="dialogVisible = true">移动到</li>
@@ -134,11 +143,11 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleDailogClose">
-      <div>
+      <div class="mf-title">
         <img src="/static/img/word.png" />
         <span class="title">Git 提交的正确姿势</span>
       </div>
-      <div class="submenu">
+      <div class="submenu mf-folder">
         <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -506,7 +515,11 @@ body{margin: 0;}
 .operation-list ul li > .submenu {
   display: none;
 }
- 
+
+.operation-list ul li > .submenu > .folder-item-operation-box {
+  display: none;
+}
+
 .operation-list ul li img {
   position: relative;
   top: 7px;
@@ -640,7 +653,7 @@ body{margin: 0;}
   box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 }
 
-.aside-list .list-item-operation-box ul {
+.item-operation-box ul {
   display: block;
   list-style-type: disc;
   -webkit-margin-before: 1em;
@@ -651,7 +664,7 @@ body{margin: 0;}
   margin-left: -40px;
 }
 
-.aside-list .list-item-operation-box ul li {
+.item-operation-box ul li {
   list-style: none;
   line-height: 36px;
   padding: 0 20px;
@@ -664,7 +677,7 @@ body{margin: 0;}
   text-align: -webkit-match-parent;
 }
 
-.aside-list .list-item-operation-box ul li:hover {
+.item-operation-box ul li:hover {
   background-color: #ecf5ff;
   color: #66b1ff;
 }
@@ -685,4 +698,19 @@ body{margin: 0;}
     left: 0px;
 }
 
+.mf-title {
+  font-size: 16px;
+  margin-top: -10px;
+}
+
+.mf-title img {
+  position: relative;
+  top: 4px;
+}
+
+.mf-folder {
+  border: 1px solid #EBEBEB;
+  padding: 5px;
+  margin-top: 10px;
+}
 </style>
