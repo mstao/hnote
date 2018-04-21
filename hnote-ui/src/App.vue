@@ -523,7 +523,7 @@ body{margin: 0;}
   cursor: pointer;
 }
 .operation-list ul li:last-child {
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 }
 
 .operation-list ul li > div:first-child {
@@ -667,7 +667,7 @@ body{margin: 0;}
   color: #8590A6;
 }
 .aside-list .list-content:last-child {
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 }
 
 .aside-list .list-content:hover {
