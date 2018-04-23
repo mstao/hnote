@@ -119,13 +119,27 @@
     </el-container>
     
     <!-- 移动到文件夹dialog -->
-    <move-to-folder-dialog/>
+    <el-dialog
+      title="移动到"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <div class="mf-title">
+        <img src="/static/img/word.png" />
+        <span class="title">Git 提交的正确姿势</span>
+      </div>
+      <div class="submenu mf-folder">
+        <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import h_header from './components/header.vue'
-  import move_to_folder_dialog from './components/move_to_folder_dialog.vue'
 
   export default {
     name: 'app',
@@ -287,8 +301,7 @@
       };
     },
     components: {
-      'h-header': h_header,
-      'move-to-folder-dialog': move_to_folder_dialog
+      'h-header': h_header
     },
     mounted() {
       this.init()
@@ -363,12 +376,9 @@
         this.inputVisible = false;
         this.inputValue = '';
       },
-      handleDialogClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
+      handleCloseDialog() {
+        console.log("zzzzzzzzzzzzzz");
+        this.dialogVisible = false;
       }
     }
   };

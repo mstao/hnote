@@ -10,7 +10,8 @@
     <module>hnote-api</module>
     <module>hnote-common</module>
     <module>hnote-rpc</module>
-    <module>hnote-provider</module>
+    <module>hnote-common-config</module>
+    <module>hnote-facade</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -27,9 +28,12 @@
     <junit.version>4.12</junit.version>
     <!-- spring版本号 -->
     <spring.version>4.3.5.RELEASE</spring.version>
+    <spring-data-redis.version>1.4.1.RELEASE</spring-data-redis.version>
     <!-- log4j日志文件管理包版本 -->
     <slf4j.version>1.7.7</slf4j.version>
     <log4j.version>1.2.17</log4j.version>
+    <!--java ee 版本-->
+    <javaee.version>7.0</javaee.version>
     <!-- mybatis版本号 -->
     <mybatis.version>3.2.6</mybatis.version>
     <mybatis-spring.version>1.2.2</mybatis-spring.version>
@@ -54,6 +58,9 @@
     <hamcrest.version>1.3</hamcrest.version>
     <asm.version>6.0</asm.version>
 
+    <jjwt.version>0.9.0</jjwt.version>
+    <aspectjweaver.version>1.8.10</aspectjweaver.version>
+    <fastjson.version>1.2.47</fastjson.version>
   </properties>
 
   <!-- 公共依赖 -->
@@ -125,6 +132,11 @@
         <version>${spring.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-redis</artifactId>
+        <version>${spring-data-redis.version}</version>
+      </dependency>
       <!-- Log -->
       <dependency>
         <groupId>log4j</groupId>
@@ -141,6 +153,12 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
         <version>${slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+        <version>${javaee.version}</version>
       </dependency>
 
       <!-- mybatis核心包 -->
@@ -276,6 +294,27 @@
         <groupId>org.ow2.asm</groupId>
         <artifactId>asm</artifactId>
         <version>${asm.version}</version>
+      </dependency>
+
+      <!-- aspectjweaver -->
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>${aspectjweaver.version}</version>
+      </dependency>
+
+      <!-- JWT -->
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt</artifactId>
+        <version>${jjwt.version}</version>
+      </dependency>
+
+      <!-- fastjson -->
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>${fastjson.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

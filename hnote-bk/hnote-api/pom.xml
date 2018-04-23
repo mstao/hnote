@@ -11,6 +11,12 @@
     <name>hnote-api Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
+
+        <dependency>
+            <groupId>me.mingshan</groupId>
+            <artifactId>hnote-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>hnote-api</finalName>
