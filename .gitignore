@@ -23,6 +23,6 @@
 *.ipr
 
 ### my own ###
-/.settings/
-/target/
-.idea/
+.settings
+target
+.idea

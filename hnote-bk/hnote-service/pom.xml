@@ -82,11 +82,6 @@
             <artifactId>hnote-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>me.mingshan</groupId>
-            <artifactId>hnote-service</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

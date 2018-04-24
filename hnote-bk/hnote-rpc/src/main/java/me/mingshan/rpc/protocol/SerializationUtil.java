@@ -23,7 +23,7 @@ public class SerializationUtil {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <T> byte[] serialize(T obj) {
+    public static <T> byte[] serialize(T obj) {
 
         Class<T> cls = (Class<T>) obj.getClass();
         LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
@@ -45,7 +45,7 @@ public class SerializationUtil {
      * @param <T>
      * @return
      */
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) {
+    public static <T> T deserialize(byte[] bytes, Class<T> clazz) {
         try {
             Schema<T> schema = getSchema(clazz);
             T message = schema.newMessage();

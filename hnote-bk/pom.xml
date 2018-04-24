@@ -42,7 +42,7 @@
     <druid.version>1.1.3</druid.version>
     <jedis.version>2.6.1</jedis.version>
     <lombok.version>1.16.6</lombok.version>
-    <swagger-springmvc.version>1.0.2</swagger-springmvc.version>
+    <springfox-swagger-ui.version>2.6.1</springfox-swagger-ui.version>
     <pagehelper.version>5.1.2</pagehelper.version>
     <dozer.version>5.5.1</dozer.version>
 
@@ -61,6 +61,7 @@
     <jjwt.version>0.9.0</jjwt.version>
     <aspectjweaver.version>1.8.10</aspectjweaver.version>
     <fastjson.version>1.2.47</fastjson.version>
+    <jetcache.version>2.4.4</jetcache.version>
   </properties>
 
   <!-- 公共依赖 -->
@@ -196,9 +197,14 @@
       </dependency>
       <!-- swagger -->
       <dependency>
-        <groupId>com.mangofactory</groupId>
-        <artifactId>swagger-springmvc</artifactId>
-        <version>${swagger-springmvc.version}</version>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>${springfox-swagger-ui.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>${springfox-swagger-ui.version}</version>
       </dependency>
 
       <!-- Mybatis分页插件 -->
@@ -316,6 +322,17 @@
         <version>1.2.47</version>
       </dependency>
 
+      <!-- cache -->
+      <dependency>
+        <groupId>com.alicp.jetcache</groupId>
+        <artifactId>jetcache-anno</artifactId>
+        <version>${jetcache.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alicp.jetcache</groupId>
+        <artifactId>jetcache-redis</artifactId>
+        <version>${jetcache.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
