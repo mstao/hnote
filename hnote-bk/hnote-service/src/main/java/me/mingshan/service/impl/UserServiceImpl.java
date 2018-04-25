@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
     public User findById(long id) {
         User user = new User();
         user.setName("mingshan");
+        user.setPassword("123");
         return user;
     }
 
