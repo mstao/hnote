@@ -46,7 +46,7 @@ public class MD5Util {
      * 盐值处理
      */
     private static class Salter {
-        private static final String PREFIX = "lightblog";
+        private static final String PREFIX = "hnote";
 
         public static String salt(String source, String salt) {
             if (source == null || source.length() == 0) {
