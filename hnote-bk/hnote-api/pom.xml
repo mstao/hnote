@@ -124,6 +124,12 @@
             <artifactId>jedis</artifactId>
         </dependency>
 
+        <!--Druid 连接池-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>me.mingshan</groupId>
             <artifactId>hnote-common</artifactId>
