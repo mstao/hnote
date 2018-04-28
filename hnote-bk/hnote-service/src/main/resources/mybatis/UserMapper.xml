@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+
+<mapper namespace="me.mingshan.service.dao.UserDao">
+
+<!-- 用户信息 resultMap -->
+<resultMap type="me.mingshan.facade.model.User" id="userResultMap">
+
+   <id column="id" property="id"/>
+   <result column="name" property="name"/>
+   <result column="password" property="password"/>
+   <result column="email" property="email"/>
+</resultMap>
+
+<!-- 查询sql -->
+<sql id="query_user_where">
+
+     <if test="name != null and name !=''">
+     and name=#{name}
+     </if>
+
+    <if test="ids !=null and ids!='' ">
+        <!-- foreach  遍历集合  拼接sql  id in(1,2) -->
+         <foreach collection="ids" item="item" open="id in(" close=")" separator="," >
+             #{item}
+         </foreach> 
+    </if>
+</sql>
+
+
+<!-- 根据id获取用户信息 -->
+<select id="selectByPrimaryKey"  parameterType="java.lang.Long" resultMap="userResultMap">
+    select id, name, email from hn_user where id = #{id}
+</select>
+
+    <select id="selectByUserName" parameterType="java.lang.String" resultMap="userResultMap">
+    select id, name, email, password from hn_user where name = #{value}
+</select>
+
+    <!-- 添加用户 -->
+<insert id="insert" parameterType="me.mingshan.facade.model.User">
+    <!-- 主键值返回 -->
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+        SELECT LAST_INSERT_ID()
+    </selectKey>
+
+    insert into hn_user (
+      name,
+      password, 
+      email,
+      salt, 
+      age, 
+      gmt_create, 
+      gmt_modified )
+    values (
+      #{name},
+      #{password},
+      #{email},
+      #{salt}, 
+      #{age}, 
+      NOW(), 
+      NOW() )
+</insert>
+
+<!-- 删除用户 -批量-->
+<delete id="deleteBatch" parameterType="me.mingshan.facade.model.User">
+   delete from hn_user
+   <where>
+     <include refid="query_user_where"></include>
+   </where>
+</delete>
+
+<!-- 修改用户 -->
+<update id="update" parameterType="me.mingshan.facade.model.User">
+    update hn_user
+    <set>
+          <if test="name !=null and name !=''">
+            name=#{name},
+          </if>
+          <if test="password != null and password != ''">
+            password=#{password},
+          </if>
+          <if test="email != null and email != ''">
+          email=#{email}
+          </if>
+          <!-- 自行添加其他 -->
+    </set>
+    where id=#{id}
+</update>
+
+</mapper>

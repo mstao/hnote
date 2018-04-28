@@ -3,17 +3,18 @@ package me.mingshan.common.dao;
 import java.util.List;
 
 /**
- * @Description:
- * @Author: Minsghan
- * @Date: Created in 9:20 2017/10/21
+ * 公共DAO
+ * @author mingshan
+ *
+ * @param <T>
  */
 public interface BaseDao<T> {
     /**
-     * Deletes model by id.
-     * @param id
+     * Deletes by batch.
+     * @param model
      * @return
      */
-    long deleteByPrimaryKey(long id);
+    long deleteBatch(T model);
 
     /**
      * Inserts model to database.
@@ -40,5 +41,5 @@ public interface BaseDao<T> {
      *
      * @return
      */
-    List<T> selectAll();
+    List<T> selectByPage();
 }

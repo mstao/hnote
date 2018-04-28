@@ -56,7 +56,8 @@ public class TokenController extends BaseController {
             throw new ParameterException("UserName or password is empty.");
         }
 
-        User user = userService.findById(1);
+        User user = userService.findByUserName(userName);
+
         String newPassword = MD5Util.md5(password, userName);
         if (user == null || !newPassword.equals(user.getPassword())) {
             result.setCode(1001);

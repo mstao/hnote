@@ -28,6 +28,8 @@
     <!-- spring版本号 -->
     <spring.version>4.3.5.RELEASE</spring.version>
     <spring-data-redis.version>1.4.1.RELEASE</spring-data-redis.version>
+    <jedis.version>2.6.1</jedis.version>
+
     <!-- log4j日志文件管理包版本 -->
     <slf4j.version>1.7.7</slf4j.version>
     <log4j.version>1.2.17</log4j.version>
@@ -133,6 +135,13 @@
         <artifactId>spring-data-redis</artifactId>
         <version>${spring-data-redis.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>redis.clients</groupId>
+        <artifactId>jedis</artifactId>
+        <version>${jedis.version}</version>
+      </dependency>
+
       <!-- Log -->
       <dependency>
         <groupId>log4j</groupId>

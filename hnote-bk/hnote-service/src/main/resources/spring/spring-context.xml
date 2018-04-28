@@ -2,16 +2,48 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="
               http://www.springframework.org/schema/beans
               http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/context
-           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 
     <context:annotation-config />
 
     <context:component-scan base-package="me.mingshan.service.impl" />
 
+    <!-- 当proxy-target-class为false时使用JDK动态代理 -->
+    <!-- 为true时使用cglib -->
+    <!-- cglib无法拦截接口方法 -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <!-- Druid和Spring关联监控配置 -->
+    <bean id="druid-stat-interceptor"
+          class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
+    </bean>
+
+    <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut"
+          scope="prototype">
+        <property name="patterns">
+            <list>
+                <value>me.mingshan.service.impl.*</value>
+                <value>me.mingshan.service.dao.*</value>
+            </list>
+        </property>
+    </bean>
+
+    <aop:config>
+        <aop:advisor advice-ref="druid-stat-interceptor"
+                     pointcut-ref="druid-stat-pointcut" />
+    </aop:config>
+
+    <!-- 加载配置文件 -->
+    <context:property-placeholder location="classpath:db.properties" />
+
     <import resource="classpath*:spring/spring-dubbo-provider.xml"/>
+    <import resource="classpath*:spring/spring-mybatis.xml"/>
 </beans>

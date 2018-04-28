@@ -1,6 +1,6 @@
 package me.mingshan.common.service;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: mingshan
@@ -9,15 +9,11 @@ import java.util.List;
 public interface BaseService<T> {
     T findById(long id);
 
-    List<T> findAll();
+    Map<String, Object> findAll(int pageNumber, int pageSize);
 
     long insert(T model);
 
-    long insertSelective(T model);
-
-    T selectByUniqueFiled(T model);
-
     long update(T model);
 
-    long delete(long id);
+    long delete(String ids);
 }

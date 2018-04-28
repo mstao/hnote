@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
  * @Author: Minsghan
  * @Date: Created in 23:41 2017/10/13
  */
-@Component
 public class RedisTokenManager implements TokenManager {
     private static final Logger logger = LoggerFactory.getLogger(RedisTokenManager.class);
     private RedisTemplate<Long, String> redisTemplate;

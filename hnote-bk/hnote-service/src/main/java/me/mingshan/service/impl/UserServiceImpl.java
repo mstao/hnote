@@ -2,9 +2,12 @@ package me.mingshan.service.impl;
 
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.UserService;
+import me.mingshan.service.dao.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: mingshan
@@ -12,16 +15,17 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired
+    private UserDao userDao;
+
     @Override
     public User findById(long id) {
-        User user = new User();
-        user.setName("mingshan");
-        user.setPassword("123");
+        User user = userDao.selectByPrimaryKey(id);
         return user;
     }
 
     @Override
-    public List<User> findAll() {
+    public Map<String, Object> findAll(int pageNumber, int pageSize) {
         return null;
     }
 
@@ -31,22 +35,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public long insertSelective(User model) {
-        return 0;
-    }
-
-    @Override
-    public User selectByUniqueFiled(User model) {
-        return null;
-    }
-
-    @Override
     public long update(User model) {
         return 0;
     }
 
     @Override
-    public long delete(long id) {
+    public long delete(String ids) {
         return 0;
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        User user = userDao.selectByUserName(userName);
+        return user;
     }
 }
