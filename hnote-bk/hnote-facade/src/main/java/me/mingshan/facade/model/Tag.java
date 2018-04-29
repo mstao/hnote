@@ -13,6 +13,8 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Tag extends BaseModel implements Serializable {
+    private static final long serialVersionUID = -4305093510865788901L;
+
     private String name;
     private int isDeleted;
 }

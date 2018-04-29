@@ -12,5 +12,8 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Recycled extends BaseModel implements Serializable {
+public class Trash extends BaseModel implements Serializable {
+    private static final long serialVersionUID = -1715340505113819658L;
+
+    private long noteId;
 }

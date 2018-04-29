@@ -1,6 +1,6 @@
 package me.mingshan.service.impl;
 
-import me.mingshan.facade.model.Recycled;
+import me.mingshan.facade.model.Trash;
 import me.mingshan.facade.service.RecycledService;
 
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class RecycledServiceImpl implements RecycledService {
     @Override
-    public Recycled findById(long id) {
+    public Trash findById(long id) {
         return null;
     }
 
@@ -21,12 +21,12 @@ public class RecycledServiceImpl implements RecycledService {
     }
 
     @Override
-    public long insert(Recycled model) {
+    public long insert(Trash model) {
         return 0;
     }
 
     @Override
-    public long update(Recycled model) {
+    public long update(Trash model) {
         return 0;
     }
 

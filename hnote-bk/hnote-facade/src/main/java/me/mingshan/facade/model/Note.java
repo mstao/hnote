@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import me.mingshan.common.model.BaseModel;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author mingshan
@@ -13,9 +14,17 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class Note extends BaseModel implements Serializable {
+    private static final long serialVersionUID = 8323875163366873309L;
+
     private String content;
     private String author;
     private String source;
-    private long folderId;
     private int isDeleted;
+
+    // 类别
+    private NoteType noteType;
+    // 文件夹
+    private Folder folder;
+    // 标签
+    private List<Tag> tags;
 }

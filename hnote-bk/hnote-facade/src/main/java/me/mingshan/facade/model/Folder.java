@@ -8,13 +8,14 @@ import java.io.Serializable;
 
 /**
  * @Author: mingshan
- * @Date: Created in 16:26 2018/4/27
+ * @Date: Created in 21:50 2018/4/29
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class NoteType extends BaseModel implements Serializable {
-    private static final long serialVersionUID = -6161486655922778147L;
+public class Folder extends BaseModel implements Serializable {
+    private static final long serialVersionUID = -2582952414547485569L;
 
     private String name;
-    private int isDeleted;
+    private int level;
+    private long pid;
 }

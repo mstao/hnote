@@ -12,6 +12,9 @@
     <dubbo:protocol name="dubbo" port="20880"/>
 
     <bean id="userService" class="me.mingshan.service.impl.UserServiceImpl"/>
+    <bean id="noteService" class="me.mingshan.service.impl.NoteServiceImpl"/>
 
     <dubbo:service interface="me.mingshan.facade.service.UserService" ref="userService"/>
+    <dubbo:service interface="me.mingshan.facade.service.NoteService" ref="noteService"/>
+
 </beans>
