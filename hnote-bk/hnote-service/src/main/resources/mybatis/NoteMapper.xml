@@ -18,9 +18,9 @@
         </association>
 
         <association property="folder" javaType="me.mingshan.facade.model.Folder">
-            <id column="nt_id" property="id"/>
+            <id column="folder_id" property="id"/>
             <result column="folder_name" property="name"/>
-            <result column="folder_level" property="name"/>
+            <result column="folder_level" property="level"/>
             <result column="folder_pid" property="pid"/>
         </association>
 
@@ -40,19 +40,24 @@
                n.gmt_modified,
                nt.id nt_id,
                nt.name nt_name,
+               f.id folder_id,
                f.name folder_name,
                f.level folder_level,
                f.pid folder_pid,
-               t.id tag_id,
-               t.name tag_name
-        from hn_note n, hn_tag t
+               t.tag_id,
+               t.tag_name
+        from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        left join hn_note_to_tag ntg on ntg.note_id = n.id and ntg.tag_id = t.id
-        where id = #{id}
+        left join (SELECT  tag.id tag_id,
+                           tag.name tag_name,
+                           ntg.note_id
+                   from hn_tag tag
+                   LEFT JOIN hn_note_to_tag ntg on ntg.tag_id = tag.id) t on t.note_id = n.id
+        where n.id = #{id}
     </select>
     
-    <select id="selectByPage" >
+    <select id="selectByPage" resultMap="noteResultMap">
         select n.id,
                n.content,
                n.author,
@@ -62,14 +67,19 @@
                n.gmt_modified,
                nt.id nt_id,
                nt.name nt_name,
+               f.id folder_id,
                f.name folder_name,
                f.level folder_level,
                f.pid folder_pid,
-               t.id tag_id,
-               t.name tag_name
-        from hn_note n, hn_tag t
+               t.tag_id,
+               t.tag_name
+        from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        left join hn_note_to_tag ntg on ntg.note_id = n.id and ntg.tag_id = t.id
+                left join (SELECT  tag.id tag_id,
+                           tag.name tag_name,
+                           ntg.note_id
+                   from hn_tag tag
+                   LEFT JOIN hn_note_to_tag ntg on ntg.tag_id = tag.id) t on t.note_id = n.id
     </select>
 </mapper>

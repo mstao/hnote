@@ -1,5 +1,6 @@
 package me.mingshan.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.Tag;
 import me.mingshan.facade.service.TagService;
 
@@ -16,7 +17,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Map<String, Object> findAll(int pageNumber, int pageSize) {
+    public PageInfo<Tag> findAll(int pageNumber, int pageSize) {
         return null;
     }
 

@@ -1,5 +1,6 @@
 package me.mingshan.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.NoteType;
 import me.mingshan.facade.service.NoteTypeService;
 
@@ -16,7 +17,7 @@ public class NoteTypeServiceImpl implements NoteTypeService {
     }
 
     @Override
-    public Map<String, Object> findAll(int pageNumber, int pageSize) {
+    public PageInfo<NoteType> findAll(int pageNumber, int pageSize) {
         return null;
     }
 

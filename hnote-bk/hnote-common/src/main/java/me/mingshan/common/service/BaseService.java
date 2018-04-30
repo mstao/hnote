@@ -1,6 +1,6 @@
 package me.mingshan.common.service;
 
-import java.util.Map;
+import com.github.pagehelper.PageInfo;
 
 /**
  * @Author: mingshan
@@ -9,7 +9,7 @@ import java.util.Map;
 public interface BaseService<T> {
     T findById(long id);
 
-    Map<String, Object> findAll(int pageNumber, int pageSize);
+    PageInfo<T> findAll(int pageNumber, int pageSize);
 
     long insert(T model);
 

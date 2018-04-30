@@ -1,5 +1,6 @@
 package me.mingshan.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.UserService;
 import me.mingshan.service.dao.UserDao;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> findAll(int pageNumber, int pageSize) {
+    public PageInfo<User> findAll(int pageNumber, int pageSize) {
         return null;
     }
 

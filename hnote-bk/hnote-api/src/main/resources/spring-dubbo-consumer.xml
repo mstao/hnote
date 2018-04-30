@@ -9,6 +9,6 @@
 
     <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
 
-    <dubbo:reference id="userService" interface="me.mingshan.facade.service.UserService">
-    </dubbo:reference>
+    <dubbo:reference id="userService" interface="me.mingshan.facade.service.UserService"/>
+    <dubbo:reference id="noteService" interface="me.mingshan.facade.service.NoteService"/>
 </beans>

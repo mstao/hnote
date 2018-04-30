@@ -2,6 +2,7 @@ package me.mingshan.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.NoteService;
 import me.mingshan.service.dao.NoteDao;
@@ -29,16 +30,11 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Map<String, Object> findAll(int pageNumber, int pageSize) {
+    public PageInfo<Note> findAll(int pageNumber, int pageSize) {
         PageHelper.startPage(pageNumber,pageSize);
         List<Note> notes = noteDao.selectByPage();
-        // 获取总记录数
-        long total = ((Page<Note>) notes).getTotal();
-        Map<String, Object> params = new HashMap<>();
-        params.put("items", notes);
-        params.put("total", total);
-
-        return params;
+        PageInfo<Note> page = new PageInfo<>(notes);
+        return page;
     }
 
     @Override
