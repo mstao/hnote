@@ -17,11 +17,6 @@ public class NoteTypeServiceImpl implements NoteTypeService {
     }
 
     @Override
-    public PageInfo<NoteType> findAll(int pageNumber, int pageSize) {
-        return null;
-    }
-
-    @Override
     public long insert(NoteType model) {
         return 0;
     }

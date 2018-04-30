@@ -1,18 +1,18 @@
 package me.mingshan.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.NoteService;
 import me.mingshan.service.dao.NoteDao;
+import me.mingshan.service.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Book;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: mingshan
@@ -39,7 +39,8 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public long insert(Note model) {
-        return 0;
+        long id = noteDao.insert(model);
+        return id;
     }
 
     @Override
@@ -49,6 +50,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public long delete(String ids) {
-        return 0;
+        Note note = new Note();
+        List<Long> idList = StringUtil.stringToList(ids);
+        note.setIds(idList);
+        return noteDao.deleteBatch(note);
     }
 }

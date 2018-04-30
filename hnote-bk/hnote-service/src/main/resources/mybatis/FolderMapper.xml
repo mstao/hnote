@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.mingshan.service.dao.FolderDao">
+    <resultMap id="folderResultMap" type="me.mingshan.facade.model.Folder">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="level" property="level"/>
+        <result column="pid" property="pid"/>
+        <result column="uid" property="uid"/>
+        <result column="isDeleted" property="isDeleted"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+
+    <!-- 查询sql -->
+    <sql id="query_folder_where">
+
+        <if test="ids !=null and ids!='' ">
+            <!-- foreach  遍历集合  拼接sql  id in(1,2) -->
+            <foreach collection="ids" item="item" open="id in(" close=")" separator="," >
+                #{item}
+            </foreach>
+        </if>
+
+    </sql>
+
+    <select id="selectByPrimaryKey"  parameterType="java.lang.Long" resultMap="folderResultMap">
+        select f.id
+               f.name,
+               f.level,
+               f.uid,
+               f.pid,
+               f.is_deleted
+        from hn_folder f where f.id = #{id}
+    </select>
+
+    <select id="selectAllByUid" parameterType="java.lang.Long" resultMap="folderResultMap">
+        select f.id
+               f.name,
+               f.level,
+               f.uid,
+               f.pid,
+               f.is_deleted
+        from hn_folder f where f.uid = #{uid}
+    </select>
+
+    <!-- 添加-->
+    <insert id="insert" parameterType="me.mingshan.facade.model.Folder">
+        <!-- 主键值返回 -->
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+        insert into hn_folder (
+            name,
+            level,
+            uid,
+            pid,
+            gmt_create,
+            gmt_modified)
+        values(
+            #{name},
+            #{level},
+            #{uid},
+            #{pid},
+            NOW(),
+            NOW())
+    </insert>
+
+    <!--逻辑删除-->
+    <update id="deleteBatch" parameterType="me.mingshan.facade.model.Folder">
+        update hn_folder set is_deleted = 1 where is_deleted = 0 and
+        <include refid="query_folder_where"></include>
+    </update>
+
+</mapper>

@@ -9,6 +9,7 @@ import java.util.List;
  * @param <T>
  */
 public interface BaseDao<T> {
+
     /**
      * Deletes by batch.
      * @param model
@@ -36,10 +37,4 @@ public interface BaseDao<T> {
      * @return
      */
     long update(T model);
-
-    /**
-     *
-     * @return
-     */
-    List<T> selectByPage();
 }

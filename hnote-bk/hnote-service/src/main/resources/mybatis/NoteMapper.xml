@@ -8,6 +8,7 @@
         <result column="content" property="content"/>
         <result column="author" property="author"/>
         <result column="source" property="source"/>
+        <result column="uid" property="uid"/>
         <result column="isDeleted" property="isDeleted"/>
         <result column="gmt_create" property="gmtCreate"/>
         <result column="gmt_modified" property="gmtModified"/>
@@ -30,11 +31,47 @@
         </collection>
     </resultMap>
 
+    <resultMap id="simpleNoteResultMap" type="me.mingshan.facade.model.Note">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="author" property="author"/>
+        <result column="source" property="source"/>
+        <result column="uid" property="uid"/>
+        <result column="isDeleted" property="isDeleted"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+
+        <association property="noteType" javaType="me.mingshan.facade.model.NoteType">
+            <id column="nt_id" property="id"/>
+            <result column="nt_name" property="name"/>
+        </association>
+
+        <association property="folder" javaType="me.mingshan.facade.model.Folder">
+            <id column="folder_id" property="id"/>
+            <result column="folder_name" property="name"/>
+            <result column="folder_level" property="level"/>
+            <result column="folder_pid" property="pid"/>
+        </association>
+    </resultMap>
+
+    <!-- 查询sql -->
+    <sql id="query_note_where">
+
+        <if test="ids !=null and ids!='' ">
+            <!-- foreach  遍历集合  拼接sql  id in(1,2) -->
+            <foreach collection="ids" item="item" open="id in(" close=")" separator="," >
+                #{item}
+            </foreach>
+        </if>
+
+    </sql>
+
     <select id="selectByPrimaryKey"  parameterType="java.lang.Long" resultMap="noteResultMap">
         select n.id,
                n.content,
                n.author,
                n.source,
+               n.uid,
                n.is_deleted,
                n.gmt_create,
                n.gmt_modified,
@@ -57,11 +94,12 @@
         where n.id = #{id}
     </select>
     
-    <select id="selectByPage" resultMap="noteResultMap">
+    <select id="selectByPage" resultMap="simpleNoteResultMap">
         select n.id,
                n.content,
                n.author,
                n.source,
+               n.uid,
                n.is_deleted,
                n.gmt_create,
                n.gmt_modified,
@@ -70,16 +108,43 @@
                f.id folder_id,
                f.name folder_name,
                f.level folder_level,
-               f.pid folder_pid,
-               t.tag_id,
-               t.tag_name
+               f.pid folder_pid
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-                left join (SELECT  tag.id tag_id,
-                           tag.name tag_name,
-                           ntg.note_id
-                   from hn_tag tag
-                   LEFT JOIN hn_note_to_tag ntg on ntg.tag_id = tag.id) t on t.note_id = n.id
     </select>
+
+    <!-- 添加-->
+    <insert id="insert" parameterType="me.mingshan.facade.model.Note">
+        <!-- 主键值返回 -->
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+
+        insert into hn_note (
+            content,
+            author,
+            source,
+            uid,
+            type_id,
+            folder_id,
+            gmt_create,
+            gmt_modified)
+        values(
+            #{content},
+            #{author},
+            #{source},
+            #{uid},
+            #{typeId},
+            #{folderId},
+            NOW(),
+            NOW())
+    </insert>
+
+    <!--逻辑删除-->
+    <update id="deleteBatch" parameterType="me.mingshan.facade.model.Note">
+        update hn_note set is_deleted = 1 where is_deleted = 0 and
+        <include refid="query_note_where"></include>
+    </update>
+
 </mapper>

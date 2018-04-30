@@ -1,5 +1,6 @@
 package me.mingshan.facade.service;
 
+import com.github.pagehelper.PageInfo;
 import me.mingshan.common.service.BaseService;
 import me.mingshan.facade.model.Note;
 
@@ -8,4 +9,13 @@ import me.mingshan.facade.model.Note;
  * @Date: Created in 16:51 2018/4/27
  */
 public interface NoteService extends BaseService<Note> {
+
+    /**
+     * Get all note by pagination.
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    PageInfo<Note> findAll(int pageNumber, int pageSize);
 }

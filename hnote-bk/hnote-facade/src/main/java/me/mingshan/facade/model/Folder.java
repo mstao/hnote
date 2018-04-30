@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import me.mingshan.common.model.BaseModel;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @Author: mingshan
@@ -18,4 +19,9 @@ public class Folder extends BaseModel implements Serializable {
     private String name;
     private int level;
     private long pid;
+    private long uid;
+    private int isDeleted;
+
+    // 批量删除
+    private List<Long> ids;
 }

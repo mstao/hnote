@@ -13,8 +13,10 @@
 
     <bean id="userService" class="me.mingshan.service.impl.UserServiceImpl"/>
     <bean id="noteService" class="me.mingshan.service.impl.NoteServiceImpl"/>
+    <bean id="folderService" class="me.mingshan.service.impl.FolderServiceImpl"/>
 
     <dubbo:service interface="me.mingshan.facade.service.UserService" ref="userService"/>
     <dubbo:service interface="me.mingshan.facade.service.NoteService" ref="noteService"/>
+    <dubbo:service interface="me.mingshan.facade.service.FolderService" ref="folderService"/>
 
 </beans>

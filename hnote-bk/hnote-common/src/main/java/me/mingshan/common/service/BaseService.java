@@ -9,8 +9,6 @@ import com.github.pagehelper.PageInfo;
 public interface BaseService<T> {
     T findById(long id);
 
-    PageInfo<T> findAll(int pageNumber, int pageSize);
-
     long insert(T model);
 
     long update(T model);

@@ -19,6 +19,9 @@ public class Note extends BaseModel implements Serializable {
     private String content;
     private String author;
     private String source;
+    private long uid;
+    private long typeId;
+    private long folderId;
     private int isDeleted;
 
     // 类别
@@ -27,4 +30,6 @@ public class Note extends BaseModel implements Serializable {
     private Folder folder;
     // 标签
     private List<Tag> tags;
+    // 批量删除
+    private List<Long> ids;
 }

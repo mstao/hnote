@@ -82,8 +82,8 @@ public class NoteController extends BaseController {
         if (note == null) {
             ResultModel result = new ResultModel();
             result.setCode(1021);
-            result.setMessage("Book with id " + id + " not found");
-            logger.info("Book with id {} not found", id);
+            result.setMessage("Note with id " + id + " not found");
+            logger.info("Note with id {} not found", id);
             throw new ServerException(result, HttpStatus.NOT_FOUND);
         }
 

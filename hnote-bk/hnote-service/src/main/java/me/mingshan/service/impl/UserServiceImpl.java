@@ -26,11 +26,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageInfo<User> findAll(int pageNumber, int pageSize) {
-        return null;
-    }
-
-    @Override
     public long insert(User model) {
         return 0;
     }
