@@ -91,7 +91,7 @@
                            ntg.note_id
                    from hn_tag tag
                    LEFT JOIN hn_note_to_tag ntg on ntg.tag_id = tag.id) t on t.note_id = n.id
-        where n.id = #{id}
+        where n.id = #{id} and n.is_deleted = 0
     </select>
     
     <select id="selectByPage" resultMap="simpleNoteResultMap">
@@ -112,15 +112,11 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
+        where n.is_deleted = 0
     </select>
 
     <!-- 添加-->
-    <insert id="insert" parameterType="me.mingshan.facade.model.Note">
-        <!-- 主键值返回 -->
-        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-
+    <insert id="insert" parameterType="me.mingshan.facade.model.Note" useGeneratedKeys="true" keyProperty="id">
         insert into hn_note (
             content,
             author,
