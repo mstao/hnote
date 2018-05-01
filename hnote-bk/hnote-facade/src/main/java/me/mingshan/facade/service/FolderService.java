@@ -17,4 +17,11 @@ public interface FolderService extends BaseService<Folder> {
      * @return
      */
     List<Folder> findAllByUid(long uid);
+
+    /**
+     * Rename folder.
+     * @param id
+     * @param newName
+     */
+    void rename(long id, String newName);
 }

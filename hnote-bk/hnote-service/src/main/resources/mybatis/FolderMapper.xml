@@ -75,4 +75,8 @@
         <include refid="query_folder_where"></include>
     </update>
 
+    <update id="rename" parameterType="me.mingshan.facade.model.Folder">
+        update hn_note set name = #{name} where id = #{id}
+    </update>
+
 </mapper>

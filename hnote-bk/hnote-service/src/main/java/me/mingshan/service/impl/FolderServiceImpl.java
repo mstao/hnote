@@ -46,4 +46,9 @@ public class FolderServiceImpl implements FolderService {
     public List<Folder> findAllByUid(long uid) {
         return folderDao.selectAllByUid(uid);
     }
+
+    @Override
+    public void rename(long id, String newName) {
+        folderDao.rename(id, newName);
+    }
 }

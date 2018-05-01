@@ -1,21 +1,23 @@
 package me.mingshan.web.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import me.mingshan.common.annotation.Authorization;
 import me.mingshan.facade.model.Folder;
+import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.FolderService;
 import me.mingshan.web.exception.ServerException;
 import me.mingshan.web.model.ResultModel;
 import me.mingshan.web.vo.FolderVO;
+import me.mingshan.web.vo.NoteVO;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,5 +84,91 @@ public class FolderController extends BaseController {
         }
 
         return new ResponseEntity<>(folderVOs, HttpStatus.OK);
+    }
+
+    /**
+     * Create folder.
+     *
+     * @param folderVO
+     * @param ucBuilder
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST)
+    @ApiOperation(value="create folder", httpMethod="POST", notes="Create folder")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<Void> createNote(@ApiParam(required=true, value="Folder", name="Folder")
+                                           @RequestBody FolderVO folderVO, UriComponentsBuilder ucBuilder) {
+        Folder folder = mapper.map(folderVO, Folder.class);
+
+        folderService.insert(folder);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/notes/{id}").buildAndExpand(folder.getId()).toUri());
+
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+
+    /**
+     * Update folder.
+     *
+     * @param folderVO
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.PUT)
+    @ApiOperation(value="Update folder", httpMethod="PUT", notes="Update folder")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<Folder> updateFolder(@RequestBody FolderVO folderVO) {
+        Folder folder = mapper.map(folderVO, Folder.class);
+        logger.info("Updating folder " + folder);
+
+        Folder currentFolder = folderService.findById(folder.getId());
+
+        if (currentFolder == null) {
+            ResultModel result = new ResultModel();
+            result.setCode(1023);
+            result.setMessage("Folder with id " + folder.getId() + " not found");
+            logger.info("Folder with id " + folder.getId() + " not found");
+            throw new ServerException(result, HttpStatus.NOT_FOUND);
+        }
+
+        folderService.rename(folder.getId(), folder.getName());
+        return new ResponseEntity<>(folder, HttpStatus.OK);
+    }
+
+    /**
+     * Deletes notes by ids.
+     *
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
+    @ApiOperation(value="Delete folders", httpMethod="DELETE", notes="Delete notes by ids")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<ResultModel> deleteBook(@ApiParam(required=true, value="Note Ids", name="ids")
+                                                  @PathVariable("ids") String ids) {
+        logger.info("Fetching & Deleting folders with ids " + ids);
+        try {
+            folderService.delete(ids);
+        } catch (RuntimeException e) {
+            ResultModel result = new ResultModel();
+            result.setCode(1024);
+            result.setMessage("Unable to delete folders with ids " + ids);
+            logger.info("Unable to delete folders with ids " + ids);
+            throw new ServerException(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
