@@ -22,6 +22,9 @@
     <!-- 将 springSwaggerConfig加载到spring容器 -->
     <bean class="me.mingshan.web.config.SwaggerConfig" id="swagger2Config"/>
 
+    <!-- Dozer mapper -->
+    <bean id="mapper" class="org.dozer.spring.DozerBeanMapperFactoryBean"/>
+
     <!-- 加载配置文件 -->
     <context:property-placeholder location="classpath*:redis-config.properties" />
 

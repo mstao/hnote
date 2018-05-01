@@ -2,9 +2,10 @@ package me.mingshan.facade.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.mingshan.common.model.BaseModel;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,15 +14,22 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Folder extends BaseModel implements Serializable {
+public class Folder implements Serializable {
     private static final long serialVersionUID = -2582952414547485569L;
 
+    private Long id;
     private String name;
-    private int level;
-    private long pid;
-    private long uid;
-    private int isDeleted;
+    private Integer level;
+    private Long pid;
+    private Long uid;
+    private Integer isDeleted;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date gmtCreate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date gmtModified;
 
-    // 批量删除
+    /**
+     * 批量删除
+     */
     private List<Long> ids;
 }

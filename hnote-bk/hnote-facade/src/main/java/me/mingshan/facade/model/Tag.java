@@ -2,9 +2,10 @@ package me.mingshan.facade.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.mingshan.common.model.BaseModel;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Author: mingshan
@@ -12,9 +13,14 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Tag extends BaseModel implements Serializable {
+public class Tag implements Serializable {
     private static final long serialVersionUID = -4305093510865788901L;
 
+    private Long id;
     private String name;
-    private int isDeleted;
+    private Integer isDeleted;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date gmtCreate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date gmtModified;
 }

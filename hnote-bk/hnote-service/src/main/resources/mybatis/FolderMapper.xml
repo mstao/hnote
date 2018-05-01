@@ -27,7 +27,7 @@
     </sql>
 
     <select id="selectByPrimaryKey"  parameterType="java.lang.Long" resultMap="folderResultMap">
-        select f.id
+        select f.id,
                f.name,
                f.level,
                f.uid,
@@ -37,7 +37,7 @@
     </select>
 
     <select id="selectAllByUid" parameterType="java.lang.Long" resultMap="folderResultMap">
-        select f.id
+        select f.id,
                f.name,
                f.level,
                f.uid,

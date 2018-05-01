@@ -9,11 +9,14 @@ import me.mingshan.facade.model.Folder;
 import me.mingshan.facade.service.FolderService;
 import me.mingshan.web.exception.ServerException;
 import me.mingshan.web.model.ResultModel;
+import me.mingshan.web.vo.FolderVO;
+import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +29,9 @@ import java.util.List;
 public class FolderController extends BaseController {
     @Autowired
     private FolderService folderService;
+
+    @Autowired
+    private Mapper mapper;
 
     /**
      * Get folder by id.
@@ -40,7 +46,7 @@ public class FolderController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<Folder> getNoteById(@PathVariable Long id) {
+    public ResponseEntity<FolderVO> getNoteById(@PathVariable Long id) {
         Folder folder = folderService.findById(id);
         if (folder == null) {
             ResultModel result = new ResultModel();
@@ -50,7 +56,8 @@ public class FolderController extends BaseController {
             throw new ServerException(result, HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(folder, HttpStatus.OK);
+        FolderVO folderVO = mapper.map(folder, FolderVO.class);
+        return new ResponseEntity<>(folderVO, HttpStatus.OK);
     }
 
     /**
@@ -66,9 +73,14 @@ public class FolderController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<List<Folder>> getNoteByUid(@RequestParam Long uid) {
+    public ResponseEntity<List<FolderVO>> getNoteByUid(@RequestParam Long uid) {
+        List<FolderVO> folderVOs = new ArrayList<>();
         List<Folder> folders = folderService.findAllByUid(uid);
+        for (Folder folder : folders) {
+            FolderVO folderVO = mapper.map(folder, FolderVO.class);
+            folderVOs.add(folderVO);
+        }
 
-        return new ResponseEntity<>(folders, HttpStatus.OK);
+        return new ResponseEntity<>(folderVOs, HttpStatus.OK);
     }
 }

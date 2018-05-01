@@ -131,6 +131,15 @@
         </dependency>
 
         <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer-spring</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>me.mingshan</groupId>
             <artifactId>hnote-common</artifactId>
             <version>${project.version}</version>
