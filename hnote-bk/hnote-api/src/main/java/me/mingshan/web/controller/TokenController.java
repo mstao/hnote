@@ -16,14 +16,12 @@ import me.mingshan.web.exception.ServerException;
 import me.mingshan.web.model.ResultModel;
 import me.mingshan.web.model.TokenModel;
 import me.mingshan.web.util.MD5Util;
+import me.mingshan.web.vo.TokenVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * The API of token for login and logout.
@@ -41,16 +39,16 @@ public class TokenController extends BaseController {
     private TokenManager tokenManager;
 
     /**
-     * Login.
-     * @param userName
-     * @param password
-     * @return ResultModel
+     *
+     * @param tokenVO
+     * @return
      */
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value="登录处理", httpMethod="POST", notes="Login")
-    public ResponseEntity<TokenModel> login(@RequestParam String userName,
-                                            @RequestParam String password) {
+    public ResponseEntity<TokenModel> login(@RequestBody TokenVO tokenVO) {
         ResultModel result = new ResultModel();
+        String userName = tokenVO.getUserName();
+        String password = tokenVO.getPassword();
 
         if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(password)) {
             throw new ParameterException("UserName or password is empty.");

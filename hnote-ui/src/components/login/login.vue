@@ -3,7 +3,6 @@
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title-container">
         <h3 class="title">H-note</h3>
-        <lang-select class="set-language"></lang-select>
       </div>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
@@ -43,7 +42,7 @@ export default {
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
+      if (value.length < 2) {
         callback(new Error('The password can not be less than 6 digits'))
       } else {
         callback()
@@ -51,8 +50,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '1111111'
+        username: 'mingshan',
+        password: '123'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -73,8 +72,13 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          localStorage.setItem('ms_username',this.ruleForm.username);
-          this.$router.push('/home');
+          this.loading = true
+          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+            this.loading = false
+            this.$router.push('/home');
+          }).catch(() => {
+            this.loading = false
+          })
         } else {
           console.log('error submit!!')
           return false

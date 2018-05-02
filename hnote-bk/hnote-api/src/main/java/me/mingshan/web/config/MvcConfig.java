@@ -2,6 +2,7 @@ package me.mingshan.web.config;
 
 import me.mingshan.web.authorization.interceptor.AuthorizationInterceptor;
 import me.mingshan.web.authorization.resolver.CurrentUserMethodArgumentResolver;
+import me.mingshan.web.interceptor.ProcessInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +30,12 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver;
 
+    @Autowired
+    private ProcessInterceptor processInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(processInterceptor);
         registry.addInterceptor(authorizationInterceptor);
     }
 
