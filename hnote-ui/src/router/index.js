@@ -1,15 +1,26 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Content from '@/components/content'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Content',
-      component: Content
-    }
+        path: '/',
+        redirect: '/login'
+    },
+    {
+        path: '/home',
+        component: resolve => require(['../components/common/home.vue'], resolve),
+        children:[{
+              path: '/',
+              component: resolve => require(['../components/content/content.vue'], resolve)
+          },
+        ]
+    },
+    {
+        path: '/login',
+        component: resolve => require(['../components/login/login.vue'], resolve)
+    },
   ]
 })
