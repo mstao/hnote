@@ -7,10 +7,6 @@ export default new Router({
   routes: [
     {
         path: '/',
-        redirect: '/login'
-    },
-    {
-        path: '/home',
         component: resolve => require(['../components/common/home.vue'], resolve),
         children:[{
               path: '/',
@@ -22,5 +18,7 @@ export default new Router({
         path: '/login',
         component: resolve => require(['../components/login/login.vue'], resolve)
     },
+    { path: '/404', component: resolve => require(['../components/errorPage/404.vue'], resolve) },
+    { path: '/401', component: resolve => require(['../components/errorPage/401.vue'], resolve) },
   ]
 })

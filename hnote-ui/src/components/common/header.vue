@@ -17,7 +17,7 @@
                 <el-dropdown-item>帐户设置</el-dropdown-item>
                 <el-dropdown-item>导入笔记</el-dropdown-item>
                 <el-dropdown-item>帮助</el-dropdown-item>
-                <el-dropdown-item divided>注销登录</el-dropdown-item>
+                <el-dropdown-item @click="logout" divided>注销登录</el-dropdown-item>
             </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -31,7 +31,14 @@
 
 <script>
 export default {
-  name: 'h-header'
+  name: 'h-header',
+  methods: {
+    logout() {
+      this.$store.dispatch('LogOut').then(() => {
+        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+      })
+    }
+  }
 }
 </script>
 

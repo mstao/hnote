@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import $ from 'jquery'
 import store from './store'
 import './icons' // icon
+import './permission' // permission control
  
 Vue.use(Element)
 

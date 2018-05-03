@@ -139,7 +139,11 @@
 </template>
 
 <script>
+  import NProgress from 'nprogress' // progress bar
+  import 'nprogress/nprogress.css'// progress bar style
   import h_header from './header.vue'
+
+  NProgress.configure({ showSpinner: false })// NProgress Configuration
 
   export default {
     name: 'home',
@@ -297,7 +301,10 @@
           date: '03-20'
         }],
         dialogVisible: false,
-        showExpandNewDiv: false
+        showExpandNewDiv: false,
+        userName: '',
+        avator: '',
+        userId: ''
       };
     },
     components: {
@@ -308,6 +315,8 @@
     },
     methods: {
       init() {
+        this.fetchBasicInfo();
+
         $(".list-content").contextmenu(
             function(e) {
               var clientHeight = window.innerHeight;
@@ -345,6 +354,11 @@
               e.preventDefault();  // return false; also works
           });
       },
+      fetchBasicInfo() {
+        // start progress bar
+        NProgress.start()
+      },
+
       handleNodeClick(data) {
         console.log(data);
       },

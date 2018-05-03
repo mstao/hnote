@@ -75,7 +75,7 @@ export default {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.loading = false
-            this.$router.push('/home');
+            this.$router.push('/');
           }).catch(() => {
             this.loading = false
           })

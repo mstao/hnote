@@ -25,7 +25,6 @@ public class ProcessInterceptor implements HandlerInterceptor {
 
         httpServletResponse.setHeader("X-Powered-By","");
 
-
         String method= httpServletRequest.getMethod();
 
         if (method.equals("OPTIONS")){

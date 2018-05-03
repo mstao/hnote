@@ -5,21 +5,15 @@ const user = {
   state: {
     user: '',
     status: '',
-    code: '',
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    userId: ''
   },
 
   mutations: {
-    SET_CODE: (state, code) => {
-      state.code = code
-    },
     SET_TOKEN: (state, token) => {
       state.token = token
-    },
-    SET_STATUS: (state, status) => {
-      state.status = status
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -27,6 +21,9 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
+    SET_USER_ID: (state, userId) => {
+      state.userId = userId
+    }
   },
 
   actions: {
@@ -37,6 +34,7 @@ const user = {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
           commit('SET_TOKEN', data.token)
+          commit('SET_USER_ID', data.userId)
           setToken(response.data.token)
           resolve()
         }).catch(error => {
@@ -48,7 +46,7 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
+        getUserInfo(state.userId).then(response => {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
@@ -81,6 +79,7 @@ const user = {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
+          commit('SET_USER_ID', '')
           removeToken()
           resolve()
         }).catch(error => {
@@ -93,6 +92,7 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
+        commit('SET_USER_ID', '')
         removeToken()
         resolve()
       })

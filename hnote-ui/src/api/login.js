@@ -19,10 +19,9 @@ export function logout() {
   })
 }
 
-export function getUserInfo(token) {
+export function getUserInfo(userId) {
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
+    url: '/users/' + userId,
+    method: 'get'
   })
 }
