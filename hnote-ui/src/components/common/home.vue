@@ -26,7 +26,7 @@
                 <li>
                   <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
                   <div class="submenu">
-                    <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick" @node-expand="handleNodeExpandCollapse" @node-collapse="handleNodeExpandCollapse"></el-tree>
+                    <el-tree :data="folders" @node-click="handleNodeClick" @node-expand="handleNodeExpandCollapse" @node-collapse="handleNodeExpandCollapse"></el-tree>
                     <div class="folder-item-operation-box item-operation-box">
                       <ul>
                         <li  @mouseover="showExpandNewDiv = true"  @mouseout="showExpandNewDiv = false">新建<img src="/static/img/right-expand.png" />
@@ -38,7 +38,7 @@
                           </div>
                         </li>
                         <li>重命名</li>
-                        <li @click="dialogVisible = true">移动到</li>
+                        <li @click="changeFileDialogVisible">移动到</li>
                         <li>删除</li>
                         <li>分享</li>
                       </ul>
@@ -104,7 +104,7 @@
             <div class="list-item-operation-box item-operation-box">
               <ul>
                 <li>重命名</li>
-                <li @click="dialogVisible = true">移动到</li>
+                <li @click="changeFileDialogVisible">移动到</li>
                 <li>删除</li>
                 <li>下载</li>
                 <li>分享</li>
@@ -117,24 +117,9 @@
         </el-main>
       </el-container>
     </el-container>
-    
+
     <!-- 移动到文件夹dialog -->
-    <el-dialog
-      title="移动到"
-      :visible.sync="dialogVisible"
-      width="30%">
-      <div class="mf-title">
-        <img src="/static/img/word.png" />
-        <span class="title">Git 提交的正确姿势</span>
-      </div>
-      <div class="submenu mf-folder">
-        <el-tree :data="folder" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
+    <file-dailog :folders="folders"/>
   </div>
 </template>
 
@@ -142,6 +127,7 @@
   import NProgress from 'nprogress' // progress bar
   import 'nprogress/nprogress.css'// progress bar style
   import h_header from './header.vue'
+  import file_dialog from '../dialog/fileDialog.vue'
 
   NProgress.configure({ showSpinner: false })// NProgress Configuration
 
@@ -149,7 +135,7 @@
     name: 'home',
     data() {
       return {
-        folder: [{
+        folders: [{
           label: '一级 1',
           children: [{
             label: '二级 1-1',
@@ -223,10 +209,6 @@
             }]
           }]
         }],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
         dynamicTags: ['标签一', '标签二', '标签三'],
         inputVisible: false,
         inputValue: '',
@@ -308,7 +290,8 @@
       };
     },
     components: {
-      'h-header': h_header
+      'h-header': h_header,
+      'file-dailog': file_dialog
     },
     mounted() {
       this.init()
@@ -358,7 +341,6 @@
         // start progress bar
         NProgress.start()
       },
-
       handleNodeClick(data) {
         console.log(data);
       },
@@ -390,9 +372,8 @@
         this.inputVisible = false;
         this.inputValue = '';
       },
-      handleCloseDialog() {
-        console.log("zzzzzzzzzzzzzz");
-        this.dialogVisible = false;
+      changeFileDialogVisible() {
+        this.$store.dispatch('ChangeFileDialogVisible', true)
       }
     }
   };
@@ -730,21 +711,5 @@ body{margin: 0;}
   top: 50px;
   bottom: 0px;
   left: 0px;
-}
-
-.mf-title {
-  font-size: 16px;
-  margin-top: -10px;
-}
-
-.mf-title img {
-  position: relative;
-  top: 4px;
-}
-
-.mf-folder {
-  border: 1px solid #EBEBEB;
-  padding: 5px;
-  margin-top: 10px;
 }
 </style>

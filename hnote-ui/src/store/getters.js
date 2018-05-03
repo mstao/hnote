@@ -2,6 +2,7 @@ const getters = {
   token: state => state.user.token,
   avatar: state => state.user.avatar,
   name: state => state.user.name,
-  errorLogs: state => state.errorLog.logs
+  errorLogs: state => state.errorLog.logs,
+  fileDialogVisible: state => state.dialog.fileDialogVisible
 }
 export default getters
