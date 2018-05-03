@@ -12,6 +12,7 @@
        <result column="name" property="name"/>
        <result column="password" property="password"/>
        <result column="email" property="email"/>
+       <result column="avatar_url" property="avatarUrl"/>
     </resultMap>
 
     <!-- 查询sql -->
@@ -32,7 +33,7 @@
 
     <!-- 根据id获取用户信息 -->
     <select id="selectByPrimaryKey"  parameterType="java.lang.Long" resultMap="userResultMap">
-        select id, name, email from hn_user where id = #{id}
+        select id, name, email,avatar_url from hn_user where id = #{id}
     </select>
 
     <select id="selectByUserName" parameterType="java.lang.String" resultMap="userResultMap">

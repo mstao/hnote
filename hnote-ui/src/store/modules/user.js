@@ -34,7 +34,7 @@ const user = {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
           commit('SET_TOKEN', data.token)
-          commit('SET_USER_ID', data.userId)
+          localStorage.setItem("userId", data.userId)
           setToken(response.data.token)
           resolve()
         }).catch(error => {
@@ -46,13 +46,15 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.userId).then(response => {
-          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+        const userId = localStorage.getItem('userId')
+        getUserInfo(userId).then(response => {
+          if (!response.status == 200) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
           const data = response.data
+
           commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
+          commit('SET_AVATAR', data.avatarUrl)
           resolve(response)
         }).catch(error => {
           reject(error)

@@ -17,9 +17,9 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
-      if (store.getters.name.length === 0) { // 判断当前用户是否已拉取完user_info信息
+      if (store.getters.name == '') { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserInfo').then(() => { // 拉取user_info
-          next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+          next({ ...to, replace: true })  // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
         }).catch(() => {
           store.dispatch('FedLogOut').then(() => {
             Message.error('Verification failed, please login again')

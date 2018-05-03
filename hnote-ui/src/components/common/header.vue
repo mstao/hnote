@@ -10,7 +10,7 @@
         <div class="profile">
             <el-dropdown @command="handleCommand">
               <div class="avatar el-dropdown-link">
-                  <img src="/static/img/avatar.jpg" class="avatar-img" />
+                  <img :src="avatar" class="avatar-img" />
               </div>
               <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>个人信息</el-dropdown-item>
@@ -25,16 +25,28 @@
         <div class="operation">
             <span class="write-mode">写作模式</span>
             <span class="write-mode">探索</span>
+            <span class="write-mode">{{name}}</span>
         </div>
     </el-header>
 </template>
 
 <script>
-export default {
+import store from '../../store'
+import { mapGetters } from 'vuex'
+
+export default {  
   name: 'h-header',
   data() {
       return {
+        userName: '',
+        avatarUrl: ''
       }
+  },
+  computed: {
+    ...mapGetters([
+      'name',
+      'avatar'
+    ])
   },
   methods: {
     handleCommand(command) {
