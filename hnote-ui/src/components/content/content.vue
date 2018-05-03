@@ -6,14 +6,14 @@
         <div class="operation">
             <img :src="editPic" class="eidt" @mouseover="editPic = editPicBlue" @mouseout="editPic = editPic1" />
             <img :src="sharePic" class="share" @mouseover="sharePic = sharePicBlue" @mouseout="sharePic = sharePic1" />
-            <el-dropdown>
+            <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
                 <img :src="morePic" class="more" @mouseover="morePic = morePicBlue" @mouseout="morePic = morePic1" />
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>移动到</el-dropdown-item>
-                <el-dropdown-item>下载</el-dropdown-item>
-                <el-dropdown-item>删除</el-dropdown-item>
+                <el-dropdown-item command='move'>移动到</el-dropdown-item>
+                <el-dropdown-item command='download'>下载</el-dropdown-item>
+                <el-dropdown-item command='delete'>删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <img :src="infoPic" class="info"  v-popover:popoverInfo @mouseover="infoPic = infoPicBlue" @mouseout="infoPic = infoPic1" />
@@ -32,7 +32,7 @@
     <br/>
 
     <div v-if="showMarkdownEditor" class="edit-content">
-        <mavon-editor style="height: 100%"></mavon-editor>
+      <mavon-editor style="height: 100%"></mavon-editor>
     </div>
     <div v-else class="html-content markdown-body">
       <h1>Markdown 语法简介</h1> <blockquote> <p>
@@ -125,6 +125,11 @@
       },
       markdownToHtml() {
         this.htmlContent =  marked('# Marked in the browser\n\nRendered by **marked**.');
+      },
+      handleCommand(command) {
+        if (command == 'move') {
+          this.$store.dispatch('ChangeFileDialogVisible', true)
+        }
       }
     },
     components: {
