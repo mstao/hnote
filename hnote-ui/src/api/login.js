@@ -12,10 +12,13 @@ export function loginByUsername(username, password) {
   })
 }
 
-export function logout() {
+export function logout(userId) {
   return request({
     url: '/tokens',
-    method: 'delete'
+    method: 'delete',
+    data: {
+      'userId': userId
+    }
   })
 }
 
