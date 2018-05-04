@@ -95,10 +95,11 @@
             </div>
           </div>
           <div class="list-content-container">
-            <div class="list-content" v-bind:key="item.index" v-for="item in lists">
-              <img src="/static/img/word.png" />
+            <div class="list-content" v-bind:key="item.index" v-for="item in noteList">
+              <img src="/static/img/word.png" class="type-img" />
               <span class="title">{{item.title}}</span>
               <span class="date">{{item.date}}</span>
+              <span class="operation"><img src="/static/img/download.png"/><img src="/static/img/share_16.png"/><img src="/static/img/delete.png"/></span>
             </div>
 
             <div class="list-item-operation-box item-operation-box">
@@ -141,7 +142,7 @@
         dynamicTags: [],
         inputVisible: false,
         inputValue: '',
-        lists: [{
+        noteList: [{
           title: 'Git 提交的正确姿势',
           date: '03-20'
         },{
@@ -264,6 +265,16 @@
               }
             
               e.preventDefault();  // return false; also works
+          });
+
+          $(document).on("mouseenter", ".list-content", function() {
+            $(this).find(".date").hide();
+            $(this).find(".operation").show();
+          });
+
+          $(document).on("mouseleave", ".list-content", function() {
+            $(this).find(".date").show();
+            $(this).find(".operation").hide();
           });
       },
       fetchBasicInfo() {
@@ -581,6 +592,7 @@ body{margin: 0;}
   line-height: 50px;
   color: #8590A6;
 }
+
 .aside-list .list-content:last-child {
   margin-bottom: 60px;
 }
@@ -589,7 +601,7 @@ body{margin: 0;}
   background: #F2F2F2;
 }
 
-.aside-list .list-content img {
+.aside-list .list-content .type-img {
   margin-left: 20px;
   position: relative;
   top: 3px;
@@ -599,6 +611,20 @@ body{margin: 0;}
   color: #B2B2CB;
   float: right;
   margin-right: 20px;
+}
+
+.aside-list .list-content .operation {
+  float: right;
+  margin-right: 20px;
+  display: none;
+}
+
+.aside-list .list-content .operation img {
+  margin-left: 8px;
+}
+
+.aside-list .list-content .operation img:hover {
+  cursor: pointer;
 }
 
 .item-operation-box {
