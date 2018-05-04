@@ -139,7 +139,7 @@ public class FolderController extends BaseController {
             throw new ServerException(result, HttpStatus.NOT_FOUND);
         }
 
-        folderService.rename(folder.getId(), folder.getName());
+        folderService.rename(folder.getId(), folder.getLabel());
         return new ResponseEntity<>(folder, HttpStatus.OK);
     }
 

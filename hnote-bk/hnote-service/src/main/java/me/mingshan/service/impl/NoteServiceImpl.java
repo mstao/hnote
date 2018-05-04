@@ -1,5 +1,6 @@
 package me.mingshan.service.impl;
 
+import com.alicp.jetcache.anno.Cached;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.Note;
@@ -21,6 +22,7 @@ public class NoteServiceImpl implements NoteService {
     private NoteDao noteDao;
 
     @Override
+    @Cached(name="noteCache.", key="#id", expire = 3600)
     public Note findById(long id) {
         Note note = noteDao.selectByPrimaryKey(id);
         return note;
@@ -28,7 +30,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public PageInfo<Note> findAll(int pageNumber, int pageSize) {
-        PageHelper.startPage(pageNumber,pageSize);
+        PageHelper.startPage(pageNumber, pageSize);
         List<Note> notes = noteDao.selectByPage();
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;

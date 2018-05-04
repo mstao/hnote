@@ -7,8 +7,7 @@ const user = {
     status: '',
     token: getToken(),
     name: '',
-    avatar: '',
-    userId: ''
+    avatar: ''
   },
 
   mutations: {
@@ -20,9 +19,6 @@ const user = {
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
-    },
-    SET_USER_ID: (state, userId) => {
-      state.userId = userId
     }
   },
 

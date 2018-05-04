@@ -5,7 +5,7 @@
 <mapper namespace="me.mingshan.service.dao.FolderDao">
     <resultMap id="folderResultMap" type="me.mingshan.facade.model.Folder">
         <id column="id" property="id"/>
-        <result column="name" property="name"/>
+        <result column="label" property="label"/>
         <result column="level" property="level"/>
         <result column="pid" property="pid"/>
         <result column="uid" property="uid"/>
@@ -28,7 +28,7 @@
 
     <select id="selectByPrimaryKey"  parameterType="java.lang.Long" resultMap="folderResultMap">
         select f.id,
-               f.name,
+               f.label,
                f.level,
                f.uid,
                f.pid,
@@ -39,7 +39,7 @@
 
     <select id="selectAllByUid" parameterType="java.lang.Long" resultMap="folderResultMap">
         select f.id,
-               f.name,
+               f.label,
                f.level,
                f.uid,
                f.pid,
@@ -51,7 +51,7 @@
     <!-- 添加-->
     <insert id="insert" parameterType="me.mingshan.facade.model.Folder" useGeneratedKeys="true" keyProperty="id">
         insert into hn_folder (
-            name,
+            label,
             level,
             uid,
             pid,
@@ -73,7 +73,7 @@
     </update>
 
     <update id="rename" parameterType="me.mingshan.facade.model.Folder">
-        update hn_folder set name = #{name}, gmt_modified = NOW() where id = #{id}
+        update hn_folder set label = #{label}, gmt_modified = NOW() where id = #{id}
     </update>
 
 </mapper>

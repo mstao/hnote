@@ -15,7 +15,7 @@ public class FolderVO implements Serializable {
     private static final long serialVersionUID = 5238578535589478796L;
 
     private Long id;
-    private String name;
+    private String label;
     private Integer level;
     private Long pid;
     private Long uid;

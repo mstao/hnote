@@ -1,5 +1,6 @@
 package me.mingshan.service.impl;
 
+import com.alicp.jetcache.anno.Cached;
 import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.UserService;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
+    @Cached(name="userCache.", key="#id", expire = 3600)
     public User findById(long id) {
         User user = userDao.selectByPrimaryKey(id);
         return user;
@@ -41,6 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cached(name="userCache.", key="#userName", expire = 3600)
     public User findByUserName(String userName) {
         User user = userDao.selectByUserName(userName);
         return user;

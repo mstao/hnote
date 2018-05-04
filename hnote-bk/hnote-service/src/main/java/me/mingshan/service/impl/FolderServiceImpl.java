@@ -1,5 +1,6 @@
 package me.mingshan.service.impl;
 
+import com.alicp.jetcache.anno.Cached;
 import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.Folder;
 import me.mingshan.facade.service.FolderService;
@@ -20,6 +21,7 @@ public class FolderServiceImpl implements FolderService {
     private FolderDao folderDao;
 
     @Override
+    @Cached(name="folderCache.", key="#id", expire = 3600)
     public Folder findById(long id) {
         return folderDao.selectByPrimaryKey(id);
     }

@@ -18,7 +18,7 @@ public class Folder implements Serializable {
     private static final long serialVersionUID = -2582952414547485569L;
 
     private Long id;
-    private String name;
+    private String label;
     private Integer level;
     private Long pid;
     private Long uid;
