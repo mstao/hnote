@@ -20,7 +20,7 @@
 
         <association property="folder" javaType="me.mingshan.facade.model.Folder">
             <id column="folder_id" property="id"/>
-            <result column="folder_name" property="name"/>
+            <result column="folder_name" property="label"/>
             <result column="folder_level" property="level"/>
             <result column="folder_pid" property="pid"/>
         </association>
@@ -48,7 +48,7 @@
 
         <association property="folder" javaType="me.mingshan.facade.model.Folder">
             <id column="folder_id" property="id"/>
-            <result column="folder_name" property="name"/>
+            <result column="folder_name" property="label"/>
             <result column="folder_level" property="level"/>
             <result column="folder_pid" property="pid"/>
         </association>
@@ -78,7 +78,7 @@
                nt.id nt_id,
                nt.name nt_name,
                f.id folder_id,
-               f.name folder_name,
+               f.label folder_name,
                f.level folder_level,
                f.pid folder_pid,
                t.tag_id,
@@ -94,7 +94,7 @@
         where n.id = #{id} and n.is_deleted = 0
     </select>
     
-    <select id="selectByPage" resultMap="simpleNoteResultMap">
+    <select id="selectByPage" parameterType="java.lang.Long" resultMap="simpleNoteResultMap">
         select n.id,
                n.content,
                n.author,
@@ -106,13 +106,13 @@
                nt.id nt_id,
                nt.name nt_name,
                f.id folder_id,
-               f.name folder_name,
+               f.label folder_name,
                f.level folder_level,
                f.pid folder_pid
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0
+        where n.is_deleted = 0 and n.id = #{nid}
     </select>
 
     <!-- 添加-->

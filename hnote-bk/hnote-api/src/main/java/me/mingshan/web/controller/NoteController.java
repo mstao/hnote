@@ -49,10 +49,11 @@ public class NoteController extends BaseController {
                     paramType = "header")
     })
     public ResponseEntity<SearchResultModel<Note>> listAllNotes(@RequestParam Integer pageNumber,
-                                                                @RequestParam Integer pageSize) {
-        logger.info("page = " + pageNumber + "per_page = " + pageSize);
+                                                                @RequestParam Integer pageSize,
+                                                                @RequestParam Long nid) {
+        logger.info("page = " + pageNumber + "per_page = " + pageSize + "nid = " + nid);
 
-        PageInfo<Note> pageInfo = noteService.findAll(pageNumber, pageSize);
+        PageInfo<Note> pageInfo = noteService.findAll(pageNumber, pageSize, nid);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();

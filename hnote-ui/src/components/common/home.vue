@@ -297,7 +297,7 @@
         })
       },
       handleNodeClick(data) {
-        console.log(data);
+        
       },
       handleNodeExpandCollapse() {
         $(".item-operation-box").hide();

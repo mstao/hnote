@@ -15,5 +15,5 @@ public interface NoteDao extends BaseDao<Note> {
      * select by paignation.
      * @return
      */
-    List<Note> selectByPage();
+    List<Note> selectByPage(long nid);
 }

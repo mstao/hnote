@@ -29,9 +29,9 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public PageInfo<Note> findAll(int pageNumber, int pageSize) {
+    public PageInfo<Note> findAll(int pageNumber, int pageSize, long nid) {
         PageHelper.startPage(pageNumber, pageSize);
-        List<Note> notes = noteDao.selectByPage();
+        List<Note> notes = noteDao.selectByPage(nid);
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }
