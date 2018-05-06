@@ -66,11 +66,8 @@
     </insert>
 
     <!-- 删除用户 -批量-->
-    <delete id="deleteBatch" parameterType="me.mingshan.facade.model.User">
-       delete from hn_user
-       <where>
-         <include refid="query_user_where"></include>
-       </where>
+    <delete id="delete" parameterType="me.mingshan.facade.model.User">
+       update hn_user set is_deleted = 1 where is_deleted = 0 and id = #{id}
     </delete>
 
     <!-- 修改用户 -->

@@ -121,26 +121,53 @@ public class NoteController extends BaseController {
     }
 
     /**
-     * Deletes notes by ids.
+     * Deletes note by id.
      * @param:  * @param null
      */
-    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ApiOperation(value="Delete note", httpMethod="DELETE", notes="Delete book by id")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<ResultModel> deleteNote(@ApiParam(required=true, value="Note ID", name="ids")
-                                                  @PathVariable("ids") String ids) {
-        logger.info("Fetching & Deleting Notes with ids " + ids);
+    public ResponseEntity<ResultModel> deleteNote(@ApiParam(required=true, value="Note ID", name="id")
+                                                  @PathVariable("id") Long id) {
+        logger.info("Fetching & Deleting Note with id " + id);
         try {
-            noteService.delete(ids);
+            noteService.delete(id);
         } catch (RuntimeException e) {
             ResultModel result = new ResultModel();
             result.setCode(1024);
-            result.setMessage("Unable to delete notes with ids " + ids);
-            logger.info("Unable to delete notes with ids " + ids);
+            result.setMessage("Unable to delete note with id " + id);
+            logger.info("Unable to delete note with id " + id);
+            throw new ServerException(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Delete tag by id.
+     * @param:  * @param null
+     */
+    @RequestMapping(value = "/{id}/tags/{tid}", method = RequestMethod.DELETE)
+    @ApiOperation(value="Delete tag", httpMethod="DELETE", notes="Delete book by id")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<ResultModel> deleteTag(@ApiParam(required=true, value="Note ID", name="id")
+                                                  @PathVariable("id") Long id, @PathVariable("tid") Long tid) {
+        logger.info("Fetching & Deleting tag with id " + tid);
+        try {
+            noteService.deleteByNidTid(id, tid);
+        } catch (RuntimeException e) {
+            ResultModel result = new ResultModel();
+            result.setCode(1024);
+            result.setMessage("Unable to delete tag with id " + tid);
+            logger.info("Unable to delete tag with id " + tid);
             throw new ServerException(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

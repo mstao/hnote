@@ -55,6 +55,4 @@
           NOW(),
           NOW())
     </insert>
-
-    <!--逻辑删除-->
 </mapper>

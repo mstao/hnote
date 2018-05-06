@@ -18,3 +18,10 @@ export function getNoteById(noteId) {
         method: 'get'
     })
 }
+
+export function deleteTagByNidTid(nid, tid) {
+    return request({
+        url: '/notes/' + nid + '/tags/' + tid,
+        method: 'delete'
+    })
+}

@@ -28,7 +28,8 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public long insert(Folder model) {
-        return folderDao.insert(model);
+        folderDao.insert(model);
+        return model.getId();
     }
 
     @Override
@@ -37,11 +38,8 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public long delete(String ids) {
-        Folder folder = new Folder();
-        List<Long> folderList = StringUtil.stringToList(ids);
-        folder.setIds(folderList);
-        return folderDao.deleteBatch(folder);
+    public long delete(long id) {
+        return folderDao.delete(id);
     }
 
     @Override

@@ -19,4 +19,11 @@ public interface NoteService extends BaseService<Note> {
      * @return
      */
     PageInfo<Note> findAll(int pageNumber, int pageSize, long fid);
+
+    /**
+     *
+     * @param nid
+     * @param tid
+     */
+    void deleteByNidTid(long nid, long tid);
 }

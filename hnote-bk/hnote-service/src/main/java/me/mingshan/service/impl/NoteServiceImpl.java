@@ -37,9 +37,14 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public void deleteByNidTid(long nid, long tid) {
+        noteDao.deleteByNidTid(nid, tid);
+    }
+
+    @Override
     public long insert(Note model) {
-        long id = noteDao.insert(model);
-        return id;
+        noteDao.insert(model);
+        return model.getId();
     }
 
     @Override
@@ -48,10 +53,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public long delete(String ids) {
-        Note note = new Note();
-        List<Long> idList = StringUtil.stringToList(ids);
-        note.setIds(idList);
-        return noteDao.deleteBatch(note);
+    public long delete(long id) {
+        return noteDao.delete(id);
     }
 }

@@ -8,11 +8,12 @@ export function getTagsByNid(nid) {
     })
 }
 
-export function saveTag(tag) {
+export function saveTag(tag, nid) {
     return request({
         url: '/tags',
         method: 'post',
-        data: tag
+        data: {name: tag.name},
+        params: {nid}
     })
 }
 

@@ -13,5 +13,5 @@ public interface BaseService<T> {
 
     long update(T model);
 
-    long delete(String ids);
+    long delete(long id);
 }

@@ -29,7 +29,7 @@ public class TrashServiceImpl implements TrashService {
     }
 
     @Override
-    public long delete(String ids) {
+    public long delete(long id) {
         return 0;
     }
 }

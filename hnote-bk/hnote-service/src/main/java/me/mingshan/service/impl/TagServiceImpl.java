@@ -36,7 +36,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public long delete(String ids) {
+    public long delete(long id) {
         return 0;
     }
 
@@ -47,7 +47,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public long insert(Tag tag, long nid) {
-        long tagId = tagDao.insert(tag);
+        tagDao.insert(tag);
+        long tagId = tag.getId();
         NoteToTag noteToTag = new NoteToTag();
         noteToTag.setTagId(tagId);
         noteToTag.setNoteId(nid);

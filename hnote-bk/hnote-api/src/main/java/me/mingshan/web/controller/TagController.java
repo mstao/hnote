@@ -97,7 +97,7 @@ public class TagController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<Void> createNote(@ApiParam(required=true, value="Folder", name="Folder")
+    public ResponseEntity<Void> createTag(@ApiParam(required=true, value="Tag", name="tag")
                                            @RequestBody TagVO tagVO, @RequestParam Long nid, UriComponentsBuilder ucBuilder) {
         Tag tag = mapper.map(tagVO, Tag.class);
 

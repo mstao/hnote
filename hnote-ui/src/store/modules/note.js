@@ -15,9 +15,12 @@ const note = {
                 getNoteById(noteId).then(response => {
                   if (!response.status == 200) { // 由于mockjs 不支持自定义状态码只能这样hack
                     reject('error')
+                  } else if (response.status == 200) {
+                    commit('SET_NOTE', response.data)
+                  } else if (response.status == 204) {
+                    commit('SET_NOTE', '')
                   }
-    
-                  commit('SET_NOTE', response.data)
+
                   resolve(response)
                 }).catch(error => {
                   reject(error)

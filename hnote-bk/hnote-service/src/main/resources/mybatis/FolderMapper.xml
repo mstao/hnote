@@ -67,9 +67,8 @@
     </insert>
 
     <!--逻辑删除-->
-    <update id="deleteBatch" parameterType="me.mingshan.facade.model.Folder">
-        update hn_folder set is_deleted = 1, gmt_modified = NOW() where is_deleted = 0 and
-        <include refid="query_folder_where"></include>
+    <update id="delete" parameterType="java.lang.Long">
+        update hn_folder set is_deleted = 1, gmt_modified = NOW() where is_deleted = 0 and id = #{id}
     </update>
 
     <update id="rename" parameterType="me.mingshan.facade.model.Folder">

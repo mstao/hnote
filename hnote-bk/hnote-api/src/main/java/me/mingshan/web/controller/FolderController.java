@@ -144,28 +144,28 @@ public class FolderController extends BaseController {
     }
 
     /**
-     * Deletes notes by ids.
+     * Deletes folder by id.
      *
-     * @param ids
+     * @param id
      * @return
      */
-    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
-    @ApiOperation(value="Delete folders", httpMethod="DELETE", notes="Delete notes by ids")
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(value="Delete folder", httpMethod="DELETE", notes="Delete folder by id")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<ResultModel> deleteBook(@ApiParam(required=true, value="Note Ids", name="ids")
-                                                  @PathVariable("ids") String ids) {
-        logger.info("Fetching & Deleting folders with ids " + ids);
+    public ResponseEntity<ResultModel> deleteBook(@ApiParam(required=true, value="Folder id", name="ids")
+                                                  @PathVariable("id") Long id) {
+        logger.info("Fetching & Deleting folder with id " + id);
         try {
-            folderService.delete(ids);
+            folderService.delete(id);
         } catch (RuntimeException e) {
             ResultModel result = new ResultModel();
             result.setCode(1024);
-            result.setMessage("Unable to delete folders with ids " + ids);
-            logger.info("Unable to delete folders with ids " + ids);
+            result.setMessage("Unable to delete folder with id " + id);
+            logger.info("Unable to delete folder with id " + id);
             throw new ServerException(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

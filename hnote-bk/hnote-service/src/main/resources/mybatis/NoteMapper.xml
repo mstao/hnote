@@ -143,9 +143,12 @@
     </insert>
 
     <!--逻辑删除-->
-    <update id="deleteBatch" parameterType="me.mingshan.facade.model.Note">
-        update hn_note set is_deleted = 1 where is_deleted = 0 and
-        <include refid="query_note_where"></include>
+    <update id="delete" parameterType="me.mingshan.facade.model.Note">
+        update hn_note set is_deleted = 1 where is_deleted = 0 and id = #{id}
     </update>
 
+    <!--逻辑删除-->
+    <update id="deleteByNidTid">
+        delete from hn_note_to_tag  where is_deleted = 0 and tag_id = #{tid} and note_id = #{nid}
+    </update>
 </mapper>

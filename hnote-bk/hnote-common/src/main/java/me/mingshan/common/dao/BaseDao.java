@@ -11,11 +11,11 @@ import java.util.List;
 public interface BaseDao<T> {
 
     /**
-     * Deletes by batch.
-     * @param model
+     * Deletes by id.
+     * @param id
      * @return
      */
-    long deleteBatch(T model);
+    long delete(long id);
 
     /**
      * Inserts model to database.
