@@ -17,6 +17,7 @@ public class NoteVO implements Serializable {
     private static final long serialVersionUID = -532603166481657790L;
 
     private Long id;
+    private String title;
     private String content;
     private String author;
     private String source;

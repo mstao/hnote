@@ -18,6 +18,7 @@ public class Note implements Serializable {
     private static final long serialVersionUID = 8323875163366873309L;
 
     private Long id;
+    private String title;
     private String content;
     private String author;
     private String source;

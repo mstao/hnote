@@ -36,8 +36,9 @@ public class NoteController extends BaseController {
     /**
      * Get all note infos by pagination.
      *
-     * @param pageNumber The current page.
-     * @param pageSize The page size.
+     * @param pageNumber
+     * @param pageSize
+     * @param fid
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -50,10 +51,10 @@ public class NoteController extends BaseController {
     })
     public ResponseEntity<SearchResultModel<Note>> listAllNotes(@RequestParam Integer pageNumber,
                                                                 @RequestParam Integer pageSize,
-                                                                @RequestParam Long nid) {
-        logger.info("page = " + pageNumber + "per_page = " + pageSize + "nid = " + nid);
+                                                                @RequestParam Long fid) {
+        logger.info("page = " + pageNumber + "per_page = " + pageSize + "fid = " + fid);
 
-        PageInfo<Note> pageInfo = noteService.findAll(pageNumber, pageSize, nid);
+        PageInfo<Note> pageInfo = noteService.findAll(pageNumber, pageSize, fid);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();

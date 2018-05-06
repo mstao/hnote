@@ -131,6 +131,7 @@
   import file_dialog from '../dialog/fileDialog.vue'
   import toJsonTree from '@/utils/toJsonTree'
   import { getFoldersByUid } from '@/api/folder'
+  import { getNotesByPage } from '@/api/note'
 
   NProgress.configure({ showSpinner: false })// NProgress Configuration
 
@@ -144,72 +145,6 @@
         inputValue: '',
         noteList: [{
           title: 'Git 提交的正确姿势',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
-          date: '03-20'
-        },{
-          title: 'Git合并多个commit',
           date: '03-20'
         }],
         dialogVisible: false,
@@ -282,6 +217,8 @@
         NProgress.start()
 
         this.fetchFolders();
+
+        NProgress.done()
       },
       fetchFolders() {
         const uid = localStorage.getItem("userId");
@@ -297,7 +234,29 @@
         })
       },
       handleNodeClick(data) {
-        
+        var fid = data.id;
+        var pageNumber = 1;
+        var pageSize = 20;
+        new Promise((resolve, reject) => {
+          getNotesByPage(pageNumber, pageSize, fid).then(response => {
+            const tempList = [];
+            if (response.status == 200) {
+              const items = response.data.items;
+              for (var i = 0; i < items.length; i++) {
+                var temp = {
+                  title: items[i].title,
+                  date: items[i].gmtCreate
+                }
+                tempList.push(temp);
+              }
+              this.noteList = tempList
+              // load note info by first item
+              this.$store.dispatch('GetNoteInfoById', items[0].id)
+            } else if (response.status == 204) {
+              this.noteList = tempList
+            }   
+          })
+        })
       },
       handleNodeExpandCollapse() {
         $(".item-operation-box").hide();

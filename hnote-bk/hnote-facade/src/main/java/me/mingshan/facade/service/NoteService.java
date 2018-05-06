@@ -15,7 +15,8 @@ public interface NoteService extends BaseService<Note> {
      *
      * @param pageNumber
      * @param pageSize
+     * @param fid
      * @return
      */
-    PageInfo<Note> findAll(int pageNumber, int pageSize, long nid);
+    PageInfo<Note> findAll(int pageNumber, int pageSize, long fid);
 }

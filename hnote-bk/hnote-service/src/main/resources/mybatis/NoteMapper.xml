@@ -5,6 +5,7 @@
 <mapper namespace="me.mingshan.service.dao.NoteDao">
     <resultMap id="noteResultMap" type="me.mingshan.facade.model.Note">
         <id column="id" property="id"/>
+        <result column="title" property="title"/>
         <result column="content" property="content"/>
         <result column="author" property="author"/>
         <result column="source" property="source"/>
@@ -33,6 +34,7 @@
 
     <resultMap id="simpleNoteResultMap" type="me.mingshan.facade.model.Note">
         <id column="id" property="id"/>
+        <result column="title" property="title"/>
         <result column="content" property="content"/>
         <result column="author" property="author"/>
         <result column="source" property="source"/>
@@ -68,6 +70,7 @@
 
     <select id="selectByPrimaryKey"  parameterType="java.lang.Long" resultMap="noteResultMap">
         select n.id,
+               n.title,
                n.content,
                n.author,
                n.source,
@@ -96,6 +99,7 @@
     
     <select id="selectByPage" parameterType="java.lang.Long" resultMap="simpleNoteResultMap">
         select n.id,
+               n.title,
                n.content,
                n.author,
                n.source,
@@ -112,12 +116,13 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0 and n.id = #{nid}
+        where n.is_deleted = 0 and f.id = #{nid}
     </select>
 
     <!-- 添加-->
     <insert id="insert" parameterType="me.mingshan.facade.model.Note" useGeneratedKeys="true" keyProperty="id">
         insert into hn_note (
+            title,
             content,
             author,
             source,
