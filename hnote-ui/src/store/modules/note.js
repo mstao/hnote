@@ -26,7 +26,11 @@ const note = {
                   reject(error)
                 })
             })
+        },
+        clearNoteInfo({ commit }) {
+          commit('SET_NOTE', '')
         }
+
     }
 }
 

@@ -252,8 +252,10 @@
               this.noteList = tempList
               // load note info by first item
               this.$store.dispatch('GetNoteInfoById', items[0].id)
+              
             } else if (response.status == 204) {
               this.noteList = tempList
+              this.$store.dispatch('clearNoteInfo')
             }   
           })
         })
