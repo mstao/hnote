@@ -24,8 +24,14 @@
               placement="top-start"
               width="200"
               trigger="hover">
-              <div>
-
+              <div class="note-info-tips">
+                <ul>
+                  <li><span>来源：</span> <span>{{note.source}}</span></li>
+                  <li><span>作者：</span> <span>{{note.author}}</span></li>
+                  <li><span>创建时间：</span> <span>{{note.gmtCreate}}</span></li>
+                  <li><span>修改时间：</span> <span>{{note.gmtModified}}</span></li>
+                  <li><span>文件夹：</span> <span>{{label}}</span></li>
+                </ul>
               </div>
             </el-popover>
         </div>
@@ -106,7 +112,7 @@
         inputVisible: false,
         inputValue: '',
         dynamicTags: [],
-        sourceTags:  []
+        sourceTags:  [],
       }
     },
     computed: {
@@ -118,6 +124,13 @@
           return marked(this.note.content) 
         } else {
           return marked('## SO GAD')
+        }
+      },
+      label() {
+        if (this.note.content !== undefined) {
+          return this.note.folder.label
+        } else {
+          return ''
         }
       }
     },
@@ -297,6 +310,18 @@
   margin-left: 10px;
   vertical-align: bottom;
 }
+
+.note-info-tips {
+  color: #666666;
+}
+
+.note-info-tips ul {
+  margin-left: -20px;
+}
+
+.note-info-tips ul li {
+  list-style-type: none;
+} 
 
 .slide-fade-enter-active {
   transition: all .3s ease;
