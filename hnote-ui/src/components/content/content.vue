@@ -148,6 +148,7 @@
     methods: {
       handleCommand(command) {
         if (command == 'move') {
+          this.$store.dispatch('SetCurrentSelectedNote', this.note)
           this.$store.dispatch('ChangeFileDialogVisible', true)
         }
       },

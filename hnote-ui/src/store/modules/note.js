@@ -2,12 +2,16 @@ import { getNoteById, getLastestNotes } from '@/api/note'
 
 const note = {
     state: {
-        note: ''
+        note: '',
+        currentSelectedNote: ''
     },
     mutations: {
         SET_NOTE: (state, note) => {
           state.note = note
-        }
+        },
+        SET_CURRENT_SELECTED_NOTE: (state, note) => {
+          state.currentSelectedNote = note
+        } 
     },
     actions: {
         GetNoteInfoById({ commit }, noteId) {
@@ -29,6 +33,9 @@ const note = {
         },
         ClearNoteInfo({ commit }) {
           commit('SET_NOTE', '')
+        },
+        SetCurrentSelectedNote({ commit }, note) {
+          commit('SET_CURRENT_SELECTED_NOTE', note)
         }
     }
 }

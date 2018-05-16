@@ -6,8 +6,9 @@
       :before-close="handleClose"
       width="30%">
       <div class="mf-title">
-        <img src="/static/img/word.png" />
-        <span class="title">{{ note.title }}</span>
+        <img src="/static/img/word.png" class="type-img" v-if="currentSelectedNote.noteType.name == 'word'" />
+        <img src="/static/img/markdown.png" class="type-img" v-else-if="currentSelectedNote.noteType.name == 'md'" />
+        <span class="title">{{ currentSelectedNote.title }}</span>
       </div>
       <div class="submenu mf-folder">
         <el-tree :data="folders" @node-click="handleNodeClick"></el-tree>
@@ -26,16 +27,13 @@
         name: 'file-dialog',
         computed: {
             ...mapGetters([
-                'fileDialogVisible'
+                'fileDialogVisible',
+                'currentSelectedNote'
             ])
         },
         props: {
             folders: {
                 type: Array,
-                required: true
-            },
-            note: {
-                type: Object,
                 required: true
             }
         },

@@ -137,7 +137,7 @@
     </el-container>
 
     <!-- 移动到文件夹dialog -->
-    <file-dailog :folders="folders" :note="currentSelectedNote" />
+    <file-dailog :folders="folders" />
   </div>
 </template>
 
@@ -166,7 +166,6 @@
         userName: '',
         avator: '',
         userId: '',
-        currentSelectedNote: {},
         isSelectFirstLi: true
       };
     },
@@ -285,6 +284,7 @@
           this.noteList = tempList
           // load note info by first item
           this.goNoteDetailPage(items[0].id);
+          // Update the current note
         } else if (response.status == 204) {
           this.noteList = tempList
           this.$store.dispatch('ClearNoteInfo')
@@ -333,7 +333,7 @@
       },
       handleSetCurrentNote(item) {
         if (item !== undefined) {
-          this.currentSelectedNote = item
+          this.$store.dispatch('SetCurrentSelectedNote', item)
         }
       },
       test(item) {
