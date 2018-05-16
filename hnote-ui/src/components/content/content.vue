@@ -123,7 +123,7 @@
         if (this.note.content !== undefined) {
           return marked(this.note.content) 
         } else {
-          return marked('## SO GAD')
+          return marked('<center>![image](http://p8rape2j2.bkt.clouddn.com/no-content.png)</center>')
         }
       },
       label() {

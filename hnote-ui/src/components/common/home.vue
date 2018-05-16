@@ -94,7 +94,7 @@
               </el-dropdown>
             </div>
           </div>
-          <div class="list-content-container">
+          <div class="list-content-container" v-if="noteList.length != 0">
             <div class="list-content" v-bind:key="item.index" v-for="item in noteList">
               <img src="/static/img/word.png" class="type-img" />
               <span class="title">{{item.title}}</span>
@@ -111,6 +111,12 @@
                 <li>分享</li>
               </ul>
             </div>
+          </div>
+          
+          <div class="list-content-container" v-else>
+            <center>
+              <img src="http://p8rape2j2.bkt.clouddn.com/Blank-page_No-content.png" class="default-no-list-image"/>
+            </center>
           </div>
         </el-aside>
         <el-main width="60%">
@@ -185,6 +191,16 @@
             }
           );
 
+          $(document).on("mouseenter", ".list-content", function() {
+            $(this).find(".date").hide();
+            $(this).find(".operation").show();
+          });
+
+          $(document).on("mouseleave", ".list-content", function() {
+            $(this).find(".date").show();
+            $(this).find(".operation").hide();
+          });
+
           $(document).on("contextmenu", ".el-tree-node__content", function(e) {
               var clientHeight = window.innerHeight;
               if (clientHeight - e.pageY > 250) {
@@ -200,16 +216,6 @@
               }
             
               e.preventDefault();  // return false; also works
-          });
-
-          $(document).on("mouseenter", ".list-content", function() {
-            $(this).find(".date").hide();
-            $(this).find(".operation").show();
-          });
-
-          $(document).on("mouseleave", ".list-content", function() {
-            $(this).find(".date").show();
-            $(this).find(".operation").hide();
           });
       },
       fetchBasicInfo() {
@@ -642,5 +648,10 @@ body{margin: 0;}
   top: 50px;
   bottom: 0px;
   left: 0px;
+}
+
+
+.default-no-list-image {
+  margin-top: 20px;
 }
 </style>

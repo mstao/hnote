@@ -4,7 +4,7 @@
             <span>H-Note</span>
         </div>
         <div class="refresh">
-            <i class="el-icon-refresh"></i> 
+            <i class="el-icon-loading"></i>
             <span>同步</span>
         </div>
         <div class="profile">
