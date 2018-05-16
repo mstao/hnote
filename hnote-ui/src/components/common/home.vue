@@ -21,8 +21,8 @@
             </div>
 
             <div class="operation-list">
-              <ul class="accordion-ul">
-                <li @click="fetchLastestNotes"><div><img src="/static/img/new-doc.png" /><span>最新文档</span></div></li>
+              <ul class="accordion-ul" @mouseover="cancelFirstLiStyle">
+                <li @click="fetchLastestNotes"><div :class="{'li-background-hover': isSelectFirstLi }"><img src="/static/img/new-doc.png" /><span>最新文档</span></div></li>
                 <li>
                   <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
                   <div class="submenu">
@@ -95,7 +95,7 @@
             </div>
           </div>
           <div class="list-content-container" v-if="noteList.length != 0">
-            <div class="list-content" @click="goNoteDetailPage(item.id)" :data-nid="item.id" :key="item.id" v-for="item in noteList">
+            <div class="list-content" @mouseover="handleSetCurrentNote(item)" @click="goNoteDetailPage(item.id)" :data-nid="item.id" :key="item.id" v-for="item in noteList">
               <div>
                 <img src="/static/img/word.png" class="type-img" />
                 <span class="title">{{item.title.substring(0, 20)}}</span>
@@ -135,7 +135,7 @@
     </el-container>
 
     <!-- 移动到文件夹dialog -->
-    <file-dailog :folders="folders"/>
+    <file-dailog :folders="folders" :note="currentSelectedNote" />
   </div>
 </template>
 
@@ -164,7 +164,8 @@
         userName: '',
         avator: '',
         userId: '',
-        currentNoteId: ''
+        currentSelectedNote: '',
+        isSelectFirstLi: true
       };
     },
     components: {
@@ -324,6 +325,14 @@
       rename() {
 
       },
+      cancelFirstLiStyle() {
+        this.isSelectFirstLi = false
+      },
+      handleSetCurrentNote(item) {
+        if (item !== undefined) {
+          this.currentSelectedNote = item
+        }
+      },
       test(item) {
         console.log("item = " + JSON.stringify(item))
       }
@@ -445,6 +454,12 @@ body{margin: 0;}
   list-style-type: none;
   cursor: pointer;
 }
+
+.li-background-hover {
+  background: #D2E2FF;
+  border-left: 4px solid #5576BD;
+}
+
 .operation-list ul li:last-child {
   margin-bottom: 60px;
 }
@@ -456,6 +471,12 @@ body{margin: 0;}
 }
 
 .operation-list ul li > div:first-child:hover {
+  background: #D2E2FF;
+  border-left: 4px solid #5576BD;
+  padding-left: 36.5px;
+}
+
+.list-backgroud-hover {
   background: #D2E2FF;
   border-left: 4px solid #5576BD;
   padding-left: 36px;

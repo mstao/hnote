@@ -3,10 +3,11 @@
     <el-dialog
       title="移动到"
       :visible.sync="fileDialogVisible"
+      :before-close="handleClose"
       width="30%">
       <div class="mf-title">
         <img src="/static/img/word.png" />
-        <span class="title">Git 提交的正确姿势</span>
+        <span class="title">{{ note.title }}</span>
       </div>
       <div class="submenu mf-folder">
         <el-tree :data="folders" @node-click="handleNodeClick"></el-tree>
@@ -32,6 +33,10 @@
             folders: {
                 type: Array,
                 required: true
+            },
+            note: {
+                type: Object,
+                required: true
             }
         },
         methods: {
@@ -41,6 +46,9 @@
             handleNodeClick(data) {
                 console.log(data);
             },
+            handleClose() {
+                this.$store.dispatch('ChangeFileDialogVisible', false)
+            }
         }
     }
 </script>
