@@ -43,7 +43,7 @@ public class NoteController extends BaseController {
      */
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/filters", method = RequestMethod.GET)
-    @ApiOperation(value="Get all note infos by pagination.", httpMethod="GET", notes="Get notes")
+    @ApiOperation(value="Get all notes by pagination.", httpMethod="GET", notes="Get notes")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
@@ -68,6 +68,42 @@ public class NoteController extends BaseController {
         model.setTotal(total);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
+
+
+    /**
+     * Get the lastest notes.
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/lastest", method = RequestMethod.GET)
+    @ApiOperation(value="Get the lastest notes by pagination.", httpMethod="GET", notes="Get notes")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<SearchResultModel<Note>> getLastestNotes(@RequestParam Integer pageNumber,
+                                                                   @RequestParam Integer pageSize) {
+        logger.info("page = " + pageNumber + "per_page = " + pageSize);
+
+        PageInfo<Note> pageInfo = noteService.findLastestNotes(pageNumber, pageSize);
+        List<Note> notes = pageInfo.getList();
+        // 总记录数
+        Long total = pageInfo.getTotal();
+        if(notes.isEmpty()){
+            // You many decide to return HttpStatus.NOT_FOUND
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        SearchResultModel<Note> model = new SearchResultModel<>();
+        model.setItems(notes);
+        model.setTotal(total);
+        return new ResponseEntity<>(model, HttpStatus.OK);
+    }
+
 
     /**
      * Get note by id.

@@ -12,6 +12,17 @@ export function getNotesByPage(pageNumber, pageSize, fid) {
     })
 }
 
+export function getLastestNotes(pageNumber, pageSize) {
+    return request({
+        url: '/notes/lastest',
+        method: 'get',
+        params: {
+            pageNumber,
+            pageSize,
+        }
+    })
+}
+
 export function getNoteById(noteId) {
     return request({
         url: '/notes/' + noteId,

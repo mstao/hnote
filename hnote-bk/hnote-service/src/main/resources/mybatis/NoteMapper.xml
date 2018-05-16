@@ -109,7 +109,26 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0 and f.id = #{nid}
+        where n.is_deleted = 0 and f.id = #{fid}
+    </select>
+
+    <select id="selectLastestNotes" resultMap="simpleNoteResultMap">
+        select n.id,
+               n.title,
+               n.uid,
+               n.is_deleted,
+               n.gmt_create,
+               n.gmt_modified,
+               nt.id nt_id,
+               nt.name nt_name,
+               f.id folder_id,
+               f.label folder_name,
+               f.level folder_level,
+               f.pid folder_pid
+        from hn_note n
+        left join hn_note_type nt on nt.id = n.type_id
+        left join hn_folder f on f.id = n.folder_id
+        where n.is_deleted = 0
     </select>
 
     <!-- 添加-->

@@ -42,6 +42,14 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public PageInfo<Note> findLastestNotes(int pageNumber, int pageSize) {
+        PageHelper.startPage(pageNumber, pageSize, "n.gmt_create desc");
+        List<Note> notes = noteDao.selectLastestNotes();
+        PageInfo<Note> page = new PageInfo<>(notes);
+        return page;
+    }
+
+    @Override
     public long insert(Note model) {
         noteDao.insert(model);
         return model.getId();

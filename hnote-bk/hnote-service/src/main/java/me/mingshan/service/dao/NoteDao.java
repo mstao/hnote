@@ -13,10 +13,10 @@ import java.util.List;
 public interface NoteDao extends BaseDao<Note> {
 
     /**
-     * select by paignation.
+     * Select by paignation.
      * @return
      */
-    List<Note> selectByPage(long nid);
+    List<Note> selectByPage(long fid);
 
     /**
      * Deletes tag by noteId and tagId
@@ -24,4 +24,11 @@ public interface NoteDao extends BaseDao<Note> {
      * @param tid
      */
     void deleteByNidTid(@Param("nid") long nid, @Param("tid") long tid);
+
+    /**
+     * Select the lastest notes.
+     *
+     * @return
+     */
+    List<Note> selectLastestNotes();
 }

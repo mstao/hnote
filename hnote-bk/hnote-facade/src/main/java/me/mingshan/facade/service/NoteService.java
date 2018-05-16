@@ -26,4 +26,13 @@ public interface NoteService extends BaseService<Note> {
      * @param tid
      */
     void deleteByNidTid(long nid, long tid);
+
+    /**
+     * Get the lastest notes.
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    PageInfo<Note> findLastestNotes(int pageNumber, int pageSize);
 }

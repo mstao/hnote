@@ -112,7 +112,7 @@
         inputVisible: false,
         inputValue: '',
         dynamicTags: [],
-        sourceTags:  [],
+        sourceTags:  []
       }
     },
     watch:{
@@ -232,8 +232,7 @@
       }
     },
     components: {
-        mavonEditor
-        // or 'mavon-editor': mavonEditor
+      'mavon-editor': mavonEditor
     }
   };
 </script>

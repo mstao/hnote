@@ -22,7 +22,7 @@
 
             <div class="operation-list">
               <ul class="accordion-ul">
-                <li><div><img src="/static/img/new-doc.png" /><span>最新文档</span></div></li>
+                <li @click="fetchLastestNotes"><div><img src="/static/img/new-doc.png" /><span>最新文档</span></div></li>
                 <li>
                   <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
                   <div class="submenu">
@@ -136,7 +136,6 @@
 
     <!-- 移动到文件夹dialog -->
     <file-dailog :folders="folders"/>
-
   </div>
 </template>
 
@@ -147,7 +146,7 @@
   import file_dialog from '../dialog/fileDialog.vue'
   import toJsonTree from '@/utils/toJsonTree'
   import { getFoldersByUid } from '@/api/folder'
-  import { getNotesByPage } from '@/api/note'
+  import { getNotesByPage, getLastestNotes } from '@/api/note'
 
   NProgress.configure({ showSpinner: false })// NProgress Configuration
 
@@ -229,8 +228,10 @@
         // start progress bar
         NProgress.start()
 
-        this.fetchFolders();
+        this.fetchFolders()
 
+        this.fetchLastestNotes()
+        
         NProgress.done()
       },
       fetchFolders() {
@@ -246,32 +247,44 @@
           })
         })
       },
+      fetchLastestNotes() {
+        var pageNumber = 1;
+        var pageSize = 20;
+        new Promise((resolve, reject) => {
+          getLastestNotes(pageNumber, pageSize).then(response => {
+            this.handleFetchNotes(response)  
+          })
+        })
+      },
       handleNodeClick(data) {
         var fid = data.id;
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
           getNotesByPage(pageNumber, pageSize, fid).then(response => {
-            const tempList = [];
-            if (response.status == 200) {
-              const items = response.data.items;
-              for (var i = 0; i < items.length; i++) {
-                var temp = {
-                  id: items[i].id,
-                  title: items[i].title,
-                  date: items[i].gmtCreate
-                }
-                tempList.push(temp);
-              }
-              this.noteList = tempList
-              // load note info by first item
-              this.goNoteDetailPage(items[0].id);
-            } else if (response.status == 204) {
-              this.noteList = tempList
-              this.$store.dispatch('clearNoteInfo')
-            }   
+              this.handleFetchNotes(response)
           })
         })
+      },
+      handleFetchNotes(response) {
+        const tempList = [];
+        if (response.status == 200) {
+          const items = response.data.items;
+          for (var i = 0; i < items.length; i++) {
+            var temp = {
+              id: items[i].id,
+              title: items[i].title,
+              date: items[i].gmtCreate
+            }
+            tempList.push(temp);
+          }
+          this.noteList = tempList
+          // load note info by first item
+          this.goNoteDetailPage(items[0].id);
+        } else if (response.status == 204) {
+          this.noteList = tempList
+          this.$store.dispatch('ClearNoteInfo')
+        } 
       },
       goNoteDetailPage(id) {
         console.log("id = " + id)

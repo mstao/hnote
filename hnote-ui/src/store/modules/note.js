@@ -1,4 +1,4 @@
-import { getNoteById } from '@/api/note'
+import { getNoteById, getLastestNotes } from '@/api/note'
 
 const note = {
     state: {
@@ -27,10 +27,9 @@ const note = {
                 })
             })
         },
-        clearNoteInfo({ commit }) {
+        ClearNoteInfo({ commit }) {
           commit('SET_NOTE', '')
         }
-
     }
 }
 
