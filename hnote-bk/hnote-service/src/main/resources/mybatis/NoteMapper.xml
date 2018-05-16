@@ -35,13 +35,9 @@
     <resultMap id="simpleNoteResultMap" type="me.mingshan.facade.model.Note">
         <id column="id" property="id"/>
         <result column="title" property="title"/>
-        <result column="content" property="content"/>
-        <result column="author" property="author"/>
         <result column="source" property="source"/>
         <result column="uid" property="uid"/>
-        <result column="isDeleted" property="isDeleted"/>
         <result column="gmt_create" property="gmtCreate"/>
-        <result column="gmt_modified" property="gmtModified"/>
 
         <association property="noteType" javaType="me.mingshan.facade.model.NoteType">
             <id column="nt_id" property="id"/>
@@ -100,9 +96,6 @@
     <select id="selectByPage" parameterType="java.lang.Long" resultMap="simpleNoteResultMap">
         select n.id,
                n.title,
-               n.content,
-               n.author,
-               n.source,
                n.uid,
                n.is_deleted,
                n.gmt_create,

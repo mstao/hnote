@@ -95,16 +95,25 @@
             </div>
           </div>
           <div class="list-content-container" v-if="noteList.length != 0">
-            <div class="list-content" v-bind:key="item.index" v-for="item in noteList">
-              <img src="/static/img/word.png" class="type-img" />
-              <span class="title">{{item.title}}</span>
-              <span class="date">{{item.date}}</span>
-              <span class="operation"><img src="/static/img/download.png"/><img src="/static/img/share_16.png"/><img src="/static/img/delete.png"/></span>
+            <div class="list-content" @click="goNoteDetailPage(item.id)" :data-nid="item.id" :key="item.id" v-for="item in noteList">
+              <div>
+                <img src="/static/img/word.png" class="type-img" />
+                <span class="title">{{item.title.substring(0, 20)}}</span>
+                <span class="date">{{item.date.substring(5, 10)}}</span>
+                <span class="operation">
+                  <img src="/static/img/download.png" />
+                  <img src="/static/img/share_16.png" />
+                  <img src="/static/img/delete.png" />
+                </span>
+              </div>
+              <!-- <div class="rename-input">
+                <el-input></el-input>
+              </div> -->
             </div>
 
             <div class="list-item-operation-box item-operation-box">
               <ul>
-                <li>重命名</li>
+                <li @click="rename">重命名</li>
                 <li @click="changeFileDialogVisible">移动到</li>
                 <li>删除</li>
                 <li>下载</li>
@@ -149,15 +158,13 @@
         dynamicTags: [],
         inputVisible: false,
         inputValue: '',
-        noteList: [{
-          title: 'Git 提交的正确姿势',
-          date: '03-20'
-        }],
+        noteList: [],
         dialogVisible: false,
         showExpandNewDiv: false,
         userName: '',
         avator: '',
-        userId: ''
+        userId: '',
+        currentNoteId: ''
       };
     },
     components: {
@@ -171,8 +178,7 @@
       init() {
         this.fetchBasicInfo();
 
-        $(".list-content").contextmenu(
-            function(e) {
+        $(document).on("contextmenu",".list-content", function(e) {
               var clientHeight = window.innerHeight;
 
               if (clientHeight - e.pageY > 250) {
@@ -250,6 +256,7 @@
               const items = response.data.items;
               for (var i = 0; i < items.length; i++) {
                 var temp = {
+                  id: items[i].id,
                   title: items[i].title,
                   date: items[i].gmtCreate
                 }
@@ -257,14 +264,17 @@
               }
               this.noteList = tempList
               // load note info by first item
-              this.$store.dispatch('GetNoteInfoById', items[0].id)
-              
+              this.goNoteDetailPage(items[0].id);
             } else if (response.status == 204) {
               this.noteList = tempList
               this.$store.dispatch('clearNoteInfo')
             }   
           })
         })
+      },
+      goNoteDetailPage(id) {
+        console.log("id = " + id)
+        this.$store.dispatch('GetNoteInfoById', id)
       },
       handleNodeExpandCollapse() {
         $(".item-operation-box").hide();
@@ -296,6 +306,12 @@
       },
       changeFileDialogVisible() {
         this.$store.dispatch('ChangeFileDialogVisible', true)
+      },
+      rename() {
+
+      },
+      test(item) {
+        console.log("item = " + JSON.stringify(item))
       }
     }
   };
@@ -592,6 +608,12 @@ body{margin: 0;}
 
 .aside-list .list-content .operation img:hover {
   cursor: pointer;
+}
+
+.aside-list .list-content .rename-input {
+  width: 200px;
+  margin-left: 20px;
+  display: none;
 }
 
 .item-operation-box {
