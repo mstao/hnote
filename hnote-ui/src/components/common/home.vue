@@ -136,6 +136,7 @@
 
     <!-- 移动到文件夹dialog -->
     <file-dailog :folders="folders"/>
+
   </div>
 </template>
 

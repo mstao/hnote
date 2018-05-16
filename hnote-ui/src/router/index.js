@@ -20,5 +20,6 @@ export default new Router({
     },
     { path: '/404', component: resolve => require(['../components/errorPage/404.vue'], resolve) },
     { path: '/401', component: resolve => require(['../components/errorPage/401.vue'], resolve) },
+    { path: '*', redirect: '/404', hidden: true }
   ]
 })

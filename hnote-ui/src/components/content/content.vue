@@ -28,8 +28,8 @@
                 <ul>
                   <li><span>来源：</span> <span>{{note.source}}</span></li>
                   <li><span>作者：</span> <span>{{note.author}}</span></li>
-                  <li><span>创建时间：</span> <span>{{note.gmtCreate}}</span></li>
-                  <li><span>修改时间：</span> <span>{{note.gmtModified}}</span></li>
+                  <li><span>创建时间：</span> <span>{{note.gmtCreate != undefined ? note.gmtCreate.substring(0,10) : ""}}</span></li>
+                  <li><span>修改时间：</span> <span>{{note.gmtModified != undefined ? note.gmtModified.substring(0,10) : ""}}</span></li>
                   <li><span>文件夹：</span> <span>{{label}}</span></li>
                 </ul>
               </div>
@@ -113,6 +113,17 @@
         inputValue: '',
         dynamicTags: [],
         sourceTags:  [],
+      }
+    },
+    watch:{
+      note(newNote, oldNote) {
+         if (newNote.id === oldNote.id){  
+          return
+         } else {
+          this.showMarkdownEditor = false;
+          this.isShowEditBtn = true;
+          this.isShowSaveBtn = false;
+         } 
       }
     },
     computed: {

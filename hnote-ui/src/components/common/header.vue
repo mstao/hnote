@@ -13,7 +13,7 @@
                   <img :src="avatar" class="avatar-img" />
               </div>
               <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>个人信息</el-dropdown-item>
+                  <el-dropdown-item command='userInfo'>个人信息</el-dropdown-item>
                   <el-dropdown-item>帐户设置</el-dropdown-item>
                   <el-dropdown-item>导入笔记</el-dropdown-item>
                   <el-dropdown-item>帮助</el-dropdown-item>
@@ -27,19 +27,34 @@
             <span class="write-mode">探索</span>
             <span class="write-mode">{{name}}</span>
         </div>
+
+        <!-- user info -->
+        <el-dialog
+            title="我的信息"
+            :visible.sync="userDialogVisible"
+            width="30%"
+            :before-close="handleClose">
+            <user-info/>
+            <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="userDialogVisible = false">确 定</el-button>
+            </span>
+          </el-dialog>
+
     </el-header>
 </template>
 
 <script>
 import store from '../../store'
 import { mapGetters } from 'vuex'
+import user_info from './userInfo'
 
 export default {  
   name: 'h-header',
   data() {
       return {
         userName: '',
-        avatarUrl: ''
+        avatarUrl: '',
+        userDialogVisible: false
       }
   },
   computed: {
@@ -48,13 +63,19 @@ export default {
       'avatar'
     ])
   },
+  components: { 'user-info': user_info },
   methods: {
     handleCommand(command) {
       if (command == 'logout') {
         this.$store.dispatch('LogOut').then(() => {
           location.reload()// In order to re-instantiate the vue-router object to avoid bugs
         })
+      } else if (command == 'userInfo') {
+        this.userDialogVisible = true
       }
+    },
+    handleClose() {
+      this.userDialogVisible = false
     }
   }
 }
