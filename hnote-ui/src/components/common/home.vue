@@ -97,8 +97,10 @@
           <div class="list-content-container" v-if="noteList.length != 0">
             <div class="list-content" @mouseover="handleSetCurrentNote(item)" @click="goNoteDetailPage(item.id)" :data-nid="item.id" :key="item.id" v-for="item in noteList">
               <div>
-                <img src="/static/img/word.png" class="type-img" />
-                <span class="title">{{item.title.substring(0, 20)}}</span>
+                <img src="/static/img/word.png" class="type-img" v-if="item.noteType.name == 'word'" />
+                <img src="/static/img/markdown.png" class="type-img" v-else-if="item.noteType.name == 'md'" />
+
+                <span class="title">{{item.title.substring(0, 18)}}</span>
                 <span class="date">{{item.date.substring(5, 10)}}</span>
                 <span class="operation">
                   <img src="/static/img/download.png" />
@@ -164,7 +166,7 @@
         userName: '',
         avator: '',
         userId: '',
-        currentSelectedNote: '',
+        currentSelectedNote: {},
         isSelectFirstLi: true
       };
     },
@@ -275,7 +277,8 @@
             var temp = {
               id: items[i].id,
               title: items[i].title,
-              date: items[i].gmtCreate
+              date: items[i].gmtCreate,
+              noteType: items[i].noteType
             }
             tempList.push(temp);
           }
@@ -622,7 +625,7 @@ body{margin: 0;}
 .aside-list .list-content .type-img {
   margin-left: 20px;
   position: relative;
-  top: 3px;
+  top: 4px;
 }
 
 .aside-list .list-content .date {
