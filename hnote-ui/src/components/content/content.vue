@@ -2,10 +2,13 @@
   <div class="content-container">
     <div class="top-navi-container">
       <div class="top-navi">
-        <span class="title">{{note.title}}</span>
+        <input class="title" v-model="title" /> 
         <div class="operation">
+            <span class="loading-span" v-show="isShowLoading">
+              <svg-icon icon-class="loading" />
+            </span>
             <img :src="editPic" v-show="isShowEditBtn" class="eidt" @click='changeEditStatus' @mouseover="editPic = editPicBlue" @mouseout="editPic = editPic1" />
-            <img :src="savePic" v-show="isShowSaveBtn" class="save" @click='saveContent' @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
+            <img :src="savePic" v-show="isShowSaveBtn" class="save" @click='updateContent' @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
             <img :src="tagPic" class="tag" @click="toggleTagDiv" @mouseover="tagPic = tagPicBlue" @mouseout="tagPic = tagPic1" />
             <img :src="sharePic" class="share" @mouseover="sharePic = sharePicBlue" @mouseout="sharePic = sharePic1" />
             <el-dropdown @command="handleCommand">
@@ -66,7 +69,7 @@
     </transition>
 
     <div v-if="showMarkdownEditor" class="edit-content">
-      <mavon-editor style="height: 100%"  v-model="note.content"></mavon-editor>
+      <mavon-editor style="height: 100%"  v-model="content"></mavon-editor>
     </div>
 
     <div v-else class="html-content markdown-body" v-html="htmlContent">
@@ -79,9 +82,10 @@
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
   import { getTagsByNid, saveTag } from '@/api/tag'
-  import { deleteTagByNidTid } from '@/api/note'
+  import { deleteTagByNidTid, updateNote } from '@/api/note'
 
   const marked = require('marked');
+  let defaultTitle = '';
 
   export default {
     name: 'editor',
@@ -109,6 +113,7 @@
         isShowEditBtn: true,
         isShowSaveBtn: false,
         isShowTagDiv: false,
+        isShowLoading: false,
         inputVisible: false,
         inputValue: '',
         dynamicTags: [],
@@ -132,6 +137,7 @@
       ]),
       htmlContent() {
         if (this.note.content !== undefined) {
+          defaultTitle = this.note.title
           return marked(this.note.content) 
         } else {
           return marked('<center>![image](http://p8rape2j2.bkt.clouddn.com/no-content.png)</center>')
@@ -142,6 +148,31 @@
           return this.note.folder.label
         } else {
           return ''
+        }
+      },
+      title: {
+        get () {
+          return this.note.title
+        },
+        set (value) {
+          if (value != this.note.title) {
+            var note = this.note
+            note.title = value;
+            this.$store.dispatch('UpdateNote', note)
+            this.updateTitle()
+          }
+        }
+      },
+      content: {
+        get () {
+          return this.note.content
+        },
+        set (value) {
+          if (value != this.note.content) {
+            var note = this.note
+            note.content = value;
+            this.$store.dispatch('UpdateNote', note)
+          }
         }
       }
     },
@@ -228,8 +259,56 @@
           this.isShowTagDiv = true
         }
       },
-      saveContent() {
+      updateTitle() {
+        var id = this.note.id;
+        var title = this.title;
 
+        if (title != '') {
+          this.isShowLoading = true;
+          var data = {
+            id: id,
+            title: title
+          }
+          new Promise((resolve, reject) => {
+            updateNote(data).then(response => {
+              if (response.status == 204) {
+                this.$message({
+                  message: '修改标题成功',
+                  type: 'success'
+                });
+              }
+
+              this.isShowLoading = false
+            })
+          })
+        } else {
+          this.$message({
+            message: '标题不能为空！',
+            type: 'warning'
+          });
+        }
+      },
+      updateContent() {
+        this.isShowLoading = true;
+        var id = this.note.id;
+        var content = this.content;
+        console.log("content = " + content)
+        var data = {
+          id: id,
+          content: content
+        }
+        new Promise((resolve, reject) => {
+          updateNote(data).then(response => {
+            if (response.status == 204) {
+              this.$message({
+                message: '修改内容成功',
+                type: 'success'
+              });
+            }
+
+            this.isShowLoading = false
+          })
+        })
       }
     },
     components: {
@@ -257,6 +336,10 @@
   font-size: 16px;
   color: #333333;
   margin-left: 20px;
+  display: inline-block;
+  min-width: 73%;
+  height: 72px;
+  border: 0px;
 }
 
 .top-navi .operation {

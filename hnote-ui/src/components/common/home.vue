@@ -241,7 +241,7 @@
         new Promise((resolve, reject) => {
           getFoldersByUid(uid).then(response => {
             const data = response.data
-            const param = {parent:'pid' };
+            const param = { parent:'pid' };
             this.folders = toJsonTree(data, 'id', 'pid', 'children');
             resolve()
           }).catch(error => {

@@ -30,6 +30,14 @@ export function getNoteById(noteId) {
     })
 }
 
+export function updateNote(note) {
+    return request({
+        url: '/notes',
+        method: 'put',
+        data: note
+    })
+}
+
 export function deleteTagByNidTid(nid, tid) {
     return request({
         url: '/notes/' + nid + '/tags/' + tid,

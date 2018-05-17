@@ -163,4 +163,25 @@
     <update id="deleteByNidTid">
         delete from hn_note_to_tag  where is_deleted = 0 and tag_id = #{tid} and note_id = #{nid}
     </update>
+
+    <update id="update" parameterType="me.mingshan.facade.model.Note">
+        update hn_note
+        <set>
+            <if test="title !=null and title !=''">
+                title=#{title},
+            </if>
+            <if test="content != null and content != ''">
+                content=#{content},
+            </if>
+            <if test="source != null and source != ''">
+                source=#{source},
+            </if>
+            <if test="folderId != null and folderId != 0">
+                folderId=#{folderId}
+            </if>
+        </set>
+
+        , gmt_modified = NOW()
+        where id=#{id}
+    </update>
 </mapper>

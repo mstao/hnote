@@ -34,6 +34,9 @@ const note = {
         ClearNoteInfo({ commit }) {
           commit('SET_NOTE', '')
         },
+        UpdateNote({ commit }, note) {
+          commit('SET_NOTE', note)
+        },
         SetCurrentSelectedNote({ commit }, note) {
           commit('SET_CURRENT_SELECTED_NOTE', note)
         }

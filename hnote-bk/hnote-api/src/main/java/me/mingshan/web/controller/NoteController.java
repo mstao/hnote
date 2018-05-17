@@ -9,6 +9,7 @@ import me.mingshan.web.exception.ServerException;
 import me.mingshan.web.model.ResultModel;
 import me.mingshan.web.model.SearchResultModel;
 import me.mingshan.web.vo.NoteVO;
+import me.mingshan.web.vo.UpdateNoteVo;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -188,7 +189,7 @@ public class NoteController extends BaseController {
      * @param:  * @param null
      */
     @RequestMapping(value = "/{id}/tags/{tid}", method = RequestMethod.DELETE)
-    @ApiOperation(value="Delete tag", httpMethod="DELETE", notes="Delete book by id")
+    @ApiOperation(value="Delete tag", httpMethod="DELETE", notes="Delete tag by id")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
@@ -204,6 +205,28 @@ public class NoteController extends BaseController {
             result.setCode(1024);
             result.setMessage("Unable to delete tag with id " + tid);
             logger.info("Unable to delete tag with id " + tid);
+            throw new ServerException(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    @ApiOperation(value="Update note", httpMethod="PUT", notes="Update note by id")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<ResultModel> updateNote(@RequestBody UpdateNoteVo updateNoteVo) {
+        try {
+            Note note = mapper.map(updateNoteVo, Note.class);
+            noteService.update(note);
+        } catch (RuntimeException e) {
+            ResultModel result = new ResultModel();
+            result.setCode(1024);
+            result.setMessage("Unable to update note: " + updateNoteVo);
+            logger.info("Unable to  update note: " + updateNoteVo);
             throw new ServerException(result, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

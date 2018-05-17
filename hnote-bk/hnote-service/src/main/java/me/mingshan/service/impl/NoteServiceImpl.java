@@ -57,7 +57,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public long update(Note model) {
-        return 0;
+        return noteDao.update(model);
     }
 
     @Override
