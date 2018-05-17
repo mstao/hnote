@@ -25,7 +25,7 @@
         <div class="operation">
             <span class="write-mode">写作模式</span>
             <span class="write-mode">探索</span>
-            <span class="write-mode">{{name}}</span>
+            <span class="write-mode" @click="userDialogVisible = true">{{name}}</span>
         </div>
 
         <!-- user info -->
