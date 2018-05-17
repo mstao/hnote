@@ -25,6 +25,18 @@
         <div class="operation">
             <span class="write-mode">写作模式</span>
             <span class="write-mode">探索</span>
+            <span class="write-mode">
+              <el-popover
+                placement="top"
+                width="160"
+                v-model="isShowNotification">
+                <p>这是一段内容 通知？</p>
+    
+                <svg-icon icon-class="notification" slot="reference" />
+                
+              </el-popover>
+              <span id="circle"></span>
+            </span>
             <span class="write-mode" @click="userDialogVisible = true">{{name}}</span>
         </div>
 
@@ -54,7 +66,8 @@ export default {
       return {
         userName: '',
         avatarUrl: '',
-        userDialogVisible: false
+        userDialogVisible: false,
+        isShowNotification: false
       }
   },
   computed: {
@@ -63,7 +76,9 @@ export default {
       'avatar'
     ])
   },
-  components: { 'user-info': user_info },
+  components: { 
+    'user-info': user_info
+  },
   methods: {
     handleCommand(command) {
       if (command == 'logout') {
@@ -145,6 +160,16 @@ export default {
   -webkit-border-radius: 50%;
   transition: linear 0.25s;
 }
+
+#circle {
+  position: absolute;
+  top: 10px;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 100%;
+  background: #f07379;
+}
+
 </style>
 
 

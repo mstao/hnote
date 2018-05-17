@@ -6,8 +6,8 @@
       :before-close="handleClose"
       width="30%">
       <div class="mf-title">
-        <img src="/static/img/word.png" class="type-img" v-if="currentSelectedNote.noteType.name == 'word'" />
-        <img src="/static/img/markdown.png" class="type-img" v-else-if="currentSelectedNote.noteType.name == 'md'" />
+        <img src="/static/img/word.png" class="type-img" v-if="currentSelectedNote.noteType && currentSelectedNote.noteType.name == 'word'" />
+        <img src="/static/img/markdown.png" class="type-img" v-else-if="currentSelectedNote.noteType && currentSelectedNote.noteType.name == 'md'" />
         <span class="title">{{ currentSelectedNote.title }}</span>
       </div>
       <div class="submenu mf-folder">
