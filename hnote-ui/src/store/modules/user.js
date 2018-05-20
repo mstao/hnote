@@ -49,7 +49,7 @@ const user = {
           } 
           const data = response.data
 
-          commit('SET_NAME', data.name)
+          commit('SET_NAME', data.name)     
           commit('SET_AVATAR', data.avatarUrl)
           resolve(response)
         }).catch(error => {

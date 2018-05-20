@@ -2,13 +2,13 @@
 <el-container id="content">
         <el-aside width="20%" class="aside-operation">
             <div class="add-new-doc">
-              <el-dropdown class="add-new-doc-dropdown">
+              <el-dropdown class="add-new-doc-dropdown" @command="handleCreateCommand">
                 <span class="el-dropdown-link">
                   <img src="/static/img/add.png" class="add-image">新文档<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>新建笔记</el-dropdown-item>
-                  <el-dropdown-item>新建Markdown</el-dropdown-item>
+                  <el-dropdown-item command="create-md">新建Markdown</el-dropdown-item>
                   <el-dropdown-item>新建文件夹</el-dropdown-item>
                   <el-dropdown-item divided>导入笔记</el-dropdown-item>
                 </el-dropdown-menu>
@@ -138,6 +138,8 @@
   import toJsonTree from '@/utils/toJsonTree'
   import { getFoldersByUid } from '@/api/folder'
   import { getNotesByPage, getLastestNotes } from '@/api/note'
+  import { getNowFormatDate } from '@/utils/date'
+  import { mapGetters } from 'vuex'
 
   NProgress.configure({ showSpinner: false })// NProgress Configuration
 
@@ -152,14 +154,18 @@
         noteList: [],
         dialogVisible: false,
         showExpandNewDiv: false,
-        userName: '',
-        avator: '',
         userId: '',
         isSelectFirstLi: true
       };
     },
     components: {
       'file-dailog': file_dialog
+    },
+    computed: {
+      ...mapGetters([
+        'selectedFolder',
+        'name'
+      ]),
     },
     mounted() {
       this.init()
@@ -337,8 +343,19 @@
         }
       },
       handleCreateCommand(command) {
-        if (command == "create-md") {
-          this.$router.push({path:'/create'})
+        if (command == 'create-md') {
+
+          var data = {
+            title: '新的markdown',
+            content: '',
+            noteType: { name: 'md' },
+            folder: this.selectedFolder,
+            date: getNowFormatDate(),
+            author: this.name,
+            source: ''
+          }
+          this.noteList.push(data)
+          this.$store.dispatch('SetNote', data)
         }
       },
       test(item) {

@@ -8,7 +8,7 @@
               <svg-icon icon-class="loading" />
             </span>
             <img :src="editPic" v-show="isShowEditBtn" class="eidt" @click='changeEditStatus' @mouseover="editPic = editPicBlue" @mouseout="editPic = editPic1" />
-            <img :src="savePic" v-show="isShowSaveBtn" class="save" @click='updateContent' @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
+            <img :src="savePic" v-show="isShowSaveBtn" class="save" @click='note.id == undefined ? updateContent : saveContent' @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
             <img :src="tagPic" class="tag" @click="toggleTagDiv" @mouseover="tagPic = tagPicBlue" @mouseout="tagPic = tagPic1" />
             <img :src="sharePic" class="share" @mouseover="sharePic = sharePicBlue" @mouseout="sharePic = sharePic1" />
             <el-dropdown @command="handleCommand">
@@ -121,6 +121,10 @@
     },
     watch:{
       note(newNote, oldNote) {
+        if (newNote.id == undefined) {
+          this.showMarkdownEditor = true
+          return
+        }
          if (newNote.id === oldNote.id){  
           return
          } else {
@@ -135,6 +139,12 @@
         'note',
       ]),
       htmlContent() {
+        if (this.note.id == undefined) {
+          this.isShowEditBtn = false;
+          this.isShowSaveBtn = true;
+          this.showMarkdownEditor = true
+          return
+        }
         if (this.note.content !== undefined) {
           return marked(this.note.content) 
         } else {
@@ -174,7 +184,15 @@
         }
       }
     },
+    mounted() {
+      this.init()
+    },
     methods: {
+      init() {
+        if (this.note == undefined || this.note.id == undefined) {
+          this.showMarkdownEditor = true;
+        }
+      },
       handleCommand(command) {
         if (command == 'move') {
           this.$store.dispatch('SetCurrentSelectedNote', this.note)
@@ -240,50 +258,56 @@
         if (this.isShowTagDiv) {
           this.isShowTagDiv = false
         } else {
-          new Promise((resolve, reject) => {
-            getTagsByNid(this.note.id).then(response => {
-              if (response.status == 200) {
-                var tempTags = [];
-                var x;
-                this.sourceTags = response.data;
-                for (x in this.sourceTags) {
-                  tempTags.push(this.sourceTags[x].name)
+          if (this.note.id == undefined) {
+
+          } else {
+            new Promise((resolve, reject) => {
+              getTagsByNid(this.note.id).then(response => {
+                if (response.status == 200) {
+                  var tempTags = [];
+                  var x;
+                  this.sourceTags = response.data;
+                  for (x in this.sourceTags) {
+                    tempTags.push(this.sourceTags[x].name)
+                  }
+                  this.dynamicTags = tempTags;
                 }
-                this.dynamicTags = tempTags;
-              }
+              })
             })
-          })
+          }
 
           this.isShowTagDiv = true
         }
       },
       updateTitle() {
-        var id = this.note.id;
-        var title = this.title;
+        if (this.note.id != undefined) {
+          var id = this.note.id;
+          var title = this.title;
 
-        if (title != '') {
-          this.isShowLoading = true;
-          var data = {
-            id: id,
-            title: title
-          }
-          new Promise((resolve, reject) => {
-            updateNote(data).then(response => {
-              if (response.status == 204) {
-                this.$message({
-                  message: '修改标题成功',
-                  type: 'success'
-                });
-              }
+          if (title != '') {
+            this.isShowLoading = true;
+            var data = {
+              id: id,
+              title: title
+            }
+            new Promise((resolve, reject) => {
+              updateNote(data).then(response => {
+                if (response.status == 204) {
+                  this.$message({
+                    message: '修改标题成功',
+                    type: 'success'
+                  });
+                }
 
-              this.isShowLoading = false
+                this.isShowLoading = false
+              })
             })
-          })
-        } else {
-          this.$message({
-            message: '标题不能为空！',
-            type: 'warning'
-          });
+          } else {
+            this.$message({
+              message: '标题不能为空！',
+              type: 'warning'
+            });
+          }
         }
       },
       updateContent() {
@@ -306,6 +330,9 @@
             this.isShowLoading = false
           })
         })
+      },
+      saveContent() {
+        console.log('sssssssssssssssssss')
       }
     },
     components: {

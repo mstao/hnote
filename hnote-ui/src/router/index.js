@@ -14,11 +14,12 @@ export default new Router({
           path: 'note',
           component: resolve => require(['../components/container/note.vue'], resolve),
           children: [
-            { path: '/', redirect: 'edit'},  
+            { path: '/', redirect: 'detail'},  
             {
-              path: 'edit',
+              path: 'detail',
               component: resolve => require(['../components/content/edit.vue'], resolve)
-              },{
+            },
+            {
               path: 'create',
               component: resolve => require(['../components/content/create.vue'], resolve)
             }

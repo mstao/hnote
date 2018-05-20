@@ -17,7 +17,7 @@ const note = {
         GetNoteInfoById({ commit }, noteId) {
             return new Promise((resolve, reject) => {
                 getNoteById(noteId).then(response => {
-                  if (!response.status == 200) { // 由于mockjs 不支持自定义状态码只能这样hack
+                  if (!response.status == 200) {
                     reject('error')
                   } else if (response.status == 200) {
                     commit('SET_NOTE', response.data)
@@ -30,6 +30,9 @@ const note = {
                   reject(error)
                 })
             })
+        },
+        SetNote({ commit }, note) {
+          commit('SET_NOTE', note)
         },
         ClearNoteInfo({ commit }) {
           commit('SET_NOTE', '')

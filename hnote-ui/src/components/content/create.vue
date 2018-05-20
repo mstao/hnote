@@ -7,7 +7,7 @@
             <span class="loading-span" v-show="isShowLoading">
               <svg-icon icon-class="loading" />
             </span>
-            <img :src="savePic" v-show="isShowSaveBtn" class="save" @click='updateContent' @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
+            <img :src="savePic" v-show="isShowSaveBtn" class="save" @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
             <img :src="tagPic" class="tag" @click="toggleTagDiv" @mouseover="tagPic = tagPicBlue" @mouseout="tagPic = tagPic1" />
             <img :src="sharePic" class="share" @mouseover="sharePic = sharePicBlue" @mouseout="sharePic = sharePic1" />
             <el-dropdown @command="handleCommand">
@@ -108,22 +108,32 @@
         inputVisible: false,
         inputValue: '',
         dynamicTags: [],
-        sourceTags:  []
+        sourceTags:  [],
+        title: '新的markdown',
+        content: ''
       }
     },
     watch:{
      
     },
     methods: {
-        handleCommand(command) {
-        },
-        handleTagClose(tag) {
-        },
-        saveTagInput() {
-        },
-        handleInputConfirm() {
+      handleCommand(command) {
+      },
+      handleTagClose(tag) {
+      },
+      saveTagInput() {
+      },
+      handleInputConfirm() {
 
-        }
+      },
+      toggleTagDiv() {
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
     },
     components: {
       'mavon-editor': mavonEditor
