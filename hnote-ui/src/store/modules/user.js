@@ -46,7 +46,7 @@ const user = {
         getUserInfo(userId).then(response => {
           if (!response.status == 200) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
-          }
+          } 
           const data = response.data
 
           commit('SET_NAME', data.name)

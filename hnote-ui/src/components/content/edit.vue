@@ -85,7 +85,6 @@
   import { deleteTagByNidTid, updateNote } from '@/api/note'
 
   const marked = require('marked');
-  let defaultTitle = '';
 
   export default {
     name: 'editor',
@@ -137,7 +136,6 @@
       ]),
       htmlContent() {
         if (this.note.content !== undefined) {
-          defaultTitle = this.note.title
           return marked(this.note.content) 
         } else {
           return marked('<center>![image](http://p8rape2j2.bkt.clouddn.com/no-content.png)</center>')
@@ -292,7 +290,6 @@
         this.isShowLoading = true;
         var id = this.note.id;
         var content = this.content;
-        console.log("content = " + content)
         var data = {
           id: id,
           content: content

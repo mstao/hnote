@@ -5,6 +5,7 @@ const getters = {
   errorLogs: state => state.errorLog.logs,
   fileDialogVisible: state => state.dialog.fileDialogVisible,
   note: state => state.note.note,
-  currentSelectedNote: state => state.note.currentSelectedNote
+  currentSelectedNote: state => state.note.currentSelectedNote,
+  selectedFolder: state => state.folder.selectedFolder
 }
 export default getters

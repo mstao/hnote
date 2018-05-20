@@ -58,7 +58,7 @@
 <script>
 import store from '../../store'
 import { mapGetters } from 'vuex'
-import user_info from './userInfo'
+import user_info from '../user/userInfo'
 
 export default {  
   name: 'h-header',
