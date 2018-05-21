@@ -18,10 +18,6 @@ export default new Router({
             {
               path: 'detail',
               component: resolve => require(['../components/content/edit.vue'], resolve)
-            },
-            {
-              path: 'create',
-              component: resolve => require(['../components/content/create.vue'], resolve)
             }
           ]
         }

@@ -121,17 +121,13 @@
     },
     watch:{
       note(newNote, oldNote) {
-        if (newNote.id == undefined) {
-          this.showMarkdownEditor = true
+        if (newNote.id === oldNote.id){  
           return
-        }
-         if (newNote.id === oldNote.id){  
-          return
-         } else {
+        } else {
           this.showMarkdownEditor = false;
           this.isShowEditBtn = true;
           this.isShowSaveBtn = false;
-         } 
+        } 
       }
     },
     computed: {
@@ -139,16 +135,15 @@
         'note',
       ]),
       htmlContent() {
-        if (this.note.id == undefined) {
-          this.isShowEditBtn = false;
-          this.isShowSaveBtn = true;
-          this.showMarkdownEditor = true
-          return
-        }
-        if (this.note.content !== undefined) {
-          return marked(this.note.content) 
-        } else {
+        if (this.note.content == undefined) {
           return marked('<center>![image](http://p8rape2j2.bkt.clouddn.com/no-content.png)</center>')
+        } else { 
+          if (this.note.id == undefined) {
+            this.isShowEditBtn = false;
+            this.isShowSaveBtn = true;
+            this.showMarkdownEditor = true
+          }
+          return marked(this.note.content) 
         }
       },
       label() {
@@ -189,7 +184,7 @@
     },
     methods: {
       init() {
-        if (this.note == undefined || this.note.id == undefined) {
+        if (this.note.id == undefined) {
           this.showMarkdownEditor = true;
         }
       },
@@ -333,6 +328,9 @@
       },
       saveContent() {
         console.log('sssssssssssssssssss')
+      },
+      test(item) {
+        console.log("item = " + JSON.stringify(item))
       }
     },
     components: {

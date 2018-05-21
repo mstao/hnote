@@ -297,7 +297,6 @@
         } 
       },
       goNoteDetailPage(id) {
-        console.log("id = " + id)
         this.$store.dispatch('GetNoteInfoById', id)
       },
       handleNodeExpandCollapse() {
