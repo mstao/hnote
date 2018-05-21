@@ -46,6 +46,13 @@ export function createNote(note) {
     })
 }
 
+export function deleteNote(id) {
+    return request({
+        url: '/notes/' + id,
+        method: 'delete'
+    })
+}
+
 export function deleteTagByNidTid(nid, tid) {
     return request({
         url: '/notes/' + nid + '/tags/' + tid,

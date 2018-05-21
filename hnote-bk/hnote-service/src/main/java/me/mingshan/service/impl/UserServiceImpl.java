@@ -21,29 +21,17 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    @Cached(name="userCache.", key="#id", expire = 3600)
-    public User findById(long id) {
+    public User findById(Long id) {
         User user = userDao.selectByPrimaryKey(id);
         return user;
     }
 
     @Override
-    public long insert(User model) {
-        return 0;
-    }
-
-    @Override
-    public long update(User model) {
-        return 0;
-    }
-
-    @Override
-    public long delete(long id) {
+    public Long delete(Long id) {
         return userDao.delete(id);
     }
 
     @Override
-    @Cached(name="userCache.", key="#userName", expire = 3600)
     public User findByUserName(String userName) {
         User user = userDao.selectByUserName(userName);
         return user;

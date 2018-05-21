@@ -22,8 +22,7 @@ public class NoteServiceImpl implements NoteService {
     private NoteDao noteDao;
 
     @Override
-    @Cached(name="noteCache.", key="#id", expire = 3600)
-    public Note findById(long id) {
+    public Note findById(Long id) {
         Note note = noteDao.selectByPrimaryKey(id);
         return note;
     }
@@ -43,25 +42,25 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public PageInfo<Note> findLastestNotes(int pageNumber, int pageSize) {
-        PageHelper.startPage(pageNumber, pageSize, "n.gmt_create desc");
+        PageHelper.startPage(pageNumber, pageSize);
         List<Note> notes = noteDao.selectLastestNotes();
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }
 
     @Override
-    public long insert(Note model) {
+    public Long insert(Note model) {
         noteDao.insert(model);
         return model.getId();
     }
 
     @Override
-    public long update(Note model) {
-        return noteDao.update(model);
+    public void update(Note model) {
+        noteDao.update(model);
     }
 
     @Override
-    public long delete(long id) {
-        return noteDao.delete(id);
+    public void delete(Long id) {
+         noteDao.delete(id);
     }
 }

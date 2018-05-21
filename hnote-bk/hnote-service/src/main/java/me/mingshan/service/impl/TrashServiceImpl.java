@@ -13,23 +13,5 @@ import java.util.Map;
  */
 @Service
 public class TrashServiceImpl implements TrashService {
-    @Override
-    public Trash findById(long id) {
-        return null;
-    }
 
-    @Override
-    public long insert(Trash model) {
-        return 0;
-    }
-
-    @Override
-    public long update(Trash model) {
-        return 0;
-    }
-
-    @Override
-    public long delete(long id) {
-        return 0;
-    }
 }

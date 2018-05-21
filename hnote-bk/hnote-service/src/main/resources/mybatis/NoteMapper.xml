@@ -109,7 +109,7 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0 and f.id = #{fid}
+        where n.is_deleted = 0 and f.id = #{fid} order by n.gmt_create desc
     </select>
 
     <select id="selectLastestNotes" resultMap="simpleNoteResultMap">
@@ -128,7 +128,7 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0
+        where n.is_deleted = 0 order by n.gmt_create desc
     </select>
 
     <!-- 添加-->
@@ -144,6 +144,7 @@
             gmt_create,
             gmt_modified)
         values(
+            #{title},
             #{content},
             #{author},
             #{source},

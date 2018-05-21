@@ -26,7 +26,7 @@ import java.util.Map;
  * @Date: Created in 10:34 2018/5/4
  */
 @Configuration
-@EnableMethodCache(basePackages = "me.mingshan.service.impl")
+@EnableMethodCache(basePackages = "me.mingshan.facade.service")
 @EnableCreateCacheAnnotation
 public class JetCacheConfig {
 
@@ -36,7 +36,7 @@ public class JetCacheConfig {
         pc.setMinIdle(2);
         pc.setMaxIdle(10);
         pc.setMaxTotal(10);
-        return new JedisPool(pc, "localhost", 6379);
+        return new JedisPool(pc, "182.254.217.246", 6379, 100000, "123456");
     }
 
     @Bean

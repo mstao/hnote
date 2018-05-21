@@ -8,7 +8,7 @@
               <svg-icon icon-class="loading" />
             </span>
             <img :src="editPic" v-show="isShowEditBtn" class="eidt" @click='changeEditStatus' @mouseover="editPic = editPicBlue" @mouseout="editPic = editPic1" />
-            <img :src="savePic" v-show="isShowSaveBtn" class="save" @click='note.id == undefined ? updateContent : saveContent' @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
+            <img :src="savePic" v-show="isShowSaveBtn" class="save" @click='updateOrSaveContent' @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
             <img :src="tagPic" class="tag" @click="toggleTagDiv" @mouseover="tagPic = tagPicBlue" @mouseout="tagPic = tagPic1" />
             <img :src="sharePic" class="share" @mouseover="sharePic = sharePicBlue" @mouseout="sharePic = sharePic1" />
             <el-dropdown @command="handleCommand">
@@ -82,7 +82,7 @@
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
   import { getTagsByNid, saveTag } from '@/api/tag'
-  import { deleteTagByNidTid, updateNote } from '@/api/note'
+  import { deleteTagByNidTid, updateNote, createNote } from '@/api/note'
 
   const marked = require('marked');
 
@@ -305,6 +305,58 @@
           }
         }
       },
+      updateOrSaveContent() {
+        if (this.note.id == undefined) {
+          this.saveNote()
+        } else {
+          this.updateContent()
+        }
+      },
+      saveNote() {
+        if (this.title == '新的markdown' || this.title.replace(/(^s*)|(s*$)/g, "").length == 0) {
+          this.$message({
+              message: '请输入标题',
+              type: 'warning'
+          });
+          return
+        }
+        
+        if (this.content.replace(/(^s*)|(s*$)/g, "").length == 0) {
+          this.$message({
+              message: '请输入正文内容',
+              type: 'warning'
+          });
+          return
+        }
+
+        var data = {
+          title: this.title,
+          content: this.content,
+          folderId: this.note.folder.id,
+          author: this.note.author,
+          source: '',
+          typeId: 2,
+          uid: localStorage.getItem('userId')
+        }
+
+        new Promise((resolve, reject) => {
+          createNote(data).then(response => {
+            if (response.status == 201) {
+              var id = response.data.id
+              this.$store.dispatch('GetNoteInfoById', id)
+              this.$message({
+                message: '新增markdown成功',
+                type: 'success'
+              });
+            } else {
+              this.$message({
+                message: '新增markdown失败，请检查网络',
+                type: 'success'
+              });
+            }
+          })
+        })
+      },
       updateContent() {
         this.isShowLoading = true;
         var id = this.note.id;
@@ -325,9 +377,6 @@
             this.isShowLoading = false
           })
         })
-      },
-      saveContent() {
-        console.log('sssssssssssssssssss')
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))

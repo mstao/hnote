@@ -8,6 +8,8 @@ import me.mingshan.facade.service.NoteService;
 import me.mingshan.web.exception.ServerException;
 import me.mingshan.web.model.ResultModel;
 import me.mingshan.web.model.SearchResultModel;
+import me.mingshan.web.vo.CreateNoteVO;
+import me.mingshan.web.vo.CreatedNoteVO;
 import me.mingshan.web.vo.NoteVO;
 import me.mingshan.web.vo.UpdateNoteVo;
 import org.dozer.Mapper;
@@ -136,7 +138,6 @@ public class NoteController extends BaseController {
     /**
      * Create a note.
      * @param noteVO
-     * @param ucBuilder
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
@@ -146,15 +147,14 @@ public class NoteController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<Void> createNote(@ApiParam(required=true, value="笔记信息", name="Note")
-                                           @RequestBody NoteVO noteVO, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<CreatedNoteVO> createNote(@ApiParam(required=true, value="笔记信息", name="Note")
+                                                    @RequestBody CreateNoteVO noteVO) {
         Note note = mapper.map(noteVO, Note.class);
-
-        noteService.insert(note);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/notes/{id}").buildAndExpand(note.getId()).toUri());
-
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        logger.info("Create note: {}", note);
+        Long id = noteService.insert(note);
+        CreatedNoteVO vo = new CreatedNoteVO();
+        vo.setId(id);
+        return new ResponseEntity<>(vo, HttpStatus.CREATED);
     }
 
     /**

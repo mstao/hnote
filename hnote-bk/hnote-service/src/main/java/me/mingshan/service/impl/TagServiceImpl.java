@@ -21,32 +21,17 @@ public class TagServiceImpl implements TagService {
     private TagDao tagDao;
 
     @Override
-    public Tag findById(long id) {
+    public Tag findById(Long id) {
         return tagDao.selectByPrimaryKey(id);
     }
 
     @Override
-    public long insert(Tag model) {
-        return 0;
-    }
-
-    @Override
-    public long update(Tag model) {
-        return 0;
-    }
-
-    @Override
-    public long delete(long id) {
-        return 0;
-    }
-
-    @Override
-    public List<Tag> findAllByNid(long nid) {
+    public List<Tag> findAllByNid(Long nid) {
         return tagDao.selectAllByNid(nid);
     }
 
     @Override
-    public long insert(Tag tag, long nid) {
+    public Long insert(Tag tag, Long nid) {
         tagDao.insert(tag);
         long tagId = tag.getId();
         NoteToTag noteToTag = new NoteToTag();

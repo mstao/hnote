@@ -98,19 +98,19 @@
                 <span class="title">{{item.title.substring(0, 18)}}</span>
                 <span class="date">{{item.date.substring(5, 10)}}</span>
                 <span class="operation">
-                  <img src="/static/img/download.png" />
-                  <img src="/static/img/share_16.png" />
-                  <img src="/static/img/delete.png" />
+                  <img src="/static/img/download.png" title="下载" />
+                  <img src="/static/img/share_16.png" title="分享" />
+                  <img src="/static/img/delete.png" title="删除" />
                 </span>
               </div>
-              <!-- <div class="rename-input">
+              <div class="rename-input">
                 <el-input></el-input>
-              </div> -->
+              </div>
             </div>
 
             <div class="list-item-operation-box item-operation-box">
               <ul>
-                <li @click="rename">重命名</li>
+                <li @click="renameNote">重命名</li>
                 <li @click="changeFileDialogVisible">移动到</li>
                 <li>删除</li>
                 <li>下载</li>
@@ -137,7 +137,7 @@
   import file_dialog from '../dialog/fileDialog.vue'
   import toJsonTree from '@/utils/toJsonTree'
   import { getFoldersByUid } from '@/api/folder'
-  import { getNotesByPage, getLastestNotes } from '@/api/note'
+  import { getNotesByPage, getLastestNotes, deleteNote } from '@/api/note'
   import { getNowFormatDate } from '@/utils/date'
   import { mapGetters } from 'vuex'
 
@@ -221,14 +221,23 @@
           });
       },
       fetchBasicInfo() {
+        // start loading
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading'
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 2000);
+
         // start progress bar
         NProgress.start()
-
         this.fetchFolders()
 
         this.fetchLastestNotes()
-        
         NProgress.done()
+        loading.close()
       },
       fetchFolders() {
         const uid = localStorage.getItem("userId");
@@ -285,7 +294,7 @@
               date: items[i].gmtCreate,
               noteType: items[i].noteType
             }
-            tempList.push(temp);
+            tempList.unshift(temp);
           }
           this.noteList = tempList
           // load note info by first item
@@ -330,8 +339,25 @@
       changeFileDialogVisible() {
         this.$store.dispatch('ChangeFileDialogVisible', true)
       },
-      rename() {
+      renameNote() {
 
+      },
+      deleteNote(id) {
+        new Promise((resolve, reject) => {
+          deleteNote(id).then(response => {
+            if (response.status == 204) {
+              // Remove note from list
+              var data = this.noteList
+              for (x in data) {
+                if (data[x].id == id) {
+                  this.noteList = this.data.splice(x, 1);
+                  break;
+                } 
+              }
+
+            }
+          })
+        })
       },
       cancelFirstLiStyle() {
         this.isSelectFirstLi = false
@@ -356,6 +382,12 @@
           this.noteList.push(data)
           this.$store.dispatch('SetNote', data)
         }
+      },
+      openFullScreen() {
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, 2000);
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))
