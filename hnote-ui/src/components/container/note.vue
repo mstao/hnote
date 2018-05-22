@@ -1,134 +1,150 @@
 <template>
-<el-container id="content">
-        <el-aside width="20%" class="aside-operation">
-            <div class="add-new-doc">
-              <el-dropdown class="add-new-doc-dropdown" @command="handleCreateCommand">
-                <span class="el-dropdown-link">
-                  <img src="/static/img/add.png" class="add-image">新文档<i class="el-icon-arrow-down el-icon--right"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>新建笔记</el-dropdown-item>
-                  <el-dropdown-item command="create-md">新建Markdown</el-dropdown-item>
-                  <el-dropdown-item>新建文件夹</el-dropdown-item>
-                  <el-dropdown-item divided>导入笔记</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </div>
+  <el-container id="content">
+    <el-aside width="20%" class="aside-operation">
+      <div class="add-new-doc">
+        <el-dropdown class="add-new-doc-dropdown" @command="handleCreateCommand">
+          <span class="el-dropdown-link">
+            <img src="/static/img/add.png" class="add-image">新文档<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>新建笔记</el-dropdown-item>
+            <el-dropdown-item command="create-md">新建Markdown</el-dropdown-item>
+            <el-dropdown-item>新建文件夹</el-dropdown-item>
+            <el-dropdown-item divided>导入笔记</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
 
-            <div class="operation-list">
-              <ul class="accordion-ul" @mouseover="cancelFirstLiStyle">
-                <li @click="fetchLastestNotes"><div :class="{'li-background-hover': isSelectFirstLi }"><img src="/static/img/new-doc.png" /><span>最新文档</span></div></li>
-                <li>
-                  <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
-                  <div class="submenu">
-                    <el-tree :data="folders" @node-click="handleNodeClick" @node-expand="handleNodeExpandCollapse" @node-collapse="handleNodeExpandCollapse"></el-tree>
-                    <div class="folder-item-operation-box item-operation-box">
+      <div class="operation-list">
+        <ul class="accordion-ul" @mouseover="cancelFirstLiStyle">
+          <li @click="fetchLastestNotes"><div :class="{'li-background-hover': isSelectFirstLi }"><img src="/static/img/new-doc.png" /><span>最新文档</span></div></li>
+          <li>
+            <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
+            <div class="submenu">
+              <el-tree :data="folders" @node-click="handleNodeClick" @node-expand="handleNodeExpandCollapse" @node-collapse="handleNodeExpandCollapse"></el-tree>
+              <div class="folder-item-operation-box item-operation-box">
+                <ul>
+                  <li  @mouseover="showExpandNewDiv = true"  @mouseout="showExpandNewDiv = false">新建<img src="/static/img/right-expand.png" />
+                    <div v-if="showExpandNewDiv" class="expand-new-div">
                       <ul>
-                        <li  @mouseover="showExpandNewDiv = true"  @mouseout="showExpandNewDiv = false">新建<img src="/static/img/right-expand.png" />
-                          <div v-if="showExpandNewDiv" class="expand-new-div">
-                            <ul>
-                              <li>文件夾</li>
-                              <li>Markdown</li>
-                            </ul>
-                          </div>
-                        </li>
-                        <li>重命名</li>
-                        <li @click="changeFileDialogVisible">移动到</li>
-                        <li>删除</li>
-                        <li>分享</li>
+                        <li>文件夾</li>
+                        <li>Markdown</li>
                       </ul>
                     </div>
-                  </div>
-                </li>
-                <li>
-                  <div class="link" v-on:click="dropdown($event)"><img src="/static/img/tag.png" /><span>我的标签</span></div>
-                  <div class="submenu tag-menu">
-                    <el-tag
-                      :key="tag"
-                      v-for="tag in dynamicTags"
-                      closable
-                      :disable-transitions="false"
-                      @close="handleClose(tag)">
-                      {{tag}}
-                    </el-tag>
-                    <el-input
-                      class="input-new-tag"
-                      v-if="inputVisible"
-                      v-model="inputValue"
-                      ref="saveTagInput"
-                      size="small"
-                      @keyup.enter.native="handleInputConfirm"
-                      @blur="handleInputConfirm"
-                    >
-                    </el-input>
-                    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
-                  </div>
-                </li>
-                <li><div><img src="/static/img/share.png" /><span>我的分享</span></div></li>
-                <li><div><img src="/static/img/garbage.png" /><span>废纸篓</span></div></li>
-              </ul>
-            </div>
-
-        </el-aside>
-        <el-aside width="20%" class="aside-list">
-          <div class="navi-list-container">
-            <div class="navi-list">
-              <img src="/static/img/back.png" class="back" />
-              <el-input  placeholder="搜索内容"></el-input>
-              <el-dropdown>
-                <span class="el-dropdown-link">
-                  <img src="/static/img/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
-                </span>
-                <el-dropdown-menu slot="dropdown" class="navi-list-dropdown-menu">
-                  <el-dropdown-item><span>摘要</span><img src="/static/img/selected.png" /></el-dropdown-item>
-                  <el-dropdown-item><span>列表</span></el-dropdown-item>
-                  <el-dropdown-item divided><span>创建时间</span><img src="/static/img/asc.png" /></el-dropdown-item>
-                  <el-dropdown-item><span>修改时间</span></el-dropdown-item>
-                  <el-dropdown-item><span>文件名称</span></el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </div>
-          </div>
-          <div class="list-content-container" v-if="noteList.length != 0">
-            <div class="list-content" @mouseover="handleSetCurrentNote(item)" @click="goNoteDetailPage(item.id)" :data-nid="item.id" :key="item.id" v-for="item in noteList">
-              <div>
-                <img src="/static/img/word.png" class="type-img" v-if="item.noteType.name == 'word'" />
-                <img src="/static/img/markdown.png" class="type-img" v-else-if="item.noteType.name == 'md'" />
-
-                <span class="title">{{item.title.substring(0, 18)}}</span>
-                <span class="date">{{item.date.substring(5, 10)}}</span>
-                <span class="operation">
-                  <img src="/static/img/download.png" title="下载" />
-                  <img src="/static/img/share_16.png" title="分享" />
-                  <img src="/static/img/delete.png" title="删除" />
-                </span>
-              </div>
-              <div class="rename-input">
-                <el-input></el-input>
+                  </li>
+                  <li>重命名</li>
+                  <li @click="changeFileDialogVisible">移动到</li>
+                  <li>删除</li>
+                  <li>分享</li>
+                </ul>
               </div>
             </div>
-
-            <div class="list-item-operation-box item-operation-box">
-              <ul>
-                <li @click="renameNote">重命名</li>
-                <li @click="changeFileDialogVisible">移动到</li>
-                <li>删除</li>
-                <li>下载</li>
-                <li>分享</li>
-              </ul>
+          </li>
+          <li>
+            <div class="link" v-on:click="dropdown($event)"><img src="/static/img/tag.png" /><span>我的标签</span></div>
+            <div class="submenu tag-menu">
+              <el-tag
+                :key="tag"
+                v-for="tag in dynamicTags"
+                closable
+                :disable-transitions="false"
+                @close="handleClose(tag)">
+                {{tag}}
+              </el-tag>
+              <el-input
+                class="input-new-tag"
+                v-if="inputVisible"
+                v-model="inputValue"
+                ref="saveTagInput"
+                size="small"
+                @keyup.enter.native="handleInputConfirm"
+                @blur="handleInputConfirm"
+              >
+              </el-input>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
             </div>
+          </li>
+          <li><div><img src="/static/img/share.png" /><span>我的分享</span></div></li>
+          <li><div><img src="/static/img/garbage.png" /><span>废纸篓</span></div></li>
+        </ul>
+      </div>
+    </el-aside>
+    <el-aside width="20%" class="aside-list">
+      <div class="navi-list-container">
+        <div class="navi-list">
+          <img src="/static/img/back.png" class="back" />
+          <el-input  placeholder="搜索内容"></el-input>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <img src="/static/img/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown" class="navi-list-dropdown-menu">
+              <el-dropdown-item><span>摘要</span><img src="/static/img/selected.png" /></el-dropdown-item>
+              <el-dropdown-item><span>列表</span></el-dropdown-item>
+              <el-dropdown-item divided><span>创建时间</span><img src="/static/img/asc.png" /></el-dropdown-item>
+              <el-dropdown-item><span>修改时间</span></el-dropdown-item>
+              <el-dropdown-item><span>文件名称</span></el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+      </div>
+      <div class="list-content-container" v-if="noteList.length != 0">
+        <div class="list-content" @mouseover="handleSetCurrentNote(item)" @click="goNoteDetailPage(item.id)" :data-nid="item.id" :key="item.id" v-for="item in noteList">
+          <div>
+            <img src="/static/img/word.png" class="type-img" v-if="item.noteType.name == 'word'" />
+            <img src="/static/img/markdown.png" class="type-img" v-else-if="item.noteType.name == 'md'" />
+
+            <span class="title">{{item.title.substring(0, 18)}}</span>
+            <span class="date">{{item.date.substring(5, 10)}}</span>
+            <span class="operation">
+              <img src="/static/img/download.png" title="下载" />
+              <img src="/static/img/share_16.png" title="分享" />
+              <img src="/static/img/delete.png" title="删除" />
+            </span>
           </div>
-          
-          <div class="list-content-container" v-else>
-            <center>
-              <img src="http://p8rape2j2.bkt.clouddn.com/Blank-page_No-content.png" class="default-no-list-image"/>
-            </center>
+          <div class="rename-input">
+            <el-input></el-input>
           </div>
-        </el-aside>
-        <el-main width="60%">
-          <router-view class="view"></router-view>
-        </el-main>
-</el-container>
+        </div>
+
+        <div class="list-item-operation-box item-operation-box">
+          <ul>
+            <li @click="changeFileDialogVisible">移动到</li>
+            <li @click="deleteNoteDialogVisible = true">删除</li>
+            <li>下载</li>
+            <li>分享</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="list-content-container" v-else>
+        <center>
+          <img src="http://p8rape2j2.bkt.clouddn.com/Blank-page_No-content.png" class="default-no-list-image"/>
+        </center>
+      </div>
+    </el-aside>
+    <el-main width="60%">
+      <router-view class="view"></router-view>
+    </el-main>
+    <!-- move to folder -->
+    <file-dailog :folders="folders"/>
+
+    <el-dialog
+      title="删除提示"
+      :visible.sync="deleteNoteDialogVisible"
+      width="30%">
+      <span>确认删除以下笔记：</span>
+      <div class="delete-dialog-content">
+        <img src="/static/img/word.png" class="delete-type-img" v-if="currentSelectedNote.noteType && currentSelectedNote.noteType.name == 'word'" />
+        <img src="/static/img/markdown.png" class="delete-type-img" v-else-if="currentSelectedNote.noteType && currentSelectedNote.noteType.name == 'md'" />
+        <span>{{currentSelectedNote.title}}</span>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteNoteDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handDeleteNote" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+      </span>
+    </el-dialog>
+  </el-container>
 </template>
 
 <script>
@@ -155,7 +171,9 @@
         dialogVisible: false,
         showExpandNewDiv: false,
         userId: '',
-        isSelectFirstLi: true
+        isSelectFirstLi: true,
+        deleteNoteDialogVisible: false,
+        fullscreenLoading: false
       };
     },
     components: {
@@ -164,7 +182,8 @@
     computed: {
       ...mapGetters([
         'selectedFolder',
-        'name'
+        'name',
+        'currentSelectedNote'
       ]),
     },
     mounted() {
@@ -339,22 +358,42 @@
       changeFileDialogVisible() {
         this.$store.dispatch('ChangeFileDialogVisible', true)
       },
-      renameNote() {
-
+      handDeleteNote() {
+        // close dialog
+        this.deleteNoteDialogVisible = false
+        // loading
+        this.openFullScreen() 
+        
+        var note = this.currentSelectedNote
+        if (note.id != undefined) {
+          this.deleteNote(note.id)
+        } else {
+          this.$message({
+            message: '无效的删除操作！',
+            type: 'warning'
+          });
+        }
       },
       deleteNote(id) {
         new Promise((resolve, reject) => {
           deleteNote(id).then(response => {
             if (response.status == 204) {
+              this.$message({
+                message: '删除成功！',
+                type: 'success'
+              });
               // Remove note from list
               var data = this.noteList
+              var x
               for (x in data) {
                 if (data[x].id == id) {
-                  this.noteList = this.data.splice(x, 1);
+                  data.splice(x, 1);
                   break;
                 } 
               }
 
+              // Remove note from vuex
+              this.$store.dispatch('ClearNoteInfo')
             }
           })
         })
@@ -387,7 +426,7 @@
         this.fullscreenLoading = true;
         setTimeout(() => {
           this.fullscreenLoading = false;
-        }, 2000);
+        }, 1500);
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))
@@ -705,6 +744,14 @@ body{margin: 0;}
 }
 .default-no-list-image {
   margin-top: 20px;
+}
+
+.delete-dialog-content {
+  margin-top: 20px;
+}
+.delete-dialog-content .delete-type-img { 
+  position: relative;
+  top: 5px;
 }
 </style>
 

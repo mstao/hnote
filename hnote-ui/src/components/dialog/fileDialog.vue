@@ -1,5 +1,5 @@
 <template>
-      <!-- 移动到文件夹dialog -->
+    <!-- 移动到文件夹dialog -->
     <el-dialog
       title="移动到"
       :visible.sync="fileDialogVisible"

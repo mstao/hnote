@@ -74,6 +74,22 @@
 
     <div v-else class="html-content markdown-body" v-html="htmlContent">
     </div>
+    
+    <el-dialog
+      title="删除提示"
+      :visible.sync="deleteNoteDialogVisible"
+      width="30%">
+      <span>确认删除以下笔记：</span>
+      <div class="delete-dialog-content">
+        <img src="/static/img/word.png" class="delete-type-img" v-if="note.noteType && note.noteType.name == 'word'" />
+        <img src="/static/img/markdown.png" class="delete-type-img" v-else-if="note.noteType && note.noteType.name == 'md'" />
+        <span>{{note.title}}</span>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteNoteDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handDeleteNote" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -82,7 +98,7 @@
   import { mavonEditor } from 'mavon-editor'
   import 'mavon-editor/dist/css/index.css'
   import { getTagsByNid, saveTag } from '@/api/tag'
-  import { deleteTagByNidTid, updateNote, createNote } from '@/api/note'
+  import { deleteTagByNidTid, updateNote, createNote, deleteNote } from '@/api/note'
 
   const marked = require('marked');
 
@@ -116,7 +132,9 @@
         inputVisible: false,
         inputValue: '',
         dynamicTags: [],
-        sourceTags:  []
+        sourceTags:  [],
+        deleteNoteDialogVisible: false,
+        fullscreenLoading: false
       }
     },
     watch:{
@@ -192,6 +210,8 @@
         if (command == 'move') {
           this.$store.dispatch('SetCurrentSelectedNote', this.note)
           this.$store.dispatch('ChangeFileDialogVisible', true)
+        } else if(command == 'delete') {
+          this.deleteNoteDialogVisible = true
         }
       },
       handleTagClose(tag) {
@@ -378,6 +398,43 @@
           })
         })
       },
+      handDeleteNote() {
+        // close dialog
+        this.deleteNoteDialogVisible = false
+        // loading
+        this.openFullScreen() 
+        
+        var note = this.note
+        if (note.id != undefined) {
+          this.deleteNote(note.id)
+        } else {
+          this.$message({
+            message: '无效的删除操作！',
+            type: 'warning'
+          });
+        }
+      },
+      deleteNote(id) {
+        new Promise((resolve, reject) => {
+          deleteNote(id).then(response => {
+            if (response.status == 204) {
+              this.$message({
+                message: '删除成功！',
+                type: 'success'
+              });
+
+              // Remove note from vuex
+              this.$store.dispatch('ClearNoteInfo')
+            }
+          })
+        })
+      },
+      openFullScreen() {
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, 1500);
+      },
       test(item) {
         console.log("item = " + JSON.stringify(item))
       }
@@ -434,7 +491,7 @@
   position: fixed;
   padding-left: 20px;
   padding-top: 20px;
-  height: 84%;
+  height: 83%;
   width: 59%;
   overflow: auto;
 }
@@ -498,5 +555,13 @@
 /* .slide-fade-leave-active for below version 2.1.8 */ {
   transform: translateX(10px);
   opacity: 0;
+}
+
+.delete-dialog-content {
+  margin-top: 20px;
+}
+.delete-dialog-content .delete-type-img { 
+  position: relative;
+  top: 5px;
 }
 </style>

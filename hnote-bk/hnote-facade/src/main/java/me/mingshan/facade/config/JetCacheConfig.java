@@ -1,4 +1,4 @@
-package me.mingshan.service.config;
+package me.mingshan.facade.config;
 
 import com.alicp.jetcache.anno.CacheConsts;
 import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
