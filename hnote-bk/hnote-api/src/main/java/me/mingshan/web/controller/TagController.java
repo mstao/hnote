@@ -6,6 +6,7 @@ import me.mingshan.facade.model.Tag;
 import me.mingshan.facade.service.TagService;
 import me.mingshan.web.exception.ServerException;
 import me.mingshan.web.model.ResultModel;
+import me.mingshan.web.vo.CreateTagVO;
 import me.mingshan.web.vo.TagVO;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,7 @@ public class TagController extends BaseController {
                     paramType = "header")
     })
     public ResponseEntity<Void> createTag(@ApiParam(required=true, value="Tag", name="tag")
-                                           @RequestBody TagVO tagVO, @RequestParam Long nid, UriComponentsBuilder ucBuilder) {
+                                           @RequestBody CreateTagVO tagVO, @RequestParam Long nid, UriComponentsBuilder ucBuilder) {
         Tag tag = mapper.map(tagVO, Tag.class);
 
         tagService.insert(tag, nid);

@@ -444,66 +444,6 @@
 </script>
 
 <style>
-body{margin: 0;}
-.wapper {
-  min-width: 1200px;
-  margin: 0 auto;
-  font-family: "Helvetica Neue","PingFang SC",Arial,sans-serif;
-}
-.el-header {
-  background-color: #3091F2;
-  color: #ffffff;
-  line-height: 60px;
-  height: 60px;
-}
-.el-header .logo {
-  float: left;
-  line-height: 50px;
-}
-.el-header .logo > span {
-  font-size: 16px;
-}
-.el-header .refresh {
-  float: left;
-  line-height: 50px;
-  margin-left: 50px;
-}
-.el-header .operation {
-  float: right;
-  line-height: 50px;
-  margin-right: 50px;
-  font-size: 14px;
-}
-.el-header .operation > span {
-  cursor: pointer;
-  padding-left: 20px;
-}
-.el-header .profile {
-  float: right;
-  width: 40px;
-  height: 40px;
-  margin-top: 5px;
-  margin-right: 30px;
-}
-.el-header .profile .avatar {
-  width: 40px;
-  height: 40px;
-  border-radius:40px;
-  -moz-border-radius: 40px;
-  -webkit-border-radius: 40px;
-  cursor: pointer;
-  display: block;
-}
-.el-header .profile .avatar .avatar-img {
-  width: 40px;
-  height: 40px;
-  line-height: 0;		/* remove line-height */
-  display: inline;	/* circle wraps image */
-  border-radius: 50%;	/* relative value */
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  transition: linear 0.25s;
-}
 .el-aside {
   height: 100%;
   border-right: 1px solid #F0F0F0;

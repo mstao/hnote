@@ -17,6 +17,7 @@ public class Tag implements Serializable {
     private static final long serialVersionUID = -4305093510865788901L;
 
     private Long id;
+    private Long uid;
     private String name;
     private Integer isDeleted;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

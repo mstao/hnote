@@ -17,6 +17,7 @@ public class TagVO implements Serializable {
     private static final long serialVersionUID = -3356168576030113008L;
 
     private Long id;
+    private Long uid;
     private String name;
     private Integer isDeleted;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

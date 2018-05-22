@@ -10,7 +10,7 @@
             <img :src="editPic" v-show="isShowEditBtn" class="eidt" @click='changeEditStatus' @mouseover="editPic = editPicBlue" @mouseout="editPic = editPic1" />
             <img :src="savePic" v-show="isShowSaveBtn" class="save" @click='updateOrSaveContent' @mouseover="savePic = savePicBlue" @mouseout="savePic = savePic1" />
             <img :src="tagPic" class="tag" @click="toggleTagDiv" @mouseover="tagPic = tagPicBlue" @mouseout="tagPic = tagPic1" />
-            <img :src="sharePic" class="share" @mouseover="sharePic = sharePicBlue" @mouseout="sharePic = sharePic1" />
+            <img :src="sharePic" class="share" @mouseover="sharePic = sharePicBlue" @mouseout="sharePic = sharePic1" @click="shareNote"/>
             <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
                 <img :src="morePic" class="more" @mouseover="morePic = morePicBlue" @mouseout="morePic = morePic1" />
@@ -243,7 +243,8 @@
         var inputValue = this.inputValue;
         if (inputValue) {
           var tag = {
-            name: inputValue
+            name: inputValue,
+            uid: localStorage.getItem('userId')
           }
     
           new Promise((resolve, reject) => {
@@ -428,6 +429,11 @@
             }
           })
         })
+      },
+      shareNote() {
+        if (this.note.id != undefined) {
+          this.$router.push('/share/index/' + this.note.id)
+        }
       },
       openFullScreen() {
         this.fullscreenLoading = true;

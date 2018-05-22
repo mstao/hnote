@@ -10,7 +10,10 @@ import store from './store'
 import './icons' // icon
 import './permission' // permission control
 import './errorLog'// error log
- 
+import TopGitment from 'top-gitment'
+
+Vue.use(TopGitment) 
+
 Vue.use(Element)
 
 Vue.config.productionTip = false

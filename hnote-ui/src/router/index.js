@@ -4,6 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',  
   routes: [
     {
       path: '/',
@@ -18,6 +19,18 @@ export default new Router({
             {
               path: 'detail',
               component: resolve => require(['../components/content/edit.vue'], resolve)
+            }
+          ]
+        },
+        {
+          path: 'share',
+          component: resolve => require(['../components/container/share.vue'], resolve),
+          children: [
+            { path: '/', redirect: 'index'},  
+            {
+              path: 'index/:id',
+              component: resolve => require(['../components/share/index.vue'], resolve),
+              props: true
             }
           ]
         }

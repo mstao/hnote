@@ -12,7 +12,7 @@ export function saveTag(tag, nid) {
     return request({
         url: '/tags',
         method: 'post',
-        data: {name: tag.name},
+        data: {name: tag.name, uid: tag.uid},
         params: {nid}
     })
 }
