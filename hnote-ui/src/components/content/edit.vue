@@ -103,7 +103,7 @@
   const marked = require('marked');
 
   export default {
-    name: 'editor',
+    name: 'edit',
     data() {
       return {
         editPic: "/static/img/edit.png",
@@ -134,9 +134,13 @@
         dynamicTags: [],
         sourceTags:  [],
         deleteNoteDialogVisible: false,
-        fullscreenLoading: false
+        fullscreenLoading: false,
+        //nid: this.$route.params.id
       }
     },
+    // create() {
+    //   this.$store.dispatch('GetNoteInfoById', this.nid)
+    // },
     watch:{
       note(newNote, oldNote) {
         if (newNote.id === oldNote.id){  

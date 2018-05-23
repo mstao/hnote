@@ -186,8 +186,11 @@
         'currentSelectedNote'
       ]),
     },
-    mounted() {
+    created() {
       this.init()
+    },
+    watch: {
+      '$route': 'init'
     },
     methods: {
       init() {
@@ -326,6 +329,7 @@
       },
       goNoteDetailPage(id) {
         this.$store.dispatch('GetNoteInfoById', id)
+        //this.$router.push('/note/detail/' + id)
       },
       handleNodeExpandCollapse() {
         $(".item-operation-box").hide();

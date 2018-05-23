@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       nid: this.$route.params.id,
-      note: {},
+      note: '',
       htmlContent: '',
       options: {
         id: this.$route.params.id, // 评论页唯一标识符
@@ -72,8 +72,12 @@ export default {
     }
   },
   components: { BackToTop },
-  mounted() {
+  created() {
     this.init()
+  },
+  watch: {
+    // 如果路由有变化，会再次执行该方法
+    '$route': 'init'
   },
   computed: {
     ...mapGetters([
@@ -114,7 +118,17 @@ export default {
     }
   }
 }
+
+
 </script>
+
+<style>
+@import "../../lib/css/markdown.css";
+@import "../../lib/css/md.css";
+@import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css');
+</style>
+
 
 <style>
 #share-main-container {

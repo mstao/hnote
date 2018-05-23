@@ -1,6 +1,6 @@
 <template>
     <el-header>
-        <div class="logo">
+        <div class="logo" title="首页" @click="goHome">
             <span>H-Note</span>
         </div>
         <div class="refresh">
@@ -80,6 +80,9 @@ export default {
     'user-info': user_info
   },
   methods: {
+    goHome() {
+      this.$router.push('/')
+    },
     handleCommand(command) {
       if (command == 'logout') {
         this.$store.dispatch('LogOut').then(() => {
@@ -108,6 +111,7 @@ export default {
 .el-header .logo {
   float: left;
   line-height: 50px;
+  cursor: pointer;
 }
 
 .el-header .logo > span {
