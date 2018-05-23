@@ -6,7 +6,7 @@
     <resultMap id="tagResultMap" type="me.mingshan.facade.model.Tag">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
-        <result column="isDeleted" property="isDeleted"/>
+        <result column="is_deleted" property="deleted"/>
         <result column="gmt_create" property="gmtCreate"/>
         <result column="gmt_modified" property="gmtModified"/>
     </resultMap>
@@ -29,7 +29,22 @@
                t.gmt_modified
         from hn_tag t
         left join hn_note_to_tag ntg on ntg.tag_id = t.id
-        where ntg.note_id = #{nid}
+        where ntg.note_id = #{nid} and t.is_deleted = 0
+    </select>
+
+    <select id="selectByNameUid" resultMap="tagResultMap">
+        select t.id
+        from hn_tag t
+        where t.name = #{name} and t.uid = #{uid} and t.is_deleted = 0
+    </select>
+
+    <select id="selectByUid" parameterType="java.lang.Long" resultMap="tagResultMap">
+        select t.id,
+               t.name,
+               t.is_deleted,
+               t.gmt_create,
+               t.gmt_modified
+        from hn_tag t where t.uid = #{uid} and t.is_deleted = 0
     </select>
 
     <insert id="insert" parameterType="me.mingshan.facade.model.Tag" useGeneratedKeys="true" keyProperty="id">

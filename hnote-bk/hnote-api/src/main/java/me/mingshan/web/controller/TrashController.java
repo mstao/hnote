@@ -1,22 +1,18 @@
 package me.mingshan.web.controller;
 
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import me.mingshan.common.annotation.Authorization;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.TrashService;
+import me.mingshan.web.exception.ServerException;
+import me.mingshan.web.model.ResultModel;
 import me.mingshan.web.model.SearchResultModel;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -67,5 +63,32 @@ public class TrashController extends BaseController {
         model.setItems(notes);
         model.setTotal(total);
         return new ResponseEntity<>(model, HttpStatus.OK);
+    }
+
+    /**
+     * Recovers note by id.
+     * @param:  * @param null
+     */
+    @RequestMapping(value = "/recover/{id}", method = RequestMethod.PUT)
+    @ApiOperation(value="Recover note", httpMethod="PUT", notes="Recover note which is already deleted.")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<ResultModel> deleteNote(@ApiParam(required=true, value="Note ID", name="id")
+                                                  @PathVariable("id") Long id) {
+        logger.info("Fetching & Deleting Note with id " + id);
+        try {
+            trashService.recover(id);
+        } catch (RuntimeException e) {
+            ResultModel result = new ResultModel();
+            result.setCode(1024);
+            result.setMessage("Unable to recover note with id " + id);
+            logger.info("Unable to recover note with id " + id);
+            throw new ServerException(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

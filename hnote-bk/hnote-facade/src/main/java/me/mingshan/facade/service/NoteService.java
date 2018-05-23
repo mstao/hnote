@@ -79,5 +79,16 @@ public interface NoteService {
      * @param token
      * @return
      */
-    PageInfo<Note>findByToken(String token, Integer pageNumber, Integer pageSize);
+    PageInfo<Note> findByToken(String token, Integer pageNumber, Integer pageSize);
+
+
+    /**
+     * Select by tagId.
+     *
+     * @param tid
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
+    PageInfo<Note> findByTid(Long tid, Integer pageNumber, Integer pageSize);
 }

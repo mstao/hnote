@@ -23,3 +23,10 @@ export function getTagById(tid) {
         method: 'get'
     })
 }
+
+export function getTagsByUid(uid) {
+    return request({
+        url: '/tags/users/' + uid,
+        method: 'get'
+    })
+}

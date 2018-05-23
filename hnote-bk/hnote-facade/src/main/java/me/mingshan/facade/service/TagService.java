@@ -12,7 +12,7 @@ import java.util.List;
 public interface TagService {
 
     /**
-     *
+     * Find by id.
      * @param id
      * @return
      */
@@ -25,6 +25,13 @@ public interface TagService {
      * @return
      */
     List<Tag> findAllByNid(Long nid);
+
+    /**
+     * Find by uid.
+     * @param uid
+     * @return
+     */
+    List<Tag> findByUid(Long uid);
 
     /**
      *

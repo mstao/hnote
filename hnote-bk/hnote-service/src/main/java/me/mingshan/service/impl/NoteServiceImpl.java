@@ -55,6 +55,14 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public PageInfo<Note> findByTid(Long tid, Integer pageNumber, Integer pageSize) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<Note> notes = noteDao.selectByTid(tid);
+        PageInfo<Note> page = new PageInfo<>(notes);
+        return page;
+    }
+
+    @Override
     public Long insert(Note model) {
         noteDao.insert(model);
         return model.getId();

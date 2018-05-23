@@ -57,7 +57,7 @@ public class TagController extends BaseController {
     }
 
     /**
-     * Get folder by id.
+     * Get tag by id.
      *
      * @param id The folder id.
      * @return
@@ -83,6 +83,24 @@ public class TagController extends BaseController {
         return new ResponseEntity<>(tagVO, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/users/{uid}", method = RequestMethod.GET)
+    @ApiOperation(value="Get tags by uid", httpMethod="GET", notes="Get tags by uid")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<List<TagVO>> getTagsByUid(@PathVariable Long uid) {
+        List<TagVO> tagsVOs = new ArrayList<>();
+        List<Tag> tags = tagService.findByUid(uid);
+        for (Tag tag : tags) {
+            TagVO tagVO = mapper.map(tag, TagVO.class);
+            tagsVOs.add(tagVO);
+        }
+
+        return new ResponseEntity<>(tagsVOs, HttpStatus.OK);
+    }
+
     /**
      * Create tag.
      *
@@ -99,12 +117,13 @@ public class TagController extends BaseController {
                     paramType = "header")
     })
     public ResponseEntity<Void> createTag(@ApiParam(required=true, value="Tag", name="tag")
-                                           @RequestBody CreateTagVO tagVO, @RequestParam Long nid, UriComponentsBuilder ucBuilder) {
+                                              @RequestBody CreateTagVO tagVO, @RequestParam Long nid, UriComponentsBuilder ucBuilder) {
         Tag tag = mapper.map(tagVO, Tag.class);
 
         tagService.insert(tag, nid);
+
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/notes/{id}").buildAndExpand(tag.getId()).toUri());
+        headers.setLocation(ucBuilder.path("/tags/{id}").buildAndExpand(tag.getId()).toUri());
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }

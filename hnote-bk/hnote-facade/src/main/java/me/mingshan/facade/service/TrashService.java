@@ -18,4 +18,10 @@ public interface TrashService {
      * @return
      */
     PageInfo<Note> findAll(Integer pageNumber, Integer pageSize);
+
+    /**
+     * Reset note which is already deleted.
+     * @param id
+     */
+    void recover(Long id);
 }

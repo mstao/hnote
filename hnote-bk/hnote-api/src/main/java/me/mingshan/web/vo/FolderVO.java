@@ -19,5 +19,5 @@ public class FolderVO implements Serializable {
     private Integer level;
     private Long pid;
     private Long uid;
-    private Integer isDeleted;
+    private Boolean deleted;
 }

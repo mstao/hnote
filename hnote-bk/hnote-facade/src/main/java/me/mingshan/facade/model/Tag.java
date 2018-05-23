@@ -19,7 +19,7 @@ public class Tag implements Serializable {
     private Long id;
     private Long uid;
     private String name;
-    private Integer isDeleted;
+    private Boolean deleted;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date gmtCreate;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

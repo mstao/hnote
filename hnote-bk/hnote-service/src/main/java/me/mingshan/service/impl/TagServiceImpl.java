@@ -29,9 +29,21 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<Tag> findByUid(Long uid) {
+        return tagDao.selectByUid(uid);
+    }
+
+    @Override
     public Long insert(Tag tag, Long nid) {
-        tagDao.insert(tag);
-        long tagId = tag.getId();
+        Tag curr = tagDao.selectByNameUid(tag.getName(), tag.getUid());
+        long tagId = 0L;
+        if (curr == null) {
+            tagDao.insert(tag);
+            tagId = tag.getId();
+        } else {
+            tagId = curr.getId();
+        }
+
         NoteToTag noteToTag = new NoteToTag();
         noteToTag.setTagId(tagId);
         noteToTag.setNoteId(nid);

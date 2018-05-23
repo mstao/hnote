@@ -22,7 +22,7 @@ public class Folder implements Serializable {
     private Integer level;
     private Long pid;
     private Long uid;
-    private Integer isDeleted;
+    private Boolean deleted;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date gmtCreate;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

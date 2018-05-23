@@ -42,6 +42,17 @@ export function getNoteByToken(token, pageNumber, pageSize) {
     })
 }
 
+export function getNoteByTid(tid, pageNumber, pageSize) {
+    return request({
+        url: '/notes/tags/' + tid,
+        method: 'get',
+        params: {
+            pageNumber,
+            pageSize,
+        }
+    })
+}
+
 export function updateNote(note) {
     return request({
         url: '/notes',

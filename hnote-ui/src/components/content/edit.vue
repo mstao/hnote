@@ -201,6 +201,9 @@
         }
       }
     },
+    components: {
+      'mavon-editor': mavonEditor
+    },
     mounted() {
       this.init()
     },
@@ -448,9 +451,6 @@
       test(item) {
         console.log("item = " + JSON.stringify(item))
       }
-    },
-    components: {
-      'mavon-editor': mavonEditor
     }
   };
 </script>

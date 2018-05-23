@@ -27,4 +27,9 @@ public class TrashServiceImpl implements TrashService {
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }
+
+    @Override
+    public void recover(Long id) {
+        trashDao.recover(id);
+    }
 }

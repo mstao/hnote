@@ -9,7 +9,7 @@
         <result column="level" property="level"/>
         <result column="pid" property="pid"/>
         <result column="uid" property="uid"/>
-        <result column="isDeleted" property="isDeleted"/>
+        <result column="is_deleted" property="deleted"/>
         <result column="gmt_create" property="gmtCreate"/>
         <result column="gmt_modified" property="gmtModified"/>
     </resultMap>

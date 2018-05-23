@@ -14,4 +14,10 @@ public interface TrashDao {
      * @return
      */
     List<Note> selectByPage();
+
+    /**
+     * Reset note which is already deleted.
+     * @param id
+     */
+    void recover(Long id);
 }

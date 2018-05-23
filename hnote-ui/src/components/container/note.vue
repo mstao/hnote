@@ -43,25 +43,7 @@
           <li>
             <div class="link" v-on:click="dropdown($event)"><img src="/static/img/tag.png" /><span>我的标签</span></div>
             <div class="submenu tag-menu">
-              <el-tag
-                :key="tag"
-                v-for="tag in dynamicTags"
-                closable
-                :disable-transitions="false"
-                @close="handleClose(tag)">
-                {{tag}}
-              </el-tag>
-              <el-input
-                class="input-new-tag"
-                v-if="inputVisible"
-                v-model="inputValue"
-                ref="saveTagInput"
-                size="small"
-                @keyup.enter.native="handleInputConfirm"
-                @blur="handleInputConfirm"
-              >
-              </el-input>
-              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+              <span class="tag-span" @click.stop="fetchNotesByTid(tag)" :title="tag" v-bind:key="tag" v-for="tag in dynamicTags">{{tag}}</span>
             </div>
           </li>
           <li><div><img src="/static/img/share.png" /><span>我的分享</span></div></li>
@@ -110,7 +92,8 @@
         <div class="list-item-operation-box item-operation-box">
           <ul>
             <li @click="changeFileDialogVisible">移动到</li>
-            <li @click="deleteNoteDialogVisible = true">删除</li>
+            <li @click="deleteNoteDialogVisible = true" v-if="!currentSelectedNote.deleted">删除</li>
+            <li @click="recover" v-else>恢复</li>
             <li>下载</li>
             <li @click="shareNote">分享</li>
           </ul>
@@ -153,8 +136,9 @@
   import file_dialog from '../dialog/fileDialog.vue'
   import toJsonTree from '@/utils/toJsonTree'
   import { getFoldersByUid } from '@/api/folder'
-  import { getNotesByPage, getLastestNotes, deleteNote, getNoteByToken } from '@/api/note'
-  import { getAllTrashsByPage } from '@/api/trash'
+  import { getNotesByPage, getLastestNotes, deleteNote, getNoteByToken, getNoteByTid } from '@/api/note'
+  import { getAllTrashsByPage, recover } from '@/api/trash'
+  import { getTagsByUid } from '@/api/tag'
   import { getNowFormatDate } from '@/utils/date'
   import { mapGetters } from 'vuex'
 
@@ -165,6 +149,7 @@
     data() {
       return {
         folders: [],
+        sourceTags: [],
         dynamicTags: [],
         inputVisible: false,
         inputValue: '',
@@ -257,11 +242,34 @@
 
         // start progress bar
         NProgress.start()
+
         this.fetchFolders()
 
         this.fetchLastestNotes()
+
+        this.fetchTags()
+
         NProgress.done()
         loading.close()
+      },
+      fetchTags() {
+        const uid = localStorage.getItem("userId");
+        new Promise((resolve, reject) => {
+          getTagsByUid(uid).then(response => {
+            if (response.status == 200) {
+              var tempTags = [];
+              var x;
+              this.sourceTags = response.data;
+              for (x in this.sourceTags) {
+                tempTags.push(this.sourceTags[x].name)
+              }
+              this.dynamicTags = tempTags;
+            }
+            resolve()
+          }).catch(error => {
+            reject(error)
+          })
+        })
       },
       fetchFolders() {
         const uid = localStorage.getItem("userId");
@@ -316,6 +324,7 @@
               id: items[i].id,
               title: items[i].title,
               date: items[i].gmtCreate,
+              deleted: items[i].deleted,
               noteType: items[i].noteType
             }
             tempList.unshift(temp);
@@ -435,8 +444,11 @@
               type: 'warning'
           });
         } else {
-          var pageNumber = 1;
-          var pageSize = 20;
+          var pageNumber = 1
+          var pageSize = 20
+          // loading
+          this.openFullScreen() 
+          
           new Promise((resolve, reject) => {
             getNoteByToken(this.token, pageNumber, pageSize).then(response => {
               this.handleFetchNotes(response)
@@ -463,6 +475,56 @@
         if (this.currentSelectedNote.id != undefined) {
           this.$router.push('/share/index/' + this.currentSelectedNote.id)
         }
+      },
+      recover() {
+        // loading
+        this.openFullScreen() 
+
+        var id = this.currentSelectedNote.id;
+        new Promise((resolve, reject) => {
+          recover(id).then(response => {
+            if (response.status == 204) {
+              this.$message({
+                message: '恢复成功！',
+                type: 'success'
+              });
+              // Remove note from list
+              var data = this.noteList
+              var x
+              for (x in data) {
+                if (data[x].id == id) {
+                  data.splice(x, 1);
+                  break;
+                } 
+              }
+
+              // Remove note from vuex
+              this.$store.dispatch('ClearNoteInfo')
+            }
+          })
+        })
+      },
+      fetchNotesByTid(tag) {
+        // Get tag id
+        var x;
+        var tagId;
+        for (x in this.sourceTags) {
+          if (tag == this.sourceTags[x].name) {
+            tagId = this.sourceTags[x].id;
+            break;
+          }
+        }
+
+        var pageNumber = 1;
+        var pageSize = 20;
+        // Delete data from database
+        new Promise((resolve, reject) => {
+          getNoteByTid(tagId, pageNumber, pageSize).then(response => {
+            if (response.status == 200) {
+              this.handleFetchNotes(response)
+            }
+          })
+        })
       },
       openFullScreen() {
         this.fullscreenLoading = true;
@@ -568,32 +630,25 @@
   margin-left: 5px;
   margin-top: 10px;
   margin-bottom: 10px;
+  width: 250px;
 }
-.operation-list ul li .tag-menu .el-tag {
-  margin-left: 10px;
-  margin-top: 5px;
-}
-.operation-list ul li .tag-menu .button-new-tag {
-  margin-top: 5px;
-}
-.operation-list ul li .tag-menu .button-new-tag:hover {
-  margin-top: 5px;
-}
-.el-tag + .el-tag {
-  margin-left: 10px;
-}
-.button-new-tag {
-  margin-left: 10px;
+.operation-list ul li .tag-menu .tag-span {
+  background-color: rgba(64,158,255,.1);
+  display: inline-block;
+  padding: 0 10px;
   height: 32px;
   line-height: 30px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.input-new-tag {
-  width: 90px;
+  font-size: 12px;
+  color: #409eff;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: 1px solid rgba(64,158,255,.2);
+  white-space: nowrap;
   margin-left: 10px;
-  vertical-align: bottom;
+  margin-top: 5px;
+  cursor: pointer;
 }
+
 .aside-list {
   background: #FAFAFA;
   overflow: hidden;

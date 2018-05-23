@@ -143,6 +143,41 @@ public class NoteController extends BaseController {
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
+    /**
+     * Get notes by tid.
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @param tid
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/tags/{tid}", method = RequestMethod.GET)
+    @ApiOperation(value="Get notes by tid.", httpMethod="GET", notes="Get notes")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<SearchResultModel<Note>> listNotesByTid(@RequestParam Integer pageNumber,
+                                                                  @RequestParam Integer pageSize,
+                                                                  @PathVariable Long tid) {
+        logger.info("page = " + pageNumber + ",per_page = " + pageSize + ",tid = " + tid);
+
+        PageInfo<Note> pageInfo = noteService.findByTid(tid, pageNumber, pageSize);
+        List<Note> notes = pageInfo.getList();
+        // 总记录数
+        Long total = pageInfo.getTotal();
+        if(notes.isEmpty()){
+            // You many decide to return HttpStatus.NOT_FOUND
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        SearchResultModel<Note> model = new SearchResultModel<>();
+        model.setItems(notes);
+        model.setTotal(total);
+        return new ResponseEntity<>(model, HttpStatus.OK);
+    }
 
     /**
      * Get note by id.

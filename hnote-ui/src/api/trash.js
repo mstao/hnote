@@ -10,3 +10,10 @@ export function getAllTrashsByPage(pageNumber, pageSize) {
         }
     })
 }
+
+export function recover(nid){
+    return request({
+        url: '/trashs/recover/' + nid,
+        method: 'put'
+    })
+}

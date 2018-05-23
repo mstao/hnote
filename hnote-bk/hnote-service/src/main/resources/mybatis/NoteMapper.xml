@@ -91,7 +91,7 @@
                            ntg.note_id
                    from hn_tag tag
                    LEFT JOIN hn_note_to_tag ntg on ntg.tag_id = tag.id) t on t.note_id = n.id
-        where n.id = #{id} and n.is_deleted = 0
+        where n.id = #{id}
     </select>
     
     <select id="selectByPage" parameterType="java.lang.Long" resultMap="simpleNoteResultMap">
@@ -149,6 +149,26 @@
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
         where n.is_deleted = 0 order by n.gmt_create desc
+    </select>
+
+    <select id="selectByTid" parameterType="java.lang.Long" resultMap="simpleNoteResultMap">
+        select n.id,
+               n.title,
+               n.uid,
+               n.is_deleted,
+               n.gmt_create,
+               n.gmt_modified,
+               nt.id nt_id,
+               nt.name nt_name,
+               f.id folder_id,
+               f.label folder_name,
+               f.level folder_level,
+               f.pid folder_pid
+        from hn_note n
+        left join hn_note_type nt on nt.id = n.type_id
+        left join hn_folder f on f.id = n.folder_id
+        left join hn_note_to_tag ntg on ntg.note_id = n.id
+        where n.is_deleted = 0 and ntg.tag_id = #{tid} order by n.gmt_create desc
     </select>
 
     <!-- 添加-->

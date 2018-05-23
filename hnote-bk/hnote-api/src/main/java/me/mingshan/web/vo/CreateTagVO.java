@@ -14,5 +14,5 @@ public class CreateTagVO implements Serializable {
 
     private Long uid;
     private String name;
-    private Integer isDeleted;
+    private Boolean deleted;
 }

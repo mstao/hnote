@@ -22,6 +22,21 @@ public interface TagDao extends BaseDao<Tag> {
     List<Tag> selectAllByNid(long nid);
 
     /**
+     * Select tag by id.
+     * @param name
+     * @param uid
+     * @return
+     */
+    Tag selectByNameUid(@Param("name") String name, @Param("uid") Long uid);
+
+    /**
+     * Select by uid.
+     * @param uid
+     * @return
+     */
+    List<Tag> selectByUid(Long uid);
+
+    /**
      * Insert notetotag
      *
      * @param noteToTag

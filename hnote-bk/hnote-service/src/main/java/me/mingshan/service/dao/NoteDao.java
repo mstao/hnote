@@ -39,4 +39,11 @@ public interface NoteDao extends BaseDao<Note> {
      * @return
      */
     List<Note> selectByToken(String token);
+
+    /**
+     * Select by tagId.
+     * @param tid
+     * @return
+     */
+    List<Note> selectByTid(Long tid);
 }

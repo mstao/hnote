@@ -19,7 +19,7 @@ public class NoteToTag implements Serializable {
     private Long id;
     private Long noteId;
     private Long tagId;
-    private Integer isDeleted;
+    private Boolean deleted;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date gmtCreate;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

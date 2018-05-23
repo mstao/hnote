@@ -8,6 +8,7 @@
         <result column="title" property="title"/>
         <result column="source" property="source"/>
         <result column="uid" property="uid"/>
+        <result column="is_deleted" property="deleted"/>
         <result column="gmt_create" property="gmtCreate"/>
 
         <association property="noteType" javaType="me.mingshan.facade.model.NoteType">
@@ -41,4 +42,8 @@
         left join hn_folder f on f.id = n.folder_id
         where n.is_deleted = 1 order by n.gmt_create desc
     </select>
+
+    <update id="recover" parameterType="java.lang.Long">
+        update hn_note set is_deleted = 0 where is_deleted = 1 and id = #{id}
+    </update>
 </mapper>
