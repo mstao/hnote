@@ -1,6 +1,5 @@
 package me.mingshan.service.impl;
 
-import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.NoteToTag;
 import me.mingshan.facade.model.Tag;
 import me.mingshan.facade.service.TagService;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: mingshan

@@ -30,6 +30,18 @@ export function getNoteById(noteId) {
     })
 }
 
+export function getNoteByToken(token, pageNumber, pageSize) {
+    return request({
+        url: '/notes/search',
+        method: 'get',
+        params: {
+            token,
+            pageNumber,
+            pageSize,
+        }
+    })
+}
+
 export function updateNote(note) {
     return request({
         url: '/notes',

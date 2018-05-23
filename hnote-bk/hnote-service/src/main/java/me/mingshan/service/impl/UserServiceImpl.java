@@ -1,15 +1,11 @@
 package me.mingshan.service.impl;
 
-import com.alicp.jetcache.anno.Cached;
-import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.UserService;
 import me.mingshan.service.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: mingshan

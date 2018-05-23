@@ -31,4 +31,12 @@ public interface NoteDao extends BaseDao<Note> {
      * @return
      */
     List<Note> selectLastestNotes();
+
+    /**
+     * Fuzzy search.
+     *
+     * @param token
+     * @return
+     */
+    List<Note> selectByToken(String token);
 }

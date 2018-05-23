@@ -129,7 +129,6 @@ export default {
 @import url('https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css');
 </style>
 
-
 <style>
 #share-main-container {
     padding-top: 10px;
@@ -165,11 +164,12 @@ export default {
 }
 
 .share-content-header {
-    width: 80%;
+    text-align:center;
+    width: 100%;
     margin: 0 auto;
-    padding: 20px;
-    font-size: 24px;
-    font-family: Microsoft YaHei,\5FAE软雅黑,Microsoft JhengHei,\534E文黑体,arial,sans-serif;
+    padding: 0 20px 20px 20px;
+    font-size: 26px;
+    font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 
 #comment-container {
@@ -195,9 +195,7 @@ div {
     -ms-user-select: text;
     user-select: text;
 }
-.share-download {
-    overflow: auto;
-}
+
 .share-content, .share-download, .share-office, .share-pdf, .share-table {
     display: block;
     position: relative;
@@ -211,13 +209,4 @@ div {
     
 }
 
-.markdown-body {
-    -webkit-text-size-adjust: 100%;
-    line-height: 1.5;
-    color: #24292e;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 16px;
-    line-height: 1.5;
-    word-wrap: break-word;
-}
 </style>

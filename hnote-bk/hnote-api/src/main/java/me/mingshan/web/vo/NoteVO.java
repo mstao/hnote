@@ -24,7 +24,7 @@ public class NoteVO implements Serializable {
     private Long uid;
     private Long typeId;
     private Long folderId;
-    private Integer isDeleted;
+    private Boolean deleted;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date gmtCreate;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

@@ -3,5 +3,42 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="me.mingshan.service.dao.TrashDao">
+    <resultMap id="simpleNoteResultMap" type="me.mingshan.facade.model.Note">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="source" property="source"/>
+        <result column="uid" property="uid"/>
+        <result column="gmt_create" property="gmtCreate"/>
 
+        <association property="noteType" javaType="me.mingshan.facade.model.NoteType">
+            <id column="nt_id" property="id"/>
+            <result column="nt_name" property="name"/>
+        </association>
+
+        <association property="folder" javaType="me.mingshan.facade.model.Folder">
+            <id column="folder_id" property="id"/>
+            <result column="folder_name" property="label"/>
+            <result column="folder_level" property="level"/>
+            <result column="folder_pid" property="pid"/>
+        </association>
+    </resultMap>
+
+    <select id="selectByPage" resultMap="simpleNoteResultMap">
+        select n.id,
+               n.title,
+               n.uid,
+               n.is_deleted,
+               n.gmt_create,
+               n.gmt_modified,
+               nt.id nt_id,
+               nt.name nt_name,
+               f.id folder_id,
+               f.label folder_name,
+               f.level folder_level,
+               f.pid folder_pid
+        from hn_note n
+        left join hn_note_type nt on nt.id = n.type_id
+        left join hn_folder f on f.id = n.folder_id
+        where n.is_deleted = 1 order by n.gmt_create desc
+    </select>
 </mapper>

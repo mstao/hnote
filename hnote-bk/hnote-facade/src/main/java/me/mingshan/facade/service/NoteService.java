@@ -6,6 +6,8 @@ import com.alicp.jetcache.anno.Cached;
 import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.Note;
 
+import java.util.List;
+
 /**
  * @Author: mingshan
  * @Date: Created in 16:51 2018/4/27
@@ -53,14 +55,14 @@ public interface NoteService {
      * @param fid
      * @return
      */
-    PageInfo<Note> findAll(int pageNumber, int pageSize, long fid);
+    PageInfo<Note> findAll(Integer pageNumber, Integer pageSize, Long fid);
 
     /**
      *
      * @param nid
      * @param tid
      */
-    void deleteByNidTid(long nid, long tid);
+    void deleteByNidTid(Long nid, Long tid);
 
     /**
      * Get the lastest notes.
@@ -69,5 +71,13 @@ public interface NoteService {
      * @param pageSize
      * @return
      */
-    PageInfo<Note> findLastestNotes(int pageNumber, int pageSize);
+    PageInfo<Note> findLastestNotes(Integer pageNumber, Integer pageSize);
+
+    /**
+     * Fuzzy search.
+     *
+     * @param token
+     * @return
+     */
+    PageInfo<Note>findByToken(String token, Integer pageNumber, Integer pageSize);
 }

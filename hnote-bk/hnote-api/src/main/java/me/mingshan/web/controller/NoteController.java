@@ -88,11 +88,47 @@ public class NoteController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<SearchResultModel<Note>> getLastestNotes(@RequestParam Integer pageNumber,
+    public ResponseEntity<SearchResultModel<Note>> listLastestNotes(@RequestParam Integer pageNumber,
                                                                    @RequestParam Integer pageSize) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
         PageInfo<Note> pageInfo = noteService.findLastestNotes(pageNumber, pageSize);
+        List<Note> notes = pageInfo.getList();
+        // 总记录数
+        Long total = pageInfo.getTotal();
+        if(notes.isEmpty()){
+            // You many decide to return HttpStatus.NOT_FOUND
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        SearchResultModel<Note> model = new SearchResultModel<>();
+        model.setItems(notes);
+        model.setTotal(total);
+        return new ResponseEntity<>(model, HttpStatus.OK);
+    }
+
+    /**
+     * Get notes by fuzzy search.
+     *
+     * @param pageNumber
+     * @param pageSize
+     * @param token
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @ApiOperation(value="Get notes by fuzzy search.", httpMethod="GET", notes="Get notes")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<SearchResultModel<Note>> listNotesByFuzzySearch(@RequestParam Integer pageNumber,
+                                                                          @RequestParam Integer pageSize,
+                                                                          @RequestParam String token) {
+        logger.info("page = " + pageNumber + "per_page = " + pageSize);
+
+        PageInfo<Note> pageInfo = noteService.findByToken(token, pageNumber, pageSize);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();

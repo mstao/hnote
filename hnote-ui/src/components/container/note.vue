@@ -65,7 +65,7 @@
             </div>
           </li>
           <li><div><img src="/static/img/share.png" /><span>我的分享</span></div></li>
-          <li><div><img src="/static/img/garbage.png" /><span>废纸篓</span></div></li>
+          <li @click="fetchTrashsInfo"><div><img src="/static/img/garbage.png" /><span>废纸篓</span></div></li>
         </ul>
       </div>
     </el-aside>
@@ -73,7 +73,7 @@
       <div class="navi-list-container">
         <div class="navi-list">
           <img src="/static/img/back.png" class="back" />
-          <el-input  placeholder="搜索内容"></el-input>
+          <el-input  placeholder="搜索内容" v-model="token" v-on:keyup.enter.native="search"></el-input>
           <el-dropdown>
             <span class="el-dropdown-link">
               <img src="/static/img/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
@@ -98,8 +98,8 @@
             <span class="date">{{item.date.substring(5, 10)}}</span>
             <span class="operation">
               <img src="/static/img/download.png" title="下载" />
-              <img src="/static/img/share_16.png" title="分享" />
-              <img src="/static/img/delete.png" title="删除" />
+              <img src="/static/img/share_16.png" title="分享" @click.stop="shareNote" />
+              <img src="/static/img/delete.png" title="删除" @click.stop="deleteNoteDialogVisible = true" />
             </span>
           </div>
           <div class="rename-input">
@@ -112,7 +112,7 @@
             <li @click="changeFileDialogVisible">移动到</li>
             <li @click="deleteNoteDialogVisible = true">删除</li>
             <li>下载</li>
-            <li>分享</li>
+            <li @click="shareNote">分享</li>
           </ul>
         </div>
       </div>
@@ -153,7 +153,8 @@
   import file_dialog from '../dialog/fileDialog.vue'
   import toJsonTree from '@/utils/toJsonTree'
   import { getFoldersByUid } from '@/api/folder'
-  import { getNotesByPage, getLastestNotes, deleteNote } from '@/api/note'
+  import { getNotesByPage, getLastestNotes, deleteNote, getNoteByToken } from '@/api/note'
+  import { getAllTrashsByPage } from '@/api/trash'
   import { getNowFormatDate } from '@/utils/date'
   import { mapGetters } from 'vuex'
 
@@ -173,7 +174,8 @@
         userId: '',
         isSelectFirstLi: true,
         deleteNoteDialogVisible: false,
-        fullscreenLoading: false
+        fullscreenLoading: false,
+        token: ''
       };
     },
     components: {
@@ -424,6 +426,42 @@
           }
           this.noteList.push(data)
           this.$store.dispatch('SetNote', data)
+        }
+      },
+      search() {
+        if (this.token.replace(/(^s*)|(s*$)/g, "").length == 0) {
+          this.$message({
+              message: '请输入要搜索的内容！',
+              type: 'warning'
+          });
+        } else {
+          var pageNumber = 1;
+          var pageSize = 20;
+          new Promise((resolve, reject) => {
+            getNoteByToken(this.token, pageNumber, pageSize).then(response => {
+              this.handleFetchNotes(response)
+              resolve()
+            }).catch(error => {
+              reject(error)
+            })
+          })
+        }
+      },
+      fetchTrashsInfo() {
+        var pageNumber = 1;
+        var pageSize = 20;
+        new Promise((resolve, reject) => {
+          getAllTrashsByPage(pageNumber, pageSize).then(response => {
+            this.handleFetchNotes(response)
+            resolve()
+          }).catch(error => {
+            reject(error)
+          })
+        })
+      },
+      shareNote() {
+        if (this.currentSelectedNote.id != undefined) {
+          this.$router.push('/share/index/' + this.currentSelectedNote.id)
         }
       },
       openFullScreen() {

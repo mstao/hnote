@@ -10,7 +10,7 @@
         <result column="author" property="author"/>
         <result column="source" property="source"/>
         <result column="uid" property="uid"/>
-        <result column="isDeleted" property="isDeleted"/>
+        <result column="is_deleted" property="deleted"/>
         <result column="gmt_create" property="gmtCreate"/>
         <result column="gmt_modified" property="gmtModified"/>
 
@@ -38,6 +38,7 @@
         <result column="source" property="source"/>
         <result column="uid" property="uid"/>
         <result column="gmt_create" property="gmtCreate"/>
+        <result column="is_deleted" property="deleted"/>
 
         <association property="noteType" javaType="me.mingshan.facade.model.NoteType">
             <id column="nt_id" property="id"/>
@@ -110,6 +111,25 @@
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
         where n.is_deleted = 0 and f.id = #{fid} order by n.gmt_create desc
+    </select>
+
+    <select id="selectByToken" parameterType="java.lang.String" resultMap="simpleNoteResultMap">
+        select n.id,
+               n.title,
+               n.uid,
+               n.is_deleted,
+               n.gmt_create,
+               n.gmt_modified,
+               nt.id nt_id,
+               nt.name nt_name,
+               f.id folder_id,
+               f.label folder_name,
+               f.level folder_level,
+               f.pid folder_pid
+        from hn_note n
+        left join hn_note_type nt on nt.id = n.type_id
+        left join hn_folder f on f.id = n.folder_id
+        where n.is_deleted = 0 and n.title LIKE '%${value}%' order by n.gmt_create desc
     </select>
 
     <select id="selectLastestNotes" resultMap="simpleNoteResultMap">

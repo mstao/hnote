@@ -1,12 +1,10 @@
 package me.mingshan.service.impl;
 
-import com.alicp.jetcache.anno.Cached;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.NoteService;
 import me.mingshan.service.dao.NoteDao;
-import me.mingshan.service.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +26,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public PageInfo<Note> findAll(int pageNumber, int pageSize, long fid) {
+    public PageInfo<Note> findAll(Integer pageNumber, Integer pageSize, Long fid) {
         PageHelper.startPage(pageNumber, pageSize);
         List<Note> notes = noteDao.selectByPage(fid);
         PageInfo<Note> page = new PageInfo<>(notes);
@@ -36,14 +34,22 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void deleteByNidTid(long nid, long tid) {
+    public void deleteByNidTid(Long nid, Long tid) {
         noteDao.deleteByNidTid(nid, tid);
     }
 
     @Override
-    public PageInfo<Note> findLastestNotes(int pageNumber, int pageSize) {
+    public PageInfo<Note> findLastestNotes(Integer pageNumber, Integer pageSize) {
         PageHelper.startPage(pageNumber, pageSize);
         List<Note> notes = noteDao.selectLastestNotes();
+        PageInfo<Note> page = new PageInfo<>(notes);
+        return page;
+    }
+
+    @Override
+    public PageInfo<Note> findByToken(String token, Integer pageNumber, Integer pageSize) {
+        PageHelper.startPage(pageNumber, pageSize);
+        List<Note> notes = noteDao.selectByToken(token);
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }

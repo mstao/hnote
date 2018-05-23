@@ -9,6 +9,9 @@
 export default {
     name: 'share',
     data() {
+        return {
+
+        }
     }
 }
 </script>

@@ -26,7 +26,7 @@ public class Note implements Serializable {
     private Long uid;
     private Long typeId;
     private Long folderId;
-    private Integer isDeleted;
+    private Boolean deleted;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date gmtCreate;
