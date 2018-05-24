@@ -21,9 +21,9 @@ public class TrashServiceImpl implements TrashService {
     private TrashDao trashDao;
 
     @Override
-    public PageInfo<Note> findAll(Integer pageNumber, Integer pageSize) {
+    public PageInfo<Note> findAll(Integer pageNumber, Integer pageSize, String sort, String sortType) {
         PageHelper.startPage(pageNumber, pageSize);
-        List<Note> notes = trashDao.selectByPage();
+        List<Note> notes = trashDao.selectByPage(sort, sortType);
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }

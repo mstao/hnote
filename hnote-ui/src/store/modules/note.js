@@ -22,7 +22,7 @@ const note = {
                   } else if (response.status == 200) {
                     commit('SET_NOTE', response.data)
                   } else if (response.status == 204) {
-                    commit('SET_NOTE', '')
+                    commit('SET_NOTE', {})
                   }
 
                   resolve(response)

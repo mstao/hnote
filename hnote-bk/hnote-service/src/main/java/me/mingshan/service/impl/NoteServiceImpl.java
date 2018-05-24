@@ -26,9 +26,9 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public PageInfo<Note> findAll(Integer pageNumber, Integer pageSize, Long fid) {
+    public PageInfo<Note> findAll(Integer pageNumber, Integer pageSize, Long fid, String sort, String sortType) {
         PageHelper.startPage(pageNumber, pageSize);
-        List<Note> notes = noteDao.selectByPage(fid);
+        List<Note> notes = noteDao.selectByPage(fid, sort, sortType);
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }
@@ -39,25 +39,27 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public PageInfo<Note> findLastestNotes(Integer pageNumber, Integer pageSize) {
+    public PageInfo<Note> findLastestNotes(Integer pageNumber, Integer pageSize, String sort, String sortType) {
         PageHelper.startPage(pageNumber, pageSize);
-        List<Note> notes = noteDao.selectLastestNotes();
+        List<Note> notes = noteDao.selectLastestNotes(sort, sortType);
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }
 
     @Override
-    public PageInfo<Note> findByToken(String token, Integer pageNumber, Integer pageSize) {
+    public PageInfo<Note> findByToken(String token, Integer pageNumber, Integer pageSize,
+                                      String sort, String sortType) {
         PageHelper.startPage(pageNumber, pageSize);
-        List<Note> notes = noteDao.selectByToken(token);
+        List<Note> notes = noteDao.selectByToken(token, sort, sortType);
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }
 
     @Override
-    public PageInfo<Note> findByTid(Long tid, Integer pageNumber, Integer pageSize) {
+    public PageInfo<Note> findByTid(Long tid, Integer pageNumber, Integer pageSize,
+                                    String sort, String sortType) {
         PageHelper.startPage(pageNumber, pageSize);
-        List<Note> notes = noteDao.selectByTid(tid);
+        List<Note> notes = noteDao.selectByTid(tid, sort, sortType);
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }

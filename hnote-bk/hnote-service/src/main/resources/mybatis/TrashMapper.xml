@@ -40,7 +40,7 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 1 order by n.gmt_create desc
+        where n.is_deleted = 1 order by n.${sort} ${sortType}
     </select>
 
     <update id="recover" parameterType="java.lang.Long">

@@ -1,6 +1,7 @@
 package me.mingshan.service.dao;
 
 import me.mingshan.facade.model.Note;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface TrashDao {
      * Select by paignation.
      * @return
      */
-    List<Note> selectByPage();
+    List<Note> selectByPage(@Param("sort") String sort, @Param("sortType") String sortType);
 
     /**
      * Reset note which is already deleted.

@@ -1,6 +1,6 @@
 const folder = {
     state: {
-        selectedFolder: ''
+        selectedFolder: {}
     },
     mutations: {
         SET_SELECTED_FOLDER: (state, folder) => {
@@ -9,9 +9,7 @@ const folder = {
     },
     actions: {
         SetSelectedFolder({ commit }, folder) {
-            return new Promise((resolve, reject) => {
-                commit('SET_SELECTED_FOLDER', folder)
-            })
+            commit('SET_SELECTED_FOLDER', folder)
         }
     }
 }

@@ -1,5 +1,7 @@
 package me.mingshan.web.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -9,6 +11,8 @@ import java.io.Serializable;
  * @Date: Created in 15:31 2018/5/21
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateNoteVO implements Serializable {
     private static final long serialVersionUID = -1018368608378910342L;
 

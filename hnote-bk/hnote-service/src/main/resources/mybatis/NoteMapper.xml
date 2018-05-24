@@ -94,7 +94,7 @@
         where n.id = #{id}
     </select>
     
-    <select id="selectByPage" parameterType="java.lang.Long" resultMap="simpleNoteResultMap">
+    <select id="selectByPage" resultMap="simpleNoteResultMap">
         select n.id,
                n.title,
                n.uid,
@@ -110,10 +110,10 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0 and f.id = #{fid} order by n.gmt_create desc
+        where n.is_deleted = 0 and f.id = #{fid} order by n.${sort} ${sortType}
     </select>
 
-    <select id="selectByToken" parameterType="java.lang.String" resultMap="simpleNoteResultMap">
+    <select id="selectByToken" resultMap="simpleNoteResultMap">
         select n.id,
                n.title,
                n.uid,
@@ -129,7 +129,7 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0 and n.title LIKE '%${value}%' order by n.gmt_create desc
+        where n.is_deleted = 0 and n.title LIKE '%${value}%' order by n.${sort} ${sortType}
     </select>
 
     <select id="selectLastestNotes" resultMap="simpleNoteResultMap">
@@ -148,10 +148,10 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0 order by n.gmt_create desc
+        where n.is_deleted = 0 order by n.${sort} ${sortType}
     </select>
 
-    <select id="selectByTid" parameterType="java.lang.Long" resultMap="simpleNoteResultMap">
+    <select id="selectByTid" resultMap="simpleNoteResultMap">
         select n.id,
                n.title,
                n.uid,
@@ -168,7 +168,7 @@
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
         left join hn_note_to_tag ntg on ntg.note_id = n.id
-        where n.is_deleted = 0 and ntg.tag_id = #{tid} order by n.gmt_create desc
+        where n.is_deleted = 0 and ntg.tag_id = #{tid} order by n.${sort} ${sortType}
     </select>
 
     <!-- 添加-->

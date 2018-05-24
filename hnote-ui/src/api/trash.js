@@ -1,12 +1,14 @@
 import request from '@/utils/request'
 
-export function getAllTrashsByPage(pageNumber, pageSize) {
+export function getAllTrashsByPage(pageNumber, pageSize, sort, sortType) {
     return request({
         url: '/trashs/filters',
         method: 'get',
         params: {
             pageNumber,
-            pageSize
+            pageSize,
+            sort,
+            sortType
         }
     })
 }

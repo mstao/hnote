@@ -49,13 +49,14 @@ public interface NoteService {
 
     /**
      * Get all note by pagination.
-     *
      * @param pageNumber
      * @param pageSize
      * @param fid
+     * @param sort
+     * @param sortType
      * @return
      */
-    PageInfo<Note> findAll(Integer pageNumber, Integer pageSize, Long fid);
+    PageInfo<Note> findAll(Integer pageNumber, Integer pageSize, Long fid, String sort, String sortType);
 
     /**
      *
@@ -66,29 +67,34 @@ public interface NoteService {
 
     /**
      * Get the lastest notes.
-     *
      * @param pageNumber
      * @param pageSize
+     * @param sort
+     * @param sortType
      * @return
      */
-    PageInfo<Note> findLastestNotes(Integer pageNumber, Integer pageSize);
+    PageInfo<Note> findLastestNotes(Integer pageNumber, Integer pageSize, String sort, String sortType);
 
     /**
      * Fuzzy search.
-     *
      * @param token
+     * @param pageNumber
+     * @param pageSize
+     * @param sort
+     * @param sortType
      * @return
      */
-    PageInfo<Note> findByToken(String token, Integer pageNumber, Integer pageSize);
+    PageInfo<Note> findByToken(String token, Integer pageNumber, Integer pageSize, String sort, String sortType);
 
 
     /**
      * Select by tagId.
-     *
      * @param tid
      * @param pageNumber
      * @param pageSize
+     * @param sort
+     * @param sortType
      * @return
      */
-    PageInfo<Note> findByTid(Long tid, Integer pageNumber, Integer pageSize);
+    PageInfo<Note> findByTid(Long tid, Integer pageNumber, Integer pageSize, String sort, String sortType);
 }

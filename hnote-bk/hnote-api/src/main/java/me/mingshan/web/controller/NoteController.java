@@ -54,10 +54,12 @@ public class NoteController extends BaseController {
     })
     public ResponseEntity<SearchResultModel<Note>> listAllNotes(@RequestParam Integer pageNumber,
                                                                 @RequestParam Integer pageSize,
-                                                                @RequestParam Long fid) {
+                                                                @RequestParam Long fid,
+                                                                @RequestParam String sort,
+                                                                @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize + "fid = " + fid);
 
-        PageInfo<Note> pageInfo = noteService.findAll(pageNumber, pageSize, fid);
+        PageInfo<Note> pageInfo = noteService.findAll(pageNumber, pageSize, fid, sort, sortType);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();
@@ -89,10 +91,12 @@ public class NoteController extends BaseController {
                     paramType = "header")
     })
     public ResponseEntity<SearchResultModel<Note>> listLastestNotes(@RequestParam Integer pageNumber,
-                                                                   @RequestParam Integer pageSize) {
+                                                                    @RequestParam Integer pageSize,
+                                                                    @RequestParam String sort,
+                                                                    @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
-        PageInfo<Note> pageInfo = noteService.findLastestNotes(pageNumber, pageSize);
+        PageInfo<Note> pageInfo = noteService.findLastestNotes(pageNumber, pageSize, sort, sortType);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();
@@ -125,10 +129,12 @@ public class NoteController extends BaseController {
     })
     public ResponseEntity<SearchResultModel<Note>> listNotesByFuzzySearch(@RequestParam Integer pageNumber,
                                                                           @RequestParam Integer pageSize,
-                                                                          @RequestParam String token) {
+                                                                          @RequestParam String token,
+                                                                          @RequestParam String sort,
+                                                                          @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
-        PageInfo<Note> pageInfo = noteService.findByToken(token, pageNumber, pageSize);
+        PageInfo<Note> pageInfo = noteService.findByToken(token, pageNumber, pageSize, sort, sortType);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();
@@ -161,10 +167,12 @@ public class NoteController extends BaseController {
     })
     public ResponseEntity<SearchResultModel<Note>> listNotesByTid(@RequestParam Integer pageNumber,
                                                                   @RequestParam Integer pageSize,
-                                                                  @PathVariable Long tid) {
+                                                                  @PathVariable Long tid,
+                                                                  @RequestParam String sort,
+                                                                  @RequestParam String sortType) {
         logger.info("page = " + pageNumber + ",per_page = " + pageSize + ",tid = " + tid);
 
-        PageInfo<Note> pageInfo = noteService.findByTid(tid, pageNumber, pageSize);
+        PageInfo<Note> pageInfo = noteService.findByTid(tid, pageNumber, pageSize, sort, sortType);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();

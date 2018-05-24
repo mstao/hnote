@@ -47,10 +47,12 @@ public class TrashController extends BaseController {
                     paramType = "header")
     })
     public ResponseEntity<SearchResultModel<Note>> listAllNotes(@RequestParam Integer pageNumber,
-                                                                @RequestParam Integer pageSize) {
+                                                                @RequestParam Integer pageSize,
+                                                                @RequestParam String sort,
+                                                                @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
-        PageInfo<Note> pageInfo = trashService.findAll(pageNumber, pageSize);
+        PageInfo<Note> pageInfo = trashService.findAll(pageNumber, pageSize, sort, sortType);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();

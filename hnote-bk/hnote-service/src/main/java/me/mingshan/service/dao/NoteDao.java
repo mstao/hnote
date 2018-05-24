@@ -12,38 +12,50 @@ import java.util.List;
  */
 public interface NoteDao extends BaseDao<Note> {
 
+
     /**
      * Select by paignation.
+     *
+     * @param fid
+     * @param sort
+     * @param sortType
      * @return
      */
-    List<Note> selectByPage(long fid);
+    List<Note> selectByPage(@Param("fid") Long fid, @Param("sort") String sort,
+                            @Param("sortType") String sortType);
 
     /**
      * Deletes tag by noteId and tagId
      * @param nid
      * @param tid
      */
-    void deleteByNidTid(@Param("nid") long nid, @Param("tid") long tid);
+    void deleteByNidTid(@Param("nid") Long nid, @Param("tid") Long tid);
 
     /**
      * Select the lastest notes.
-     *
+     * @param sort
+     * @param sortType
      * @return
      */
-    List<Note> selectLastestNotes();
+    List<Note> selectLastestNotes(@Param("sort") String sort, @Param("sortType") String sortType);
 
     /**
      * Fuzzy search.
-     *
      * @param token
+     * @param sort
+     * @param sortType
      * @return
      */
-    List<Note> selectByToken(String token);
+    List<Note> selectByToken(@Param("token") String token, @Param("sort") String sort,
+                             @Param("sortType") String sortType);
 
     /**
      * Select by tagId.
      * @param tid
+     * @param sort
+     * @param sortType
      * @return
      */
-    List<Note> selectByTid(Long tid);
+    List<Note> selectByTid(@Param("tid") Long tid, @Param("sort") String sort,
+                           @Param("sortType") String sortType);
 }

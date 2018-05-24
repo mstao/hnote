@@ -29,6 +29,7 @@
 
     <!-- sqlSessinFactory -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
          <!-- 自动扫描po目录, 省掉sqlMapper.xml里的手工配置 -->  
         <property name="mapperLocations" value="classpath:mybatis/**/*.xml" />
         <!-- 数据源 -->

@@ -17,7 +17,7 @@ public interface TrashService {
      * @param pageSize
      * @return
      */
-    PageInfo<Note> findAll(Integer pageNumber, Integer pageSize);
+    PageInfo<Note> findAll(Integer pageNumber, Integer pageSize, String sort, String sortType);
 
     /**
      * Reset note which is already deleted.

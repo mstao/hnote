@@ -173,7 +173,6 @@ export default {
   border-radius: 100%;
   background: #f07379;
 }
-
 </style>
 
 

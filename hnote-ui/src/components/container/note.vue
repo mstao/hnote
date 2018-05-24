@@ -54,16 +54,14 @@
     <el-aside width="20%" class="aside-list">
       <div class="navi-list-container">
         <div class="navi-list">
-          <img src="/static/img/back.png" class="back" />
+          <img src="/static/img/back.png" @click="fetchNotesByParentFolder" class="back" />
           <el-input  placeholder="搜索内容" v-model="token" v-on:keyup.enter.native="search"></el-input>
           <el-dropdown>
             <span class="el-dropdown-link">
               <img src="/static/img/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" class="navi-list-dropdown-menu">
-              <el-dropdown-item><span>摘要</span><img src="/static/img/selected.png" /></el-dropdown-item>
-              <el-dropdown-item><span>列表</span></el-dropdown-item>
-              <el-dropdown-item divided><span>创建时间</span><img src="/static/img/asc.png" /></el-dropdown-item>
+              <el-dropdown-item><span>创建时间</span><img src="/static/img/asc.png" /></el-dropdown-item>
               <el-dropdown-item><span>修改时间</span></el-dropdown-item>
               <el-dropdown-item><span>文件名称</span></el-dropdown-item>
             </el-dropdown-menu>
@@ -134,7 +132,7 @@
   import NProgress from 'nprogress' // progress bar
   import 'nprogress/nprogress.css'// progress bar style
   import file_dialog from '../dialog/fileDialog.vue'
-  import toJsonTree from '@/utils/toJsonTree'
+  import { toJsonTree, getNode } from '@/utils/json'
   import { getFoldersByUid } from '@/api/folder'
   import { getNotesByPage, getLastestNotes, deleteNote, getNoteByToken, getNoteByTid } from '@/api/note'
   import { getAllTrashsByPage, recover } from '@/api/trash'
@@ -276,8 +274,9 @@
         new Promise((resolve, reject) => {
           getFoldersByUid(uid).then(response => {
             const data = response.data
-            const param = { parent:'pid' }
+            
             this.folders = toJsonTree(data, 'id', 'pid', 'children')
+            
             this.$store.dispatch('SetSelectedFolder', this.findDefaultFolder(data))
             resolve()
           }).catch(error => {
@@ -298,22 +297,25 @@
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
-          getLastestNotes(pageNumber, pageSize).then(response => {
+          getLastestNotes(pageNumber, pageSize, 'gmt_create', 'desc').then(response => {
             this.handleFetchNotes(response)  
           })
         })
       },
       handleNodeClick(data) {
-        var fid = data.id;
+        this.fetchNotesByFolderId(data)
+      },
+      fetchNotesByFolderId(folder) {
+        var fid = folder.id
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
-          getNotesByPage(pageNumber, pageSize, fid).then(response => {
+          getNotesByPage(pageNumber, pageSize, fid, 'gmt_modified', 'desc').then(response => {
               this.handleFetchNotes(response)
           })
         })
         
-        this.$store.dispatch('SetSelectedFolder', data)
+        this.$store.dispatch('SetSelectedFolder', folder)
       },
       handleFetchNotes(response) {
         const tempList = [];
@@ -340,7 +342,6 @@
       },
       goNoteDetailPage(id) {
         this.$store.dispatch('GetNoteInfoById', id)
-        //this.$router.push('/note/detail/' + id)
       },
       handleNodeExpandCollapse() {
         $(".item-operation-box").hide();
@@ -354,14 +355,12 @@
       handleClose(tag) {
         this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
       },
-
       showInput() {
         this.inputVisible = true;
         this.$nextTick(_ => {
           this.$refs.saveTagInput.$refs.input.focus();
         });
       },
-
       handleInputConfirm() {
         let inputValue = this.inputValue;
         if (inputValue) {
@@ -446,8 +445,6 @@
         } else {
           var pageNumber = 1
           var pageSize = 20
-          // loading
-          this.openFullScreen() 
           
           new Promise((resolve, reject) => {
             getNoteByToken(this.token, pageNumber, pageSize).then(response => {
@@ -463,7 +460,7 @@
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
-          getAllTrashsByPage(pageNumber, pageSize).then(response => {
+          getAllTrashsByPage(pageNumber, pageSize, 'gmt_create', 'desc').then(response => {
             this.handleFetchNotes(response)
             resolve()
           }).catch(error => {
@@ -519,12 +516,24 @@
         var pageSize = 20;
         // Delete data from database
         new Promise((resolve, reject) => {
-          getNoteByTid(tagId, pageNumber, pageSize).then(response => {
+          getNoteByTid(tagId, pageNumber, pageSize, 'gmt_create', 'desc').then(response => {
             if (response.status == 200) {
               this.handleFetchNotes(response)
             }
           })
         })
+      },
+      fetchNotesByParentFolder() {
+        var curr = this.selectedFolder
+        if (curr != null) {
+          var obj = getNode(this.folders, curr.id)
+          this.test(obj)
+          
+          if (obj != null) {
+            // fetch note data.
+            this.fetchNotesByFolderId(obj)
+          }
+        }
       },
       openFullScreen() {
         this.fullscreenLoading = true;
@@ -545,6 +554,7 @@
   $(document).click(function(){
     $(".item-operation-box").hide();
   });
+  
 </script>
 
 <style>
@@ -672,6 +682,7 @@
   position: relative;
   top: 6px;
   margin-left: 10px;
+  cursor: pointer;
 }
 .aside-list .navi-list .el-input {
   margin-left: 20px;

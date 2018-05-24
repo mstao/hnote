@@ -1,24 +1,28 @@
 import request from '@/utils/request'
 
-export function getNotesByPage(pageNumber, pageSize, fid) {
+export function getNotesByPage(pageNumber, pageSize, fid, sort, sortType) {
     return request({
         url: '/notes/filters',
         method: 'get',
         params: {
             pageNumber,
             pageSize,
-            fid
+            fid,
+            sort,
+            sortType
         }
     })
 }
 
-export function getLastestNotes(pageNumber, pageSize) {
+export function getLastestNotes(pageNumber, pageSize, sort, sortType) {
     return request({
         url: '/notes/lastest',
         method: 'get',
         params: {
             pageNumber,
             pageSize,
+            sort,
+            sortType
         }
     })
 }
@@ -30,7 +34,7 @@ export function getNoteById(noteId) {
     })
 }
 
-export function getNoteByToken(token, pageNumber, pageSize) {
+export function getNoteByToken(token, pageNumber, pageSize, ) {
     return request({
         url: '/notes/search',
         method: 'get',
@@ -42,13 +46,15 @@ export function getNoteByToken(token, pageNumber, pageSize) {
     })
 }
 
-export function getNoteByTid(tid, pageNumber, pageSize) {
+export function getNoteByTid(tid, pageNumber, pageSize, sort, sortType) {
     return request({
         url: '/notes/tags/' + tid,
         method: 'get',
         params: {
             pageNumber,
             pageSize,
+            sort,
+            sortType
         }
     })
 }
