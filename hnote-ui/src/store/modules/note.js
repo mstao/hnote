@@ -11,7 +11,7 @@ const note = {
         },
         SET_CURRENT_SELECTED_NOTE: (state, note) => {
           state.currentSelectedNote = note
-        } 
+        }
     },
     actions: {
         GetNoteInfoById({ commit }, noteId) {

@@ -21,7 +21,15 @@
           <li>
             <div class="link" v-on:click="dropdown($event)"><img src="/static/img/folder.png"><span>我的文件夹</span></div>
             <div class="submenu">
-              <el-tree :data="folders" @node-click="handleNodeClick" @node-expand="handleNodeExpandCollapse" @node-collapse="handleNodeExpandCollapse"></el-tree>
+              <el-tree 
+                ref="folderTree" 
+                node-key="id" 
+                accordion 
+                :data="folders" 
+                @node-click="handleNodeClick" 
+                @node-expand="handleNodeExpandCollapse" 
+                @node-collapse="handleNodeExpandCollapse">
+              </el-tree>
               <div class="folder-item-operation-box item-operation-box">
                 <ul>
                   <li  @mouseover="showExpandNewDiv = true"  @mouseout="showExpandNewDiv = false">新建<img src="/static/img/right-expand.png" />
@@ -56,14 +64,23 @@
         <div class="navi-list">
           <img src="/static/img/back.png" @click="fetchNotesByParentFolder" class="back" />
           <el-input  placeholder="搜索内容" v-model="token" v-on:keyup.enter.native="search"></el-input>
-          <el-dropdown>
+          <el-dropdown @command="handleSortCommand">
             <span class="el-dropdown-link">
               <img src="/static/img/sort-option.png" class="sort-option-img"><i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" class="navi-list-dropdown-menu">
-              <el-dropdown-item><span>创建时间</span><img src="/static/img/asc.png" /></el-dropdown-item>
-              <el-dropdown-item><span>修改时间</span></el-dropdown-item>
-              <el-dropdown-item><span>文件名称</span></el-dropdown-item>
+              <el-dropdown-item command="createTime"><span>创建时间</span>
+                <img src="/static/img/asc.png" v-if="sortItem.sort == 'gmt_create' ? ( sortItem.sortType == 'asc' ? true : false) : false" />
+                <img src="/static/img/desc.png" v-if="sortItem.sort == 'gmt_create' ? ( sortItem.sortType == 'desc' ? true : false) : false" />
+              </el-dropdown-item>
+              <el-dropdown-item command="modifiedTime"><span>修改时间</span>
+                <img src="/static/img/asc.png" v-if="sortItem.sort == 'gmt_modified' ? ( sortItem.sortType == 'asc' ? true : false) : false" />
+                <img src="/static/img/desc.png" v-if="sortItem.sort == 'gmt_modified' ? ( sortItem.sortType == 'desc' ? true : false) : false" />
+              </el-dropdown-item>
+              <el-dropdown-item command="fileName"><span>文件名称</span>
+                <img src="/static/img/asc.png" v-if="sortItem.sort == 'title' ? ( sortItem.sortType == 'asc' ? true : false) : false" />
+                <img src="/static/img/desc.png" v-if="sortItem.sort == 'title' ? ( sortItem.sortType == 'desc' ? true : false) : false" />
+              </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -134,7 +151,7 @@
   import file_dialog from '../dialog/fileDialog.vue'
   import { toJsonTree, getNode } from '@/utils/json'
   import { getFoldersByUid } from '@/api/folder'
-  import { getNotesByPage, getLastestNotes, deleteNote, getNoteByToken, getNoteByTid } from '@/api/note'
+  import { getNotesByPage, getLastestNotes, deleteNote, getNoteByToken, getNoteByTid, updateNoteFolder } from '@/api/note'
   import { getAllTrashsByPage, recover } from '@/api/trash'
   import { getTagsByUid } from '@/api/tag'
   import { getNowFormatDate } from '@/utils/date'
@@ -158,7 +175,8 @@
         isSelectFirstLi: true,
         deleteNoteDialogVisible: false,
         fullscreenLoading: false,
-        token: ''
+        token: '',
+        sortItem: { sort: 'gmt_create', sortType: 'desc' }
       };
     },
     components: {
@@ -297,7 +315,7 @@
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
-          getLastestNotes(pageNumber, pageSize, 'gmt_create', 'desc').then(response => {
+          getLastestNotes(pageNumber, pageSize, this.sortItem.sort, this.sortItem.sortType).then(response => {
             this.handleFetchNotes(response)  
           })
         })
@@ -310,7 +328,7 @@
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
-          getNotesByPage(pageNumber, pageSize, fid, 'gmt_modified', 'desc').then(response => {
+          getNotesByPage(pageNumber, pageSize, fid, this.sortItem.sort, this.sortItem.sortType).then(response => {
               this.handleFetchNotes(response)
           })
         })
@@ -447,7 +465,7 @@
           var pageSize = 20
           
           new Promise((resolve, reject) => {
-            getNoteByToken(this.token, pageNumber, pageSize).then(response => {
+            getNoteByToken(this.token, pageNumber, pageSize, this.sortItem.sort, this.sortItem.sortType).then(response => {
               this.handleFetchNotes(response)
               resolve()
             }).catch(error => {
@@ -460,7 +478,7 @@
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
-          getAllTrashsByPage(pageNumber, pageSize, 'gmt_create', 'desc').then(response => {
+          getAllTrashsByPage(pageNumber, pageSize, this.sortItem.sort, this.sortItem.sortType).then(response => {
             this.handleFetchNotes(response)
             resolve()
           }).catch(error => {
@@ -516,7 +534,7 @@
         var pageSize = 20;
         // Delete data from database
         new Promise((resolve, reject) => {
-          getNoteByTid(tagId, pageNumber, pageSize, 'gmt_create', 'desc').then(response => {
+          getNoteByTid(tagId, pageNumber, pageSize, this.sortItem.sort, this.sortItem.sortType).then(response => {
             if (response.status == 200) {
               this.handleFetchNotes(response)
             }
@@ -525,11 +543,11 @@
       },
       fetchNotesByParentFolder() {
         var curr = this.selectedFolder
-        if (curr != null) {
-          var obj = getNode(this.folders, curr.id)
-          this.test(obj)
+    
+        if (curr) {
+          var obj = this.$refs.folderTree.getNode(curr.id).parent.data
           
-          if (obj != null) {
+          if (obj !== this.folders) {
             // fetch note data.
             this.fetchNotesByFolderId(obj)
           }
@@ -540,6 +558,36 @@
         setTimeout(() => {
           this.fullscreenLoading = false;
         }, 1500);
+      },
+      handleSortCommand(command) {
+        if (command == 'createTime') {
+          this.changeSortStatus('gmt_create')
+        } else if (command == 'modifiedTime') {
+          this.changeSortStatus('gmt_modified')
+        } else if (command == 'fileName') {
+          this.changeSortStatus('title')
+        }
+      },
+      changeSortStatus(sort) {
+          var sortType = this.sortItem.sortType;
+          if (sortType == 'desc') {
+            this.sortItem.sortType = 'asc'
+          } else if (sortType == 'asc') {
+            this.sortItem.sortType = 'desc'
+          }
+          this.sortItem.sort = sort
+      },
+      updatedNoteFolder(folderId, noteId) {
+        new Promise((resolve, reject) => {
+          updateNoteFolder(folderId, noteId).then(response => {
+            if (response.status == 204) {
+              this.$message({
+                  message: '移动文件夹成功！',
+                  type: 'success'
+              });
+            }
+          })
+        })
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))

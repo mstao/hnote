@@ -8,10 +8,7 @@ import me.mingshan.facade.service.NoteService;
 import me.mingshan.web.exception.ServerException;
 import me.mingshan.web.model.ResultModel;
 import me.mingshan.web.model.SearchResultModel;
-import me.mingshan.web.vo.CreateNoteVO;
-import me.mingshan.web.vo.CreatedNoteVO;
-import me.mingshan.web.vo.NoteVO;
-import me.mingshan.web.vo.UpdateNoteVo;
+import me.mingshan.web.vo.*;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -290,6 +287,12 @@ public class NoteController extends BaseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Update note.
+     *
+     * @param updateNoteVo
+     * @return
+     */
     @RequestMapping(method = RequestMethod.PUT)
     @ApiOperation(value="Update note", httpMethod="PUT", notes="Update note by id")
     @Authorization
@@ -311,4 +314,33 @@ public class NoteController extends BaseController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    /**
+     * Update folder of note.
+     *
+     * @param folderVO
+     * @return
+     */
+    @RequestMapping(value = "/folder", method = RequestMethod.PUT)
+    @ApiOperation(value="Update folder of note", httpMethod="PUT", notes="Update folder of note")
+    @Authorization
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
+                    paramType = "header")
+    })
+    public ResponseEntity<ResultModel>  updateFolder(@RequestBody UpdateNoteFolderVO folderVO) {
+        try {
+
+            noteService.updateFolder(folderVO.getFolderId(), folderVO.getId());
+        } catch (RuntimeException e) {
+            ResultModel result = new ResultModel();
+            result.setCode(1024);
+            result.setMessage("Unable to update folder of note: " + folderVO);
+            logger.info("Unable to  update folder of note: " + folderVO);
+            throw new ServerException(result, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

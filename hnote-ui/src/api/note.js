@@ -34,7 +34,7 @@ export function getNoteById(noteId) {
     })
 }
 
-export function getNoteByToken(token, pageNumber, pageSize, ) {
+export function getNoteByToken(token, pageNumber, pageSize,  sort, sortType) {
     return request({
         url: '/notes/search',
         method: 'get',
@@ -42,6 +42,8 @@ export function getNoteByToken(token, pageNumber, pageSize, ) {
             token,
             pageNumber,
             pageSize,
+            sort,
+            sortType
         }
     })
 }
@@ -72,6 +74,14 @@ export function createNote(note) {
         url: '/notes',
         method: 'post',
         data: note
+    })
+}
+
+export function updateNoteFolder(folderId, noteId) {
+    return request({
+        url: '/notes/folder',
+        method: 'put',
+        data: { folderId: folderId, id: noteId }
     })
 }
 

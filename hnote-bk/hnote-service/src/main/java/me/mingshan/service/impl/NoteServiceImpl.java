@@ -65,6 +65,11 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    public void updateFolder(Integer folderId, Long id) {
+        noteDao.updateFolder(folderId, id);
+    }
+
+    @Override
     public Long insert(Note model) {
         noteDao.insert(model);
         return model.getId();

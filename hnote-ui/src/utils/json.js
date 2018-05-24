@@ -21,18 +21,4 @@ export function toJsonTree(a, idStr, pidStr, childrenStr) {
         }  
     }  
     return r;  
-  }  
-
-  var parentNode = null;
-  var node = null;
-
-/**
- * 根据NodeID查找当前节点以及父节点
- * 
- * @param {String} json 经过{toJsonTree}转化后的字符串
- * @param {Number} nodeId 要查询的结点id
- * @return {[type]}
- */
-export function getNode(json, nodeId) { 
-    
-}
+} 

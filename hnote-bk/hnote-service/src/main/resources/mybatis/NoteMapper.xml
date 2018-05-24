@@ -129,7 +129,7 @@
         from hn_note n
         left join hn_note_type nt on nt.id = n.type_id
         left join hn_folder f on f.id = n.folder_id
-        where n.is_deleted = 0 and n.title LIKE '%${value}%' order by n.${sort} ${sortType}
+        where n.is_deleted = 0 and n.title LIKE '%${token}%' order by n.${sort} ${sortType}
     </select>
 
     <select id="selectLastestNotes" resultMap="simpleNoteResultMap">
@@ -224,5 +224,9 @@
 
         , gmt_modified = NOW()
         where id=#{id}
+    </update>
+
+    <update id="updateFolder">
+        update hn_note set folder_id = #{folderId} where is_deleted = 0 and id = #{id}
     </update>
 </mapper>

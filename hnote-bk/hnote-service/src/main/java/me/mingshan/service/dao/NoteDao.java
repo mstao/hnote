@@ -58,4 +58,12 @@ public interface NoteDao extends BaseDao<Note> {
      */
     List<Note> selectByTid(@Param("tid") Long tid, @Param("sort") String sort,
                            @Param("sortType") String sortType);
+
+    /**
+     * Update folder of note.
+     *
+     * @param folderId
+     * @param id
+     */
+    void updateFolder(@Param("folderId") Integer folderId, @Param("id") Long id);
 }

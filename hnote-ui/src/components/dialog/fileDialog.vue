@@ -15,16 +15,22 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="changeDialogVisible">取 消</el-button>
-        <el-button type="primary" @click="changeDialogVisible">确 定</el-button>
+        <el-button type="primary" @click="moveNoteFolder">确 定</el-button>
       </span>
     </el-dialog>
 </template>
 
 <script>
     import { mapGetters } from 'vuex'
+    import { updateNoteFolder } from '@/api/note'
 
     export default {
         name: 'file-dialog',
+        data() {
+            return {
+                currentSelectedFolder: {}
+            }
+        },
         computed: {
             ...mapGetters([
                 'fileDialogVisible',
@@ -38,15 +44,39 @@
             }
         },
         methods: {
+            handleNodeClick(data) {
+                this.currentSelectedFolder = data;
+            },
             changeDialogVisible() {
                 this.$store.dispatch('ChangeFileDialogVisible', false)
             },
-            handleNodeClick(data) {
-                console.log(data);
-            },
             handleClose() {
                 this.$store.dispatch('ChangeFileDialogVisible', false)
-            }
+            },
+            moveNoteFolder() {
+                var noteId = this.currentSelectedNote.id
+                var folderId = this.currentSelectedFolder.id
+    
+                if (!folderId || folderId == this.currentSelectedNote.folder.id) {
+                   this.$message({
+                        message: '请选择文件夹',
+                        type: 'warning'
+                    });
+
+                    return
+                } 
+                new Promise((resolve, reject) => {
+                    updateNoteFolder(folderId, noteId).then(response => {
+                        if (response.status == 204) {
+                            this.$message({
+                                message: '移动文件夹成功！',
+                                type: 'success'
+                            });
+                            this.$store.dispatch('ChangeFileDialogVisible', false)
+                        }
+                    })
+                })
+            },
         }
     }
 </script>

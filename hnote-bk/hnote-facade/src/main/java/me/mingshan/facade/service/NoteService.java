@@ -97,4 +97,11 @@ public interface NoteService {
      * @return
      */
     PageInfo<Note> findByTid(Long tid, Integer pageNumber, Integer pageSize, String sort, String sortType);
+
+    /**
+     * Update folder of note.
+     * @param folderId
+     * @param id
+     */
+    void updateFolder(Integer folderId, Long id);
 }
