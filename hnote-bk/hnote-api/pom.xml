@@ -140,6 +140,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>me.mingshan</groupId>
             <artifactId>hnote-common</artifactId>
             <version>${project.version}</version>

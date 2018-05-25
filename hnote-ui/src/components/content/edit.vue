@@ -69,7 +69,7 @@
     </transition>
 
     <div v-if="showMarkdownEditor" class="edit-content">
-      <mavon-editor style="height: 100%"  v-model="content"></mavon-editor>
+      <mavon-editor style="height: 100%" ref="md" @imgAdd="$imgAdd" v-model="content"></mavon-editor>
     </div>
 
     <div v-else class="html-content markdown-body" v-html="htmlContent">
@@ -99,6 +99,7 @@
   import 'mavon-editor/dist/css/index.css'
   import { getTagsByNid, saveTag } from '@/api/tag'
   import { deleteTagByNidTid, updateNote, createNote, deleteNote } from '@/api/note'
+  import { uploadImage } from '@/api/file'
 
   const marked = require('marked');
 
@@ -447,6 +448,18 @@
         setTimeout(() => {
           this.fullscreenLoading = false;
         }, 1500);
+      },
+      $imgAdd(pos, $file){
+          // 第一步.将图片上传到服务器.
+          var formdata = new FormData();
+          formdata.append('file', $file);
+          new Promise((resolve, reject) => {
+            uploadImage(formdata).then((response) => {
+                // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+                // $vm.$img2Url 详情见本页末尾
+                this.$refs.md.$img2Url(pos, response.data.url);
+            })
+          })
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))

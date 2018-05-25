@@ -59,6 +59,7 @@
     <javassist.version>3.15.0-GA</javassist.version>
     <zkclient.version>0.10</zkclient.version>
     <curator.version>4.0.0</curator.version>
+    <qiniu-java-sdk.version>[7.2.0, 7.2.99]</qiniu-java-sdk.version>
   </properties>
 
   <!-- 公共依赖 -->
@@ -310,6 +311,12 @@
         <groupId>org.apache.curator</groupId>
         <artifactId>curator-framework</artifactId>
         <version>${curator.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.qiniu</groupId>
+        <artifactId>qiniu-java-sdk</artifactId>
+        <version>${qiniu-java-sdk.version}</version>
       </dependency>
 
     </dependencies>
