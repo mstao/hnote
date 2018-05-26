@@ -27,6 +27,7 @@
                 accordion 
                 :data="folders" 
                 @node-click="handleNodeClick" 
+                @node-contextmenu="handNodeContextmenu"
                 @node-expand="handleNodeExpandCollapse" 
                 @node-collapse="handleNodeExpandCollapse">
               </el-tree>
@@ -41,9 +42,7 @@
                     </div>
                   </li>
                   <li>重命名</li>
-                  <li @click="changeFileDialogVisible">移动到</li>
                   <li>删除</li>
-                  <li>分享</li>
                 </ul>
               </div>
             </div>
@@ -263,23 +262,6 @@
             $(this).find(".date").show();
             $(this).find(".operation").hide();
           });
-
-          $(document).on("contextmenu", ".el-tree-node__content", function(e) {
-              var clientHeight = window.innerHeight;
-              if (clientHeight - e.pageY > 250) {
-                $(".folder-item-operation-box")
-                  .css("left", e.pageX)
-                  .css("top", e.pageY - 40)
-                  .show();
-              } else {
-                $(".folder-item-operation-box")
-                  .css("left", e.pageX)
-                  .css("top", e.pageY - 240)
-                  .show();
-              }
-            
-              e.preventDefault();  // return false; also works
-          });
       },
       fetchBasicInfo() {
         // start loading
@@ -358,6 +340,25 @@
       },
       handleNodeClick(data) {
         this.fetchNotesByFolderId(data)
+      },
+      handNodeContextmenu(e, data) {
+        // pop up right menu.
+        var clientHeight = window.innerHeight;
+        if (clientHeight - e.pageY > 250) {
+          $(".folder-item-operation-box")
+            .css("left", e.pageX)
+            .css("top", e.pageY - 40)
+            .show();
+        } else {
+          $(".folder-item-operation-box")
+            .css("left", e.pageX)
+            .css("top", e.pageY - 240)
+            .show();
+        }
+      
+        e.preventDefault();  // return false; also works
+
+        this.$store.dispatch('SetSelectedFolder', data)
       },
       fetchNotesByFolderId(folder) {
         var fid = folder.id
@@ -476,21 +477,23 @@
       },
       handleCreateCommand(command) {
         if (command == 'create-md') {
-
-          var data = {
-            title: '新的markdown',
-            content: '',
-            noteType: { name: 'md' },
-            folder: this.selectedFolder,
-            date: getNowFormatDate(),
-            author: this.name,
-            source: ''
-          }
-          this.noteList.push(data)
-          this.$store.dispatch('SetNote', data)
+          createMd(this.selectedFolder)
         } else if (command == 'create-folder') {
           this.saveFolder.addFolderDialogVisible = true
         }
+      },
+      createMd(folder) {
+        var data = {
+          title: '新的markdown',
+          content: '',
+          noteType: { name: 'md' },
+          folder: folder,
+          date: getNowFormatDate(),
+          author: this.name,
+          source: ''
+        }
+        this.noteList.push(data)
+        this.$store.dispatch('SetNote', data)
       },
       search() {
         if (this.token.replace(/(^s*)|(s*$)/g, "").length == 0) {
@@ -705,10 +708,11 @@
         this.saveFolder.currentSelectParentFolder = {}
       },
       handNodeClickForAddFolder() {
-
+        this.saveFolder.addFolderDialogVisible = true
       },
       handNodeClickForAddMdClick() {
-
+        var curr = this.selectedFolder
+        this.createMd(curr)
       },
       openFullScreen() {
        const loading = this.$loading({
