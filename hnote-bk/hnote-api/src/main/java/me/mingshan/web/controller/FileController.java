@@ -13,18 +13,26 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import me.mingshan.common.annotation.Authorization;
+import me.mingshan.facade.model.Note;
+import me.mingshan.facade.service.NoteService;
 import me.mingshan.web.config.Constants;
-import me.mingshan.web.model.ResultModel;
+import me.mingshan.web.util.FileUtil;
 import me.mingshan.web.vo.UploadImageVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -36,6 +44,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/files")
 public class FileController extends BaseController {
+
+    @Autowired
+    private NoteService noteService;
 
     /**
      * 上传图片
@@ -62,9 +73,9 @@ public class FileController extends BaseController {
         // 提取文件拓展名
         String fileNameExtension = fi.substring(fi.lastIndexOf("."), fi.length());
         // 生成实际存储的真实文件名
-        String realName = UUID.randomUUID().toString() + fileNameExtension;
-        String key = realName;
+        String key = UUID.randomUUID().toString() + fileNameExtension;
         String url = "";
+
         try {
             Auth auth = Auth.create(Constants.QINIU_ACCESS_KEY, Constants.QINIU_SECRET_KEY);
             String upToken = auth.uploadToken(Constants.QINIU_UPLOAD_TOKEN);
@@ -91,5 +102,43 @@ public class FileController extends BaseController {
         UploadImageVO imageVO = new UploadImageVO();
         imageVO.setUrl(url);
         return new ResponseEntity<>(imageVO, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
+    @ApiOperation(value="下载文件", httpMethod="GET", notes="下载文件")
+    public void download(@RequestParam Long bid, HttpServletResponse response) {
+        Note note = noteService.findById(bid);
+        String content = note.getContent();
+        String title = note.getTitle();
+
+        String fileName = "";
+        if (Constants.MD.equals(note.getNoteType().getName())) {
+            fileName = title + ".md";
+        } else if (Constants.WORD.equals(note.getNoteType().getName())) {
+            fileName = title + ".txt";
+        }
+
+        byte[] bytes = content.getBytes();
+
+        // 设置下载响应头
+        FileUtil.setFileDownloadHeader(response, fileName);
+
+        ServletOutputStream out = null;
+
+        try {
+            out = response.getOutputStream();
+            out.write(bytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

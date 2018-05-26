@@ -74,4 +74,11 @@ public class Constants {
 
     public static final String QINIU_UPLOAD_URL = "http://p8rape2j2.bkt.clouddn.com";
 
+    /**
+     * 下載文件格式
+     */
+    public static final String MD = "md";
+    public static final String WORD = "word";
+
+
 }

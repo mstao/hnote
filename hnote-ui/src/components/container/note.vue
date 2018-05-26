@@ -94,7 +94,7 @@
             <span class="title">{{item.title.substring(0, 18)}}</span>
             <span class="date">{{item.date.substring(5, 10)}}</span>
             <span class="operation">
-              <img src="/static/img/download.png" title="下载" />
+              <img src="/static/img/download.png" title="下载" @click.stop="downloadNote" />
               <img src="/static/img/share_16.png" title="分享" @click.stop="shareNote" />
               <img src="/static/img/delete.png" title="删除" @click.stop="deleteNoteDialogVisible = true" />
             </span>
@@ -109,7 +109,7 @@
             <li @click="changeFileDialogVisible">移动到</li>
             <li @click="deleteNoteDialogVisible = true" v-if="!currentSelectedNote.deleted">删除</li>
             <li @click="recover" v-else>恢复</li>
-            <li>下载</li>
+            <li @click="downloadNote">下载</li>
             <li @click="shareNote">分享</li>
           </ul>
         </div>
@@ -489,6 +489,11 @@
       shareNote() {
         if (this.currentSelectedNote.id != undefined) {
           this.$router.push('/share/index/' + this.currentSelectedNote.id)
+        }
+      },
+      downloadNote() {
+        if (this.currentSelectedNote.id != undefined) {
+          window.location.href = process.env.BASE_API + "/files/download?bid=" + this.currentSelectedNote.id
         }
       },
       recover() {

@@ -220,6 +220,8 @@
           this.$store.dispatch('ChangeFileDialogVisible', true)
         } else if(command == 'delete') {
           this.deleteNoteDialogVisible = true
+        } else if (command == 'download') {
+          this.downloadNote()
         }
       },
       handleTagClose(tag) {
@@ -460,6 +462,11 @@
                 this.$refs.md.$img2Url(pos, response.data.url);
             })
           })
+      },
+      downloadNote() {
+        if (this.note.id != undefined) {
+          window.location.href = process.env.BASE_API + "/files/download?bid=" + this.note.id
+        }
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))
