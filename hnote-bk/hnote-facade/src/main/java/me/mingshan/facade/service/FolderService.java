@@ -54,4 +54,13 @@ public interface FolderService {
      * @param newName
      */
     void rename(long id, String newName);
+
+    /**
+     * Find by label and uid.
+     *
+     * @param label
+     * @param uid
+     * @return
+     */
+    Folder findByLabel(String label, Long uid);
 }

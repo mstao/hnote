@@ -13,11 +13,19 @@ import java.util.List;
 public interface FolderDao extends BaseDao<Folder> {
 
     /**
-     * Select all notes by uid.
+     * Select all folders by uid.
      * @param uid
      * @return
      */
     List<Folder> selectAllByUid(long uid);
+
+    /**
+     * Select by label and uid.
+     * @param label
+     * @param uid
+     * @return
+     */
+    Folder selectByLabel(@Param("label") String label, @Param("uid") Long uid);
 
     /**
      * Rename folder.

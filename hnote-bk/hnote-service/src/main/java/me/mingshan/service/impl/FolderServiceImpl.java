@@ -43,4 +43,9 @@ public class FolderServiceImpl implements FolderService {
     public void rename(long id, String newName) {
         folderDao.rename(id, newName);
     }
+
+    @Override
+    public Folder findByLabel(String label, Long uid) {
+        return folderDao.selectByLabel(label, uid);
+    }
 }

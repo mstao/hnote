@@ -9,7 +9,7 @@
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>新建笔记</el-dropdown-item>
             <el-dropdown-item command="create-md">新建Markdown</el-dropdown-item>
-            <el-dropdown-item>新建文件夹</el-dropdown-item>
+            <el-dropdown-item command="create-folder">新建文件夹</el-dropdown-item>
             <el-dropdown-item divided>导入笔记</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -35,8 +35,8 @@
                   <li  @mouseover="showExpandNewDiv = true"  @mouseout="showExpandNewDiv = false">新建<img src="/static/img/right-expand.png" />
                     <div v-if="showExpandNewDiv" class="expand-new-div">
                       <ul>
-                        <li>文件夾</li>
-                        <li>Markdown</li>
+                        <li @click="handNodeClickForAddFolder">文件夾</li>
+                        <li @click="handNodeClickForAddMdClick">Markdown</li>
                       </ul>
                     </div>
                   </li>
@@ -127,6 +127,7 @@
     <!-- move to folder -->
     <file-dailog :folders="folders"/>
 
+    <!-- 刪除提示 -->
     <el-dialog
       title="删除提示"
       :visible.sync="deleteNoteDialogVisible"
@@ -142,6 +143,33 @@
         <el-button type="primary" @click="handDeleteNote" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 新增dialog -->
+    <el-dialog
+      title="新增文件夹"
+      :visible.sync="saveFolder.addFolderDialogVisible"
+      width="30%">
+      <span>请填写文件夹名称：</span>
+      <el-input v-model="saveFolder.inputFolderName" clearable v-on:blur="checkFolder" placeholder="请输入内容"></el-input>
+      <span class="loading-span" v-show="saveFolder.isShowCheckFolderLoading">
+        <svg-icon icon-class="loading" />
+      </span>
+      <span :class="{'folder-valid-true': saveFolder.inputFolderNameValid, 'folder-valid-false': !saveFolder.inputFolderNameValid}">
+        {{saveFolder.folderNameValidTips}}
+      </span>
+      <br/><br/>
+      <span>请选择父文件夹(不选择即为根文件夹)：</span>
+      <div class="submenu mf-folder">
+        <el-tree :data="folders" accordion @node-click="handleSelectParentFolderClick"></el-tree>
+      </div><br>
+      <span v-if="saveFolder.currentSelectParentFolder.label">已选择父文件夹：<b>{{saveFolder.currentSelectParentFolder.label}}</b> &nbsp;&nbsp;
+        <el-button type="primary" size="mini" icon="el-icon-delete" @click="clearSelectParentFolder" title="清除"></el-button>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="saveFolder.addFolderDialogVisible = false">取 消</el-button>
+        <el-button type="primary"  ref="saveFolderBtn" @click="handAddFolderClick" v-loading.fullscreen.lock="fullscreenLoading">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -150,7 +178,7 @@
   import 'nprogress/nprogress.css'// progress bar style
   import file_dialog from '../dialog/fileDialog.vue'
   import { toJsonTree, getNode } from '@/utils/json'
-  import { getFoldersByUid } from '@/api/folder'
+  import { folderFilter, saveFolder } from '@/api/folder'
   import { getNotesByPage, getLastestNotes, deleteNote, getNoteByToken, getNoteByTid, updateNoteFolder } from '@/api/note'
   import { getAllTrashsByPage, recover } from '@/api/trash'
   import { getTagsByUid } from '@/api/tag'
@@ -176,7 +204,15 @@
         deleteNoteDialogVisible: false,
         fullscreenLoading: false,
         token: '',
-        sortItem: { sort: 'gmt_create', sortType: 'desc' }
+        sortItem: { sort: 'gmt_create', sortType: 'desc' },
+        saveFolder: {
+          addFolderDialogVisible: false, 
+          currentSelectParentFolder: {},
+          inputFolderName: '',
+          inputFolderNameValid: false,
+          isShowCheckFolderLoading: false,
+          folderNameValidTips: ''
+        }
       };
     },
     components: {
@@ -290,9 +326,9 @@
       fetchFolders() {
         const uid = localStorage.getItem("userId");
         new Promise((resolve, reject) => {
-          getFoldersByUid(uid).then(response => {
+          folderFilter({uid:uid}).then(response => {
             const data = response.data
-            
+            console.log(data)
             this.folders = toJsonTree(data, 'id', 'pid', 'children')
             
             this.$store.dispatch('SetSelectedFolder', this.findDefaultFolder(data))
@@ -452,6 +488,8 @@
           }
           this.noteList.push(data)
           this.$store.dispatch('SetNote', data)
+        } else if (command == 'create-folder') {
+          this.saveFolder.addFolderDialogVisible = true
         }
       },
       search() {
@@ -558,12 +596,6 @@
           }
         }
       },
-      openFullScreen() {
-        this.fullscreenLoading = true;
-        setTimeout(() => {
-          this.fullscreenLoading = false;
-        }, 1500);
-      },
       handleSortCommand(command) {
         if (command == 'createTime') {
           this.changeSortStatus('gmt_create')
@@ -593,6 +625,101 @@
             }
           })
         })
+      },
+      handleSelectParentFolderClick(data) {
+        this.saveFolder.currentSelectParentFolder = data
+      },
+      handAddFolderClick() {
+        if (this.saveFolder.inputFolderNameValid) {
+          var curr = this.saveFolder.currentSelectParentFolder;
+          if (curr.level == 0) {
+            this.$message({
+                message: '默认文件夹下不允许新建文件夹!',
+                type: 'warning'
+            });
+            return
+          }
+
+          this.openFullScreen()
+
+          new Promise((resolve, reject) => {
+            var label = this.saveFolder.inputFolderName
+            var pid = curr.id ? curr.id : 0
+            var uid = localStorage.getItem('userId')
+            var level = curr.id ? curr.level + 1 : 1
+            var data = {
+              label : label,
+              pid: pid,
+              uid: uid,
+              level: level
+            }
+            saveFolder(data).then(response => {
+              if (response.status == 201) {
+                this.$message({
+                  message: '创建文件夹成功！',
+                  type: 'success'
+                });
+
+                this.saveFolder.currentSelectParentFolder = {}
+                this.saveFolder.inputFolderNameValid = false
+                this.saveFolder.inputFolderName = ''
+                this.saveFolder.addFolderDialogVisible = false
+
+                this.fetchFolders();
+              }
+            })
+          })
+        } else {
+          this.$message({
+              message: '文件夹名称检测不通过!',
+              type: 'warning'
+          });
+        }
+      },
+      checkFolder() {
+        if (this.saveFolder.inputFolderName) {
+          this.saveFolder.isShowCheckFolderLoading = true
+          var uid = localStorage.getItem('userId') 
+          new Promise((resolve, reject) => {
+            folderFilter({label: this.saveFolder.inputFolderName, uid: uid}).then(response => {
+              if (response.status == 200) {
+                var data = response.data
+                if (data.length == 0) {
+                  this.saveFolder.inputFolderNameValid = true
+                  this.saveFolder.folderNameValidTips = '文件夹名称可用'
+                } else {
+                  this.saveFolder.inputFolderNameValid = false
+                  this.saveFolder.folderNameValidTips = '文件夹名称已被占用'
+                }
+                this.saveFolder.isShowCheckFolderLoading = false
+              }
+              resolve()
+            }).catch(error => {
+              this.saveFolder.isShowCheckFolderLoading = false
+              reject(error)
+            }) 
+          })
+        }
+      },
+      clearSelectParentFolder() {
+        this.saveFolder.currentSelectParentFolder = {}
+      },
+      handNodeClickForAddFolder() {
+
+      },
+      handNodeClickForAddMdClick() {
+
+      },
+      openFullScreen() {
+       const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 2000);
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))
@@ -853,6 +980,12 @@
 .delete-dialog-content .delete-type-img { 
   position: relative;
   top: 5px;
+}
+.folder-valid-false {
+  color: #F56C6C;
+}
+.folder-valid-true {
+  color: #67C23A;
 }
 </style>
 

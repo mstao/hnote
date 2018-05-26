@@ -48,6 +48,17 @@
         where f.uid = #{uid} and f.is_deleted = 0
     </select>
 
+    <select id="selectByLabel" resultMap="folderResultMap">
+        select f.id,
+               f.label,
+               f.level,
+               f.uid,
+               f.pid,
+               f.is_deleted
+        from hn_folder f
+        where f.label = #{label} and f.uid = #{uid} and f.is_deleted = 0
+    </select>
+
     <!-- 添加-->
     <insert id="insert" parameterType="me.mingshan.facade.model.Folder" useGeneratedKeys="true" keyProperty="id">
         insert into hn_folder (
@@ -58,7 +69,7 @@
             gmt_create,
             gmt_modified)
         values(
-            #{name},
+            #{label},
             #{level},
             #{uid},
             #{pid},

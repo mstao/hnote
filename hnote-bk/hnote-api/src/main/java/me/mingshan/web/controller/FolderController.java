@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -48,7 +50,7 @@ public class FolderController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<FolderVO> getNoteById(@PathVariable Long id) {
+    public ResponseEntity<FolderVO> getFolderById(@PathVariable Long id) {
         Folder folder = folderService.findById(id);
         if (folder == null) {
             ResultModel result = new ResultModel();
@@ -63,28 +65,48 @@ public class FolderController extends BaseController {
     }
 
     /**
-     * Get folder by uid.
+     * Get folder by filter.
      *
      * @param uid The folder id.
      * @return
      */
-    @RequestMapping(value = "filters", method = RequestMethod.GET)
+    @RequestMapping(value = "/filters", method = RequestMethod.GET)
     @ApiOperation(value="Get folder by uid", httpMethod="GET", notes="")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<List<FolderVO>> getNoteByUid(@RequestParam Long uid) {
+    public ResponseEntity<List<FolderVO>> filter(@RequestParam(value = "uid", required = false) Long uid,
+                                                 @RequestParam(value = "label", required = false) String label) {
+
         List<FolderVO> folderVOs = new ArrayList<>();
-        List<Folder> folders = folderService.findAllByUid(uid);
-        for (Folder folder : folders) {
-            FolderVO folderVO = mapper.map(folder, FolderVO.class);
-            folderVOs.add(folderVO);
+        List<Folder> folders = null;
+
+        if (uid != null) {
+            if (!StringUtils.isEmpty(label)) {
+                Folder folder = folderService.findByLabel(label, uid);
+                folders = new ArrayList<>();
+                if (folder != null) {
+                    folders.add(folder);
+                }
+            } else {
+                folders = folderService.findAllByUid(uid);
+            }
+        }
+
+        if (folders != null ) {
+            if (folders.size() > 0) {
+                for (Folder folder : folders) {
+                    FolderVO folderVO = mapper.map(folder, FolderVO.class);
+                    folderVOs.add(folderVO);
+                }
+            }
         }
 
         return new ResponseEntity<>(folderVOs, HttpStatus.OK);
     }
+
 
     /**
      * Create folder.
@@ -100,7 +122,7 @@ public class FolderController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<Void> createNote(@ApiParam(required=true, value="Folder", name="Folder")
+    public ResponseEntity<Void> createFolder(@ApiParam(required=true, value="Folder", name="Folder")
                                            @RequestBody FolderVO folderVO, UriComponentsBuilder ucBuilder) {
         Folder folder = mapper.map(folderVO, Folder.class);
 
@@ -156,7 +178,7 @@ public class FolderController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<ResultModel> deleteBook(@ApiParam(required=true, value="Folder id", name="ids")
+    public ResponseEntity<ResultModel> deleteFolder(@ApiParam(required=true, value="Folder id", name="ids")
                                                   @PathVariable("id") Long id) {
         logger.info("Fetching & Deleting folder with id " + id);
         try {
