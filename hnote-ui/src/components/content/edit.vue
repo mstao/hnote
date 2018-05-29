@@ -260,7 +260,7 @@
           new Promise((resolve, reject) => {
             saveTag(tag, this.note.id).then(response => {
               if (response.status == 201) {
-                this.dynamicTags.push(inputValue);
+                this.fetchTagsByNoteId(this.note.id)
               }
             })
           }) 
@@ -288,22 +288,27 @@
 
           } else {
             new Promise((resolve, reject) => {
-              getTagsByNid(this.note.id).then(response => {
-                if (response.status == 200) {
-                  var tempTags = [];
-                  var x;
-                  this.sourceTags = response.data;
-                  for (x in this.sourceTags) {
-                    tempTags.push(this.sourceTags[x].name)
-                  }
-                  this.dynamicTags = tempTags;
-                }
-              })
+              this.fetchTagsByNoteId(this.note.id)
             })
           }
 
           this.isShowTagDiv = true
         }
+      },
+      fetchTagsByNoteId(noteId) {
+        new Promise((resolve, reject) => {
+          getTagsByNid(noteId).then(response => {
+            if (response.status == 200) {
+              var tempTags = [];
+              var x;
+              this.sourceTags = response.data;
+              for (x in this.sourceTags) {
+                tempTags.push(this.sourceTags[x].name)
+              }
+              this.dynamicTags = tempTags;
+            }
+          })
+        })
       },
       updateTitle() {
         if (this.note.id != undefined) {
