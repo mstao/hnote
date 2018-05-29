@@ -13,3 +13,7 @@ Druid monitor view
 After starting the project, enter the following url (IP and port are replaced), and the username and password are guest.
 
 http://localhost:8080/druid/index.html
+
+Notice:
+Just for study
+
