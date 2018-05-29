@@ -39,12 +39,12 @@ public class TokenController extends BaseController {
     private TokenManager tokenManager;
 
     /**
-     *
+     * Login
      * @param tokenVO
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
-    @ApiOperation(value="登录处理", httpMethod="POST", notes="Login")
+    @ApiOperation(value="Log in", httpMethod="POST", notes="Login")
     public ResponseEntity<TokenModel> login(@RequestBody TokenVO tokenVO) {
         ResultModel result = new ResultModel();
         String userName = tokenVO.getUserName();
@@ -75,7 +75,7 @@ public class TokenController extends BaseController {
      */
     @RequestMapping(method = RequestMethod.DELETE)
     @Authorization
-    @ApiOperation(value="登出处理", httpMethod="DELETE", notes="Logout")
+    @ApiOperation(value="Log out", httpMethod="DELETE", notes="Logout")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")

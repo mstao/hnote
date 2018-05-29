@@ -19,9 +19,7 @@ import me.mingshan.web.config.Constants;
 import me.mingshan.web.util.FileUtil;
 import me.mingshan.web.vo.UploadImageVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,7 +56,7 @@ public class FileController extends BaseController {
      * @throws IOException
      */
     @RequestMapping(value = "/image", method = RequestMethod.POST)
-    @ApiOperation(value="上传图片", httpMethod="POST", notes="")
+    @ApiOperation(value="Upload image to qiniu.", httpMethod="POST", notes="")
     @Authorization
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
@@ -106,7 +104,7 @@ public class FileController extends BaseController {
 
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
-    @ApiOperation(value="下载文件", httpMethod="GET", notes="下载文件")
+    @ApiOperation(value="Download file which is md or txt. ", httpMethod="GET", notes="下载文件")
     public void download(@RequestParam Long bid, HttpServletResponse response) {
         Note note = noteService.findById(bid);
         String content = note.getContent();
