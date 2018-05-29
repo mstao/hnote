@@ -1,6 +1,8 @@
 # hnote
 A note with vue and rpc
 
+![image](http://p8rape2j2.bkt.clouddn.com/hnote_main.png)
+
 Test API
 Enter after the project is started：
 
