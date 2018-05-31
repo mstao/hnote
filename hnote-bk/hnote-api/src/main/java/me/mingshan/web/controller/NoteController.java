@@ -138,9 +138,6 @@ public class NoteController extends BaseController {
                                                                           @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
-//        PageInfo<Note> pageInfo = noteService.findByToken(token, pageNumber, pageSize, sort, sortType);
-//        List<Note> notes = pageInfo.getList();
-
         List<Note> notes = searchClient.search(token, Note.class);
 
         // 总记录数

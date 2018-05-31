@@ -17,10 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>用户搜索客户端</p>
- *
- * @author: XianGuo
- * @date: 2018年01月31日
+ * 搜索客户端
  */
 @Service("searchClient")
 public class EsSearchClient implements SearchClient {
