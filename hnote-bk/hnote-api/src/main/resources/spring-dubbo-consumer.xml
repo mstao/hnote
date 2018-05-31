@@ -14,4 +14,5 @@
     <dubbo:reference id="folderService" interface="me.mingshan.facade.service.FolderService"/>
     <dubbo:reference id="tagService" interface="me.mingshan.facade.service.TagService"/>
     <dubbo:reference id="trashService" interface="me.mingshan.facade.service.TrashService"/>
+    <dubbo:reference id="searchClient" interface="me.mingshan.facade.service.SearchClient"/>
 </beans>

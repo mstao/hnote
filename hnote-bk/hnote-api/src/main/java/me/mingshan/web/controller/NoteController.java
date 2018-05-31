@@ -5,11 +5,15 @@ import io.swagger.annotations.*;
 import me.mingshan.common.annotation.Authorization;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.NoteService;
+import me.mingshan.facade.service.SearchClient;
 import me.mingshan.web.exception.ServerException;
 import me.mingshan.web.model.ResultModel;
 import me.mingshan.web.model.SearchResultModel;
 import me.mingshan.web.vo.*;
 import org.dozer.Mapper;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,6 +36,9 @@ public class NoteController extends BaseController {
 
     @Autowired
     private Mapper mapper;
+
+    @Autowired
+    private SearchClient searchClient;
 
     /**
      * Get all note infos by pagination.
@@ -131,10 +138,13 @@ public class NoteController extends BaseController {
                                                                           @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
-        PageInfo<Note> pageInfo = noteService.findByToken(token, pageNumber, pageSize, sort, sortType);
-        List<Note> notes = pageInfo.getList();
+//        PageInfo<Note> pageInfo = noteService.findByToken(token, pageNumber, pageSize, sort, sortType);
+//        List<Note> notes = pageInfo.getList();
+
+        List<Note> notes = searchClient.search(token, Note.class);
+
         // 总记录数
-        Long total = pageInfo.getTotal();
+        Long total = Long.valueOf(notes.size());
         if(notes.isEmpty()){
             // You many decide to return HttpStatus.NOT_FOUND
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
