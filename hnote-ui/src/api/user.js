@@ -28,3 +28,19 @@ export function getUserInfo(userId) {
     method: 'get'
   })
 }
+
+export function checkUser(userName) {
+  return request({
+    url: '/users/check',
+    method: 'get',
+    parms: { userName }
+  })
+}
+
+export function createUser(user) {
+  return request({
+    url: '/users',
+    method: 'post',
+    data: user
+  })
+} 

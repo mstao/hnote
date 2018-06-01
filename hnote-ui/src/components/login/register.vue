@@ -4,48 +4,80 @@
       <div class="title-container">
         <h3 class="title">H-note</h3>
       </div>
-      <el-form-item prop="username">
+      <el-form-item prop="name">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        <el-input name="name" type="text" v-model="loginForm.name" autoComplete="off" placeholder="username" />
+      </el-form-item>
+
+      <el-form-item prop="email">
+        <span class="svg-container svg-container_email">
+          <svg-icon icon-class="email" />
+        </span>
+        <el-input name="email" type="text" v-model="loginForm.email" autoComplete="off" placeholder="email" />
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
-        <el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password" />
+        <el-input name="password" :type="passwordType" v-model="loginForm.password" autoComplete="off" placeholder="password" />
         <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-bottom:10px;" :loading="loading" @click.native.prevent="handleLogin">LOG IN</el-button>
-    
-      <div class="register-tips-div">
-        <router-link class="find-password" to="/find-password">Forgot Password?</router-link>
-        <router-link class="register" to="/register">No acount? click me to register.</router-link>
-      </div>
+      <el-form-item prop="rePassword">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input name="rePassword" :type="passwordType" v-model="loginForm.rePassword" autoComplete="off" placeholder="repeat password" />
+        <span class="show-pwd" @click="showPwd">
+          <svg-icon icon-class="eye" />
+        </span>
+      </el-form-item>
 
+      <el-button type="primary" style="width:100%;margin-bottom:10px;" :loading="loading" @click.native.prevent="handleRegister">Register</el-button>
+      
+      <div class="login-tips-div">
+        <router-link class="login-link" to="/login">Already have an account? now login.</router-link>
+      </div>
     </el-form>
+
   </div>
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+import { isvalidUsername, validateEmail } from '@/utils/validate'
+import {  checkUser, createUser } from '@/api/user' 
 import { Message } from 'element-ui'
-import { loginByUsername } from '@/api/user'
 
 export default {
-  name: 'login',
+  name: 'register',
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
         callback(new Error('Please enter the correct user name'))
       } else {
-        callback()
+        new Promise((resolve, reject) => {
+          checkUser(value).then(response => {
+            const data = response.data
+            if (data.code == 1003) {
+              callback(new Error(data.message))
+            } else {
+              callback()
+            }
+          })
+        })
       }
+    }
+    const validateCurrEmail = (rule, value, callback) => {
+        if (!validateEmail(value)) {
+          callback(new Error('Please enter the correct email'))
+        } else {
+          callback()
+        }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 2) {
@@ -54,14 +86,29 @@ export default {
         callback()
       }
     }
+    const validateRePassword = (rule, value, callback) => {
+      if (value.length < 2) {
+        callback(new Error('The password can not be less than 6 digits'))
+      } else {
+        if (value != this.loginForm.password) {
+          callback(new Error('The repeat password is not equal to password!'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       loginForm: {
-        username: 'mingshan',
-        password: '123'
+        name: '',
+        password: '',
+        rePassword: '',
+        email: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        name: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        email: [{ required: true, trigger: 'blur', validator: validateCurrEmail }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        rePassword: [{ required: true, trigger: 'blur', validator: validateRePassword }]
       },
       passwordType: 'password',
       loading: false
@@ -75,53 +122,29 @@ export default {
         this.passwordType = 'password'
       }
     },
-    handleLogin() {
+    handleRegister() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-    
-          const username = this.loginForm.username.trim() 
-          return new Promise((resolve, reject) => {
-            loginByUsername(username, this.loginForm.password).then(response => {
-              const data = response.data
-              if (data.code == 1001) {
-                Message.error(data.message)
-              } else {
-                this.$store.dispatch('SetToken', data.token)
-                localStorage.setItem("userId", data.userId)
-                this.$router.push('/');
+          new Promise((resolve, reject) => {
+            createUser(this.loginForm).then(response => {
+              if (response.status == 201) {
+                this.$message({
+                    message: '创建用户成功，请前往登录。',
+                    type: 'success'
+                });
+                this.$router.push('/login');
               }
               this.loading = false
-              resolve()
-            }).catch(error => {
+            }).catch(() => {
               this.loading = false
-              reject(error)
             })
           })
-
         } else {
           console.log('error submit!!')
           return false
         }
       })
-    },
-    afterQRScan() {
-      // const hash = window.location.hash.slice(1)
-      // const hashObj = getQueryObject(hash)
-      // const originUrl = window.location.origin
-      // history.replaceState({}, '', originUrl)
-      // const codeMap = {
-      //   wechat: 'code',
-      //   tencent: 'code'
-      // }
-      // const codeName = hashObj[codeMap[this.auth_type]]
-      // if (!codeName) {
-      //   alert('第三方登录失败')
-      // } else {
-      //   this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-      //     this.$router.push({ path: '/' })
-      //   })
-      // }
     }
   },
   created() {
@@ -223,31 +246,29 @@ $light_gray:#666666;
   .thirdparty-button {
     position: absolute;
     right: 35px;
+    bottom: 28px;
   }
 }
 </style>
 
 <style>
-  .register-tips-div {
+  .login-tips-div {
     position: absolute;
     right: 35px;
     width: 420px;
   }
 
-  .register-tips-div a {
+  .login-tips-div a {
     color: #AA99BB;
     font-size: 12px;
     text-decoration: none;
   }
 
-  .register-tips-div a:hover{
+  .login-tips-div a:hover{
     text-decoration: underline;
   }
 
-  .register-tips-div .find-password {
+  .login-tips-div .login-link {
     float: left;
-  }
-  .register-tips-div .register {
-    float: right;
   }
 </style>

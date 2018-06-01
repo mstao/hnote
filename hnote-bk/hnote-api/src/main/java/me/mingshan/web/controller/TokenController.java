@@ -61,7 +61,7 @@ public class TokenController extends BaseController {
             result.setCode(1001);
             result.setMessage("UserName or password is incorrect.");
             logger.info("UserName or password is incorrect.");
-            throw new ServerException(result, HttpStatus.NOT_FOUND);
+            throw new ServerException(result, HttpStatus.OK);
         }
         
         TokenModel token = tokenManager.creatToken(user.getId());

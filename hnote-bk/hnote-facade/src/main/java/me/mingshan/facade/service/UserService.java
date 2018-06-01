@@ -35,4 +35,10 @@ public interface UserService {
      */
     @CacheInvalidate(name="userCache-", key="#id")
     void delete(Long id) throws ServerException;
+
+    /**
+     * Add user.
+     * @return
+     */
+    Long insert(User user);
 }

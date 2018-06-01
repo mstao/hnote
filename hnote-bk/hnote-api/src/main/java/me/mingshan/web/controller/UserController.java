@@ -1,23 +1,23 @@
 package me.mingshan.web.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import me.mingshan.common.annotation.Authorization;
+import me.mingshan.facade.model.Note;
+import me.mingshan.facade.model.Tag;
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.UserService;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.common.model.ResultModel;
-import me.mingshan.web.vo.UserVO;
+import me.mingshan.web.config.Constants;
+import me.mingshan.web.util.MD5Util;
+import me.mingshan.web.vo.*;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * @Author: mingshan
@@ -50,7 +50,7 @@ public class UserController extends BaseController {
         User user = userService.findById(id);
         if (user == null) {
             ResultModel result = new ResultModel();
-            result.setCode(1021);
+            result.setCode(1001);
             result.setMessage("User with id " + id + " not found");
             logger.info("User with id {} not found", id);
             throw new ServerException(result, HttpStatus.NOT_FOUND);
@@ -59,4 +59,51 @@ public class UserController extends BaseController {
         UserVO userVO = mapper.map(user, UserVO.class);
         return new ResponseEntity<>(userVO, HttpStatus.OK);
     }
+
+    /**
+     * Check user
+     * @param userName
+     * @return
+     */
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
+    @ApiOperation(value="Check user by username.", httpMethod="GET", notes="")
+    public ResponseEntity<ResultModel> checkUser(String userName) {
+        User user = userService.findByUserName(userName);
+        ResultModel result = new ResultModel();
+
+        if (user == null) {
+            result.setCode(1002);
+            result.setMessage("This username is ok!");
+        } else {
+            result.setCode(1003);
+            result.setMessage("User is already exist.");
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * Create user.
+     * 
+     * @param userVO
+     * @param ucBuilder
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST)
+    @ApiOperation(value="create user", httpMethod="POST", notes="Create user")
+    public ResponseEntity<Void> createUser(@ApiParam(required=true, value="User", name="user")
+                                          @RequestBody CreateUserVO userVO, UriComponentsBuilder ucBuilder) {
+
+        User user = mapper.map(userVO, User.class);
+        user.setPassword(MD5Util.md5(user.getName(), user.getName()));
+        user.setSalt(user.getName());
+        user.setAvatarUrl(Constants.DEFAULT_AVATAR);
+
+        Long id = userService.insert(user);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/users/{id}").buildAndExpand(id).toUri());
+
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
 }

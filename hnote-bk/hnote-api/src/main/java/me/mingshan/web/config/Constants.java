@@ -80,5 +80,7 @@ public class Constants {
     public static final String MD = "md";
     public static final String WORD = "word";
 
+    public static final String DEFAULT_AVATAR = "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif";
+
 
 }

@@ -120,10 +120,10 @@ public class TagController extends BaseController {
                                               @RequestBody CreateTagVO tagVO, @RequestParam Long nid, UriComponentsBuilder ucBuilder) {
         Tag tag = mapper.map(tagVO, Tag.class);
 
-        tagService.insert(tag, nid);
+        Long id = tagService.insert(tag, nid);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/tags/{id}").buildAndExpand(tag.getId()).toUri());
+        headers.setLocation(ucBuilder.path("/tags/{id}").buildAndExpand(id).toUri());
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }

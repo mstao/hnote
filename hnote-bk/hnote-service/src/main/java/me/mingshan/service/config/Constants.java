@@ -5,4 +5,9 @@ package me.mingshan.service.config;
  * @Date: Created in 22:07 2018/4/24
  */
 public class Constants {
+    /**
+     * 用户的默认文件夹
+     */
+    public static final String DEFAULT_FOLDER = "默认文件夹";
+
 }

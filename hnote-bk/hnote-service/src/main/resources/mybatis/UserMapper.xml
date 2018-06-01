@@ -36,8 +36,8 @@
         select id, name, email,avatar_url from hn_user where id = #{id}
     </select>
 
-    <select id="selectByUserName" parameterType="java.lang.String" resultMap="userResultMap">
-        select id, name, email, password from hn_user where name = #{value}
+    <select id="selectByUserName" resultMap="userResultMap">
+        select id, name, email, password from hn_user where name = #{name}
     </select>
 
     <select id="selectVersion" parameterType="java.lang.Long" resultType="java.lang.Integer">
@@ -45,12 +45,7 @@
     </select>
 
     <!-- 添加用户 -->
-    <insert id="insert" parameterType="me.mingshan.facade.model.User">
-        <!-- 主键值返回 -->
-        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-            SELECT LAST_INSERT_ID()
-        </selectKey>
-
+    <insert id="insert" parameterType="me.mingshan.facade.model.User" useGeneratedKeys="true" keyProperty="id">
         insert into hn_user (
           name,
           password,
