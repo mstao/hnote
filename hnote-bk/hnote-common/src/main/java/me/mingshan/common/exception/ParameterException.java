@@ -1,4 +1,4 @@
-package me.mingshan.web.exception;
+package me.mingshan.common.exception;
 
 /**
  * The parameters of exception.

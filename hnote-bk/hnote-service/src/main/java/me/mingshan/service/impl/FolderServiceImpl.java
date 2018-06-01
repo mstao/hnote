@@ -1,5 +1,6 @@
 package me.mingshan.service.impl;
 
+import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Folder;
 import me.mingshan.facade.service.FolderService;
 import me.mingshan.service.dao.FolderDao;
@@ -30,8 +31,12 @@ public class FolderServiceImpl implements FolderService {
 
 
     @Override
-    public void delete(Long id) {
-        folderDao.delete(id);
+    public void delete(Long id) throws ServerException {
+        Integer version = folderDao.selectVersion(id);
+        Integer result = folderDao.delete(id, version);
+        if (result == 0) {
+            throw new ServerException();
+        }
     }
 
     @Override
@@ -40,8 +45,12 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void rename(long id, String newName) {
-        folderDao.rename(id, newName);
+    public void rename(long id, String newName) throws ServerException {
+        Integer version = folderDao.selectVersion(id);
+        Integer result = folderDao.rename(id, newName, version);
+        if (result == 0) {
+            throw new ServerException();
+        }
     }
 
     @Override

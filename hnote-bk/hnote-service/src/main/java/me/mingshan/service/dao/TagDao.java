@@ -41,5 +41,5 @@ public interface TagDao extends BaseDao<Tag> {
      *
      * @param noteToTag
      */
-    void insertNoteToTag(NoteToTag noteToTag);
+    Long insertNoteToTag(NoteToTag noteToTag);
 }

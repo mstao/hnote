@@ -1,4 +1,4 @@
-package me.mingshan.web.model;
+package me.mingshan.common.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

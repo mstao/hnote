@@ -1,8 +1,8 @@
 package me.mingshan.web.handler;
 
-import me.mingshan.web.exception.ParameterException;
-import me.mingshan.web.exception.ServerException;
-import me.mingshan.web.model.ResultModel;
+import me.mingshan.common.exception.ParameterException;
+import me.mingshan.common.exception.ServerException;
+import me.mingshan.common.model.ResultModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

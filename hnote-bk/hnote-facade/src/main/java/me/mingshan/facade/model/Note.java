@@ -39,6 +39,11 @@ public class Note implements Serializable {
     private Date gmtModified;
 
     /**
+     * 乐观锁版本号
+     */
+    private Integer version;
+
+    /**
      *  类别
      */
     private NoteType noteType;

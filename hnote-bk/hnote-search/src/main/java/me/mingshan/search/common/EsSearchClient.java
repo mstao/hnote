@@ -8,6 +8,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class EsSearchClient implements SearchClient {
     @Autowired
     private RestHighLevelClient rhlClient;
 
+    /**
+     * No highlight
+     * @param token
+     * @return
+     */
     @Override
     public List<JSONObject> search(String token) {
         try {
@@ -34,13 +40,20 @@ public class EsSearchClient implements SearchClient {
             searchRequest.types("doc");
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             searchSourceBuilder.query(QueryBuilders.matchQuery("title", token));
+            HighlightBuilder highlightBuilder = new HighlightBuilder();
+
+            HighlightBuilder.Field highlightUser = new HighlightBuilder.Field("title");
+            highlightBuilder.field(highlightUser);
+            searchSourceBuilder.highlighter(highlightBuilder);
             searchRequest.source(searchSourceBuilder);
+
             SearchResponse response = rhlClient.search(searchRequest);
             logger.info("search result: {} ", response);
             if (response.getHits() == null) {
                 return null;
             }
             List<JSONObject> list = new ArrayList<>();
+
             response.getHits().forEach(item -> list.add(JSON.parseObject(item.getSourceAsString())));
             return list;
         } catch (Exception e) {

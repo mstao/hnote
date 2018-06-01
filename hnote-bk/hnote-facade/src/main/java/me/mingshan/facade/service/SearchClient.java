@@ -24,5 +24,4 @@ public interface SearchClient {
      */
     <T> List<T> search(String token, Class<T> tClass);
 
-
 }

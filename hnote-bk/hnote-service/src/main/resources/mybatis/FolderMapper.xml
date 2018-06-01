@@ -59,6 +59,10 @@
         where f.label = #{label} and f.uid = #{uid} and f.is_deleted = 0
     </select>
 
+    <select id="selectVersion" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select version from hn_folder where id = #{id}
+    </select>
+
     <!-- 添加-->
     <insert id="insert" parameterType="me.mingshan.facade.model.Folder" useGeneratedKeys="true" keyProperty="id">
         insert into hn_folder (

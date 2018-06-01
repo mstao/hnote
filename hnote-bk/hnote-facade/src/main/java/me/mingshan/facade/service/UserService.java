@@ -3,6 +3,7 @@ package me.mingshan.facade.service;
 
 import com.alicp.jetcache.anno.CacheInvalidate;
 import com.alicp.jetcache.anno.Cached;
+import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.User;
 
 /**
@@ -33,5 +34,5 @@ public interface UserService {
      * @return
      */
     @CacheInvalidate(name="userCache-", key="#id")
-    Long delete(Long id);
+    void delete(Long id) throws ServerException;
 }

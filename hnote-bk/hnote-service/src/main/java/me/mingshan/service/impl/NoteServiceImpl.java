@@ -2,6 +2,7 @@ package me.mingshan.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.NoteService;
 import me.mingshan.service.dao.NoteDao;
@@ -34,7 +35,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void deleteByNidTid(Long nid, Long tid) {
+    public void deleteByNidTid(Long nid, Long tid)  {
         noteDao.deleteByNidTid(nid, tid);
     }
 
@@ -65,8 +66,12 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void updateFolder(Integer folderId, Long id) {
-        noteDao.updateFolder(folderId, id);
+    public void updateFolder(Integer folderId, Long id) throws ServerException {
+        Integer version = noteDao.selectVersion(id);
+        Integer result = noteDao.updateFolder(folderId, id, version);
+        if (result == 0) {
+            throw new ServerException();
+        }
     }
 
     @Override
@@ -76,12 +81,21 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void update(Note model) {
-        noteDao.update(model);
+    public void update(Note model) throws ServerException   {
+        Integer version = noteDao.selectVersion(model.getId());
+        model.setVersion(version);
+        Integer result = noteDao.update(model);
+        if (result == 0) {
+            throw new ServerException();
+        }
     }
 
     @Override
-    public void delete(Long id) {
-         noteDao.delete(id);
+    public void delete(Long id) throws ServerException {
+         Integer version = noteDao.selectVersion(id);
+         Integer result = noteDao.delete(id, version);
+         if (result == 0) {
+             throw new ServerException();
+         }
     }
 }

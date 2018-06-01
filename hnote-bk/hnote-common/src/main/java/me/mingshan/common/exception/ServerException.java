@@ -1,6 +1,7 @@
-package me.mingshan.web.exception;
+package me.mingshan.common.exception;
 
-import me.mingshan.web.model.ResultModel;
+
+import me.mingshan.common.model.ResultModel;
 import org.springframework.http.HttpStatus;
 
 /**

@@ -4,11 +4,14 @@ import com.alicp.jetcache.anno.CacheInvalidate;
 import com.alicp.jetcache.anno.CacheUpdate;
 import com.alicp.jetcache.anno.Cached;
 import com.github.pagehelper.PageInfo;
+import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Note;
 
-import java.util.List;
+import javax.sql.rowset.serial.SerialException;
 
 /**
+ * 支持乐观锁
+ *
  * @Author: mingshan
  * @Date: Created in 16:51 2018/4/27
  */
@@ -37,7 +40,7 @@ public interface NoteService {
      * @param note
      */
     @CacheUpdate(name="noteCache-", key="#note.id", value="#note")
-    void update(Note note);
+    void update(Note note) throws ServerException;
 
     /**
      *  Delete note by id.
@@ -45,7 +48,7 @@ public interface NoteService {
      * @param id
      */
     @CacheInvalidate(name="noteCache-", key="#id")
-    void delete(Long id);
+    void delete(Long id) throws ServerException;
 
     /**
      * Get all note by pagination.
@@ -103,5 +106,5 @@ public interface NoteService {
      * @param folderId
      * @param id
      */
-    void updateFolder(Integer folderId, Long id);
+    void updateFolder(Integer folderId, Long id) throws ServerException;
 }

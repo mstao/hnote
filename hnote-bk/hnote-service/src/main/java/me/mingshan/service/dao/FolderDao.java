@@ -32,5 +32,12 @@ public interface FolderDao extends BaseDao<Folder> {
      * @param id
      * @param newName
      */
-    void rename(@Param("id")long id, @Param("name")String newName);
+    Integer rename(@Param("id")long id, @Param("name")String newName, @Param("version") Integer version);
+
+    /**
+     * Select version by id.
+     * @param id
+     * @return
+     */
+    Integer selectVersion(Long id);
 }

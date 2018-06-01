@@ -3,23 +3,19 @@ package me.mingshan.web.controller;
 import io.swagger.annotations.*;
 import me.mingshan.common.annotation.Authorization;
 import me.mingshan.facade.model.Folder;
-import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.FolderService;
-import me.mingshan.web.exception.ServerException;
-import me.mingshan.web.model.ResultModel;
+import me.mingshan.common.exception.ServerException;
+import me.mingshan.common.model.ResultModel;
 import me.mingshan.web.vo.FolderVO;
-import me.mingshan.web.vo.NoteVO;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -171,6 +171,10 @@
         where n.is_deleted = 0 and ntg.tag_id = #{tid} order by n.${sort} ${sortType}
     </select>
 
+    <select id="selectVersion" parameterType="java.lang.Long" resultType="java.lang.Integer">
+        select version from hn_note where id = #{id}
+    </select>
+
     <!-- 添加-->
     <insert id="insert" parameterType="me.mingshan.facade.model.Note" useGeneratedKeys="true" keyProperty="id">
         insert into hn_note (
@@ -183,7 +187,7 @@
             folder_id,
             gmt_create,
             gmt_modified)
-        values(
+        values (
             #{title},
             #{content},
             #{author},
@@ -197,10 +201,9 @@
 
     <!--逻辑删除-->
     <update id="delete" parameterType="me.mingshan.facade.model.Note">
-        update hn_note set is_deleted = 1 where is_deleted = 0 and id = #{id}
+        update hn_note set is_deleted = 1, version = version + 1  where is_deleted = 0 and id = #{id} and version = #{version}
     </update>
 
-    <!--逻辑删除-->
     <update id="deleteByNidTid">
         delete from hn_note_to_tag  where is_deleted = 0 and tag_id = #{tid} and note_id = #{nid}
     </update>
@@ -222,11 +225,11 @@
             </if>
         </set>
 
-        , gmt_modified = NOW()
-        where id=#{id}
+        , gmt_modified = NOW(), version = version + 1
+        where id=#{id} and version = #{version}
     </update>
 
     <update id="updateFolder">
-        update hn_note set folder_id = #{folderId} where is_deleted = 0 and id = #{id}
+        update hn_note set folder_id = #{folderId} where is_deleted = 0 and id = #{id} and version = #{version}
     </update>
 </mapper>

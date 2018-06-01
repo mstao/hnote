@@ -33,6 +33,11 @@ public class Folder implements Serializable {
     private Date gmtModified;
 
     /**
+     * 乐观锁版本号
+     */
+    private Integer version;
+
+    /**
      * 批量删除
      */
     private List<Long> ids;

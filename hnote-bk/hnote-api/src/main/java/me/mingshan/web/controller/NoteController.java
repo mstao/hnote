@@ -6,21 +6,17 @@ import me.mingshan.common.annotation.Authorization;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.NoteService;
 import me.mingshan.facade.service.SearchClient;
-import me.mingshan.web.exception.ServerException;
-import me.mingshan.web.model.ResultModel;
+import me.mingshan.common.exception.ServerException;
+import me.mingshan.common.model.ResultModel;
 import me.mingshan.web.model.SearchResultModel;
 import me.mingshan.web.vo.*;
 import org.dozer.Mapper;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.sql.rowset.serial.SerialException;
 import java.util.List;
 
 /**
@@ -41,7 +37,7 @@ public class NoteController extends BaseController {
     private SearchClient searchClient;
 
     /**
-     * Get all note infos by pagination.
+     * Get all note info by pagination.
      *
      * @param pageNumber
      * @param pageSize

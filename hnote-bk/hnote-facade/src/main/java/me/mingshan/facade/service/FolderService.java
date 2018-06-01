@@ -3,6 +3,7 @@ package me.mingshan.facade.service;
 import com.alicp.jetcache.anno.CacheInvalidate;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
+import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Folder;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public interface FolderService {
      * @return
      */
     @CacheInvalidate(name="folderCache-", key="#id")
-    void delete(Long id);
+    void delete(Long id) throws ServerException;
 
     /**
      * Find all folders by uid.
@@ -53,7 +54,7 @@ public interface FolderService {
      * @param id
      * @param newName
      */
-    void rename(long id, String newName);
+    void rename(long id, String newName) throws ServerException;
 
     /**
      * Find by label and uid.

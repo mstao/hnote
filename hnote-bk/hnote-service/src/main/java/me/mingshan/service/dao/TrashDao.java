@@ -20,5 +20,5 @@ public interface TrashDao {
      * Reset note which is already deleted.
      * @param id
      */
-    void recover(Long id);
+    Integer recover(Long id);
 }

@@ -50,10 +50,12 @@
     <insert id="insert" parameterType="me.mingshan.facade.model.Tag" useGeneratedKeys="true" keyProperty="id">
         insert into hn_tag(
           name,
+          uid,
           gmt_create,
           gmt_modified)
         values(
           #{name},
+          #{uid},
           NOW(),
           NOW())
     </insert>

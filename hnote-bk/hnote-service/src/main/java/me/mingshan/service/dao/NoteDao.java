@@ -29,7 +29,7 @@ public interface NoteDao extends BaseDao<Note> {
      * @param nid
      * @param tid
      */
-    void deleteByNidTid(@Param("nid") Long nid, @Param("tid") Long tid);
+    Integer deleteByNidTid(@Param("nid") Long nid, @Param("tid") Long tid);
 
     /**
      * Select the lastest notes.
@@ -65,5 +65,13 @@ public interface NoteDao extends BaseDao<Note> {
      * @param folderId
      * @param id
      */
-    void updateFolder(@Param("folderId") Integer folderId, @Param("id") Long id);
+    Integer updateFolder(@Param("folderId") Integer folderId, @Param("id") Long id, Integer version);
+
+    /**
+     * Get vesion by id.
+     *
+     * @param id
+     * @return
+     */
+    Integer selectVersion(Long id);
 }

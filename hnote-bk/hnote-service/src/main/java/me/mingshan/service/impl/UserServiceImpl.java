@@ -1,5 +1,6 @@
 package me.mingshan.service.impl;
 
+import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.UserService;
 import me.mingshan.service.dao.UserDao;
@@ -23,8 +24,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long delete(Long id) {
-        return userDao.delete(id);
+    public void delete(Long id) {
+        Integer version = userDao.selectVersion(id);
+        Integer result = userDao.delete(id, version);
+        if (result == 0) {
+            throw new ServerException();
+        }
     }
 
     @Override

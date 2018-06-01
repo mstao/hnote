@@ -1,7 +1,5 @@
 package me.mingshan.common.dao;
 
-import java.util.List;
-
 /**
  * 公共DAO
  * @author mingshan
@@ -11,30 +9,31 @@ import java.util.List;
 public interface BaseDao<T> {
 
     /**
-     * Deletes by id.
+     * Delete by id and version.
      * @param id
+     * @param version
      * @return
      */
-    long delete(long id);
+    Integer delete(Long id, Integer version);
 
     /**
      * Inserts model to database.
      * @param model
      * @return
      */
-    long insert(T model);
+    Long insert(T model);
 
     /**
      * Selects model by id.
      * @param id
      * @return
      */
-    T selectByPrimaryKey(long id);
+    T selectByPrimaryKey(Long id);
 
     /**
      * Update model information.
      * @param model
      * @return
      */
-    long update(T model);
+    Integer update(T model);
 }
