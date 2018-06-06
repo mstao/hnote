@@ -65,7 +65,7 @@ public interface NoteDao extends BaseDao<Note> {
      * @param folderId
      * @param id
      */
-    Integer updateFolder(@Param("folderId") Integer folderId, @Param("id") Long id, Integer version);
+    Integer updateFolder(@Param("folderId") Integer folderId, @Param("id") Long id, @Param("version") Integer version);
 
     /**
      * Get vesion by id.

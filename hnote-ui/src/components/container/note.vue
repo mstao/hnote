@@ -382,7 +382,8 @@
               title: items[i].title,
               date: items[i].gmtCreate,
               deleted: items[i].deleted,
-              noteType: items[i].noteType
+              noteType: items[i].noteType,
+              folder: items[i].folder
             }
             tempList.unshift(temp);
           }
@@ -477,7 +478,7 @@
       },
       handleCreateCommand(command) {
         if (command == 'create-md') {
-          createMd(this.selectedFolder)
+          this.createMd(this.selectedFolder)
         } else if (command == 'create-folder') {
           this.saveFolder.addFolderDialogVisible = true
         }

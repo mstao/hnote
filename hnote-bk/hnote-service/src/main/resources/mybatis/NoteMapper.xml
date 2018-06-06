@@ -230,6 +230,6 @@
     </update>
 
     <update id="updateFolder">
-        update hn_note set folder_id = #{folderId} where is_deleted = 0 and id = #{id} and version = #{version}
+        update hn_note set folder_id = #{folderId}, version = version + 1 where is_deleted = 0 and id = #{id} and version = #{version}
     </update>
 </mapper>
