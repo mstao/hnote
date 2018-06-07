@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.NoteService;
+import me.mingshan.service.annotation.RedisCache;
+import me.mingshan.service.annotation.RedisEvict;
 import me.mingshan.service.dao.NoteDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class NoteServiceImpl implements NoteService {
     private NoteDao noteDao;
 
     @Override
+    @RedisCache(type = Note.class, expire = 3600)
     public Note findById(Long id) {
         Note note = noteDao.selectByPrimaryKey(id);
         return note;
@@ -91,6 +94,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    @RedisEvict(type = Note.class)
     public void delete(Long id) throws ServerException {
          Integer version = noteDao.selectVersion(id);
          Integer result = noteDao.delete(id, version);

@@ -133,15 +133,6 @@
             <artifactId>pagehelper</artifactId>
         </dependency>
 
-        <!-- cache -->
-        <dependency>
-            <groupId>com.alicp.jetcache</groupId>
-            <artifactId>jetcache-anno</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.alicp.jetcache</groupId>
-            <artifactId>jetcache-redis</artifactId>
-        </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>

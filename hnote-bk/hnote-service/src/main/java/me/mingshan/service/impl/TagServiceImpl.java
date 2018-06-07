@@ -3,6 +3,7 @@ package me.mingshan.service.impl;
 import me.mingshan.facade.model.NoteToTag;
 import me.mingshan.facade.model.Tag;
 import me.mingshan.facade.service.TagService;
+import me.mingshan.service.annotation.RedisCache;
 import me.mingshan.service.dao.TagDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class TagServiceImpl implements TagService {
     private TagDao tagDao;
 
     @Override
+    @RedisCache(type = Tag.class, expire = 3600)
     public Tag findById(Long id) {
         return tagDao.selectByPrimaryKey(id);
     }

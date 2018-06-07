@@ -1,6 +1,5 @@
 package me.mingshan.facade.service;
 
-import com.alicp.jetcache.anno.Cached;
 import me.mingshan.facade.model.Tag;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public interface TagService {
      * @param id
      * @return
      */
-    @Cached(name="tagCache-", key="#id", expire = 3600)
     Tag findById(Long id);
 
     /**

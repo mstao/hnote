@@ -1,13 +1,9 @@
 package me.mingshan.facade.service;
 
-import com.alicp.jetcache.anno.CacheInvalidate;
-import com.alicp.jetcache.anno.CacheUpdate;
-import com.alicp.jetcache.anno.Cached;
 import com.github.pagehelper.PageInfo;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Note;
 
-import javax.sql.rowset.serial.SerialException;
 
 /**
  * 支持乐观锁
@@ -23,7 +19,6 @@ public interface NoteService {
      * @param id
      * @return
      */
-    @Cached(name="noteCache-", key="#id", expire = 3600)
     Note findById(Long id);
 
     /**
@@ -39,7 +34,6 @@ public interface NoteService {
      *
      * @param note
      */
-    @CacheUpdate(name="noteCache-", key="#note.id", value="#note")
     void update(Note note) throws ServerException;
 
     /**
@@ -47,7 +41,6 @@ public interface NoteService {
      *
      * @param id
      */
-    @CacheInvalidate(name="noteCache-", key="#id")
     void delete(Long id) throws ServerException;
 
     /**

@@ -1,8 +1,5 @@
 package me.mingshan.facade.service;
 
-
-import com.alicp.jetcache.anno.CacheInvalidate;
-import com.alicp.jetcache.anno.Cached;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.User;
 
@@ -17,7 +14,6 @@ public interface UserService {
      * @param id
      * @return
      */
-    @Cached(name="userCache-", key="#id", expire = 3600)
     User findById(Long id);
 
     /**
@@ -33,7 +29,6 @@ public interface UserService {
      * @param id
      * @return
      */
-    @CacheInvalidate(name="userCache-", key="#id")
     void delete(Long id) throws ServerException;
 
     /**

@@ -21,7 +21,8 @@ public interface NoteDao extends BaseDao<Note> {
      * @param sortType
      * @return
      */
-    List<Note> selectByPage(@Param("fid") Long fid, @Param("sort") String sort,
+    List<Note> selectByPage(@Param("fid") Long fid,
+                            @Param("sort") String sort,
                             @Param("sortType") String sortType);
 
     /**
@@ -46,7 +47,8 @@ public interface NoteDao extends BaseDao<Note> {
      * @param sortType
      * @return
      */
-    List<Note> selectByToken(@Param("token") String token, @Param("sort") String sort,
+    List<Note> selectByToken(@Param("token") String token,
+                             @Param("sort") String sort,
                              @Param("sortType") String sortType);
 
     /**
@@ -56,7 +58,8 @@ public interface NoteDao extends BaseDao<Note> {
      * @param sortType
      * @return
      */
-    List<Note> selectByTid(@Param("tid") Long tid, @Param("sort") String sort,
+    List<Note> selectByTid(@Param("tid") Long tid,
+                           @Param("sort") String sort,
                            @Param("sortType") String sortType);
 
     /**

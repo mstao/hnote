@@ -1,8 +1,5 @@
 package me.mingshan.facade.service;
 
-import com.alicp.jetcache.anno.CacheInvalidate;
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.Cached;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Folder;
 
@@ -20,7 +17,6 @@ public interface FolderService {
      * @param id
      * @return
      */
-    @Cached(name="folderCache-", key="#id", expire = 3600)
     Folder findById(Long id);
 
     /**
@@ -37,7 +33,6 @@ public interface FolderService {
      * @param id
      * @return
      */
-    @CacheInvalidate(name="folderCache-", key="#id")
     void delete(Long id) throws ServerException;
 
     /**

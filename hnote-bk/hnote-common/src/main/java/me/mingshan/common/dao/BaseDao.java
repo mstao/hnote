@@ -1,5 +1,7 @@
 package me.mingshan.common.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
  * 公共DAO
  * @author mingshan
@@ -14,7 +16,7 @@ public interface BaseDao<T> {
      * @param version
      * @return
      */
-    Integer delete(Long id, Integer version);
+    Integer delete(@Param("id") Long id, @Param("version") Integer version);
 
     /**
      * Inserts model to database.

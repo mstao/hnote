@@ -15,11 +15,12 @@
     <context:annotation-config />
 
     <context:component-scan base-package="me.mingshan.service.impl" />
+    <context:component-scan base-package="me.mingshan.service.aspect" />
 
     <!-- 当proxy-target-class为false时使用JDK动态代理 -->
     <!-- 为true时使用cglib -->
     <!-- cglib无法拦截接口方法 -->
-    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <aop:aspectj-autoproxy proxy-target-class="false" />
 
     <!-- Druid和Spring关联监控配置 -->
     <bean id="druid-stat-interceptor"
@@ -42,8 +43,9 @@
     </aop:config>
 
     <!-- 加载配置文件 -->
-    <context:property-placeholder location="classpath:db.properties" />
+    <context:property-placeholder location="classpath:db.properties, redis-config.properties" />
 
     <import resource="classpath*:spring/spring-dubbo-provider.xml"/>
     <import resource="classpath*:spring/spring-mybatis.xml"/>
+    <import resource="classpath*:spring/spring-redis.xml"/>
 </beans>

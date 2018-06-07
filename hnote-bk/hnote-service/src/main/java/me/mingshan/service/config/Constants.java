@@ -10,4 +10,9 @@ public class Constants {
      */
     public static final String DEFAULT_FOLDER = "默认文件夹";
 
+    /**
+     * 缓存需要的分隔符
+     */
+    public static final String ELIMITER = ":";
+
 }
