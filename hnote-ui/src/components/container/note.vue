@@ -744,7 +744,7 @@
   
 </script>
 
-<style>
+<style  scoped>
 .el-aside {
   height: 100%;
   border-right: 1px solid #F0F0F0;

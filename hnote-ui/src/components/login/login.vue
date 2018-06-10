@@ -227,7 +227,7 @@ $light_gray:#666666;
 }
 </style>
 
-<style>
+<style scoped>
   .register-tips-div {
     position: absolute;
     right: 35px;

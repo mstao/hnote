@@ -81,20 +81,20 @@
     }
 </script>
 
-<style>
-    .mf-title {
-      font-size: 16px;
-      margin-top: -10px;
-    }
+<style  scoped>
+.mf-title {
+    font-size: 16px;
+    margin-top: -10px;
+}
 
-    .mf-title img {
-      position: relative;
-      top: 4px;
-    }
+.mf-title img {
+    position: relative;
+    top: 4px;
+}
 
-    .mf-folder {
-      border: 1px solid #EBEBEB;
-      padding: 5px;
-      margin-top: 10px;
-    }
+.mf-folder {
+    border: 1px solid #EBEBEB;
+    padding: 5px;
+    margin-top: 10px;
+}
 </style>

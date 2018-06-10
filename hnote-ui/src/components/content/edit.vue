@@ -504,8 +504,6 @@
 </script>
 
 <style lang="css" scoped>
- 
-
 .top-navi-container {
   border-bottom: 1px solid #EBEBEB;
   position: fixed;

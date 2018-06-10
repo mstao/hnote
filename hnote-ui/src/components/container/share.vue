@@ -16,7 +16,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #share-content {
   background-color: #F8F8F8;
   width: 100%;

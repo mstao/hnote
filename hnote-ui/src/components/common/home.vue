@@ -27,7 +27,7 @@
   };
 </script>
 
-<style>
+<style  scoped>
 body{margin: 0;}
 .wapper {
   min-width: 1200px;
