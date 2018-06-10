@@ -100,6 +100,7 @@
   import { getTagsByNid, saveTag } from '@/api/tag'
   import { deleteTagByNidTid, updateNote, createNote, deleteNote } from '@/api/note'
   import { uploadImage } from '@/api/file'
+  import sensitiveWordChecker from '@/utils/sensitiveWordChecker'
 
   const marked = require('marked');
 
@@ -365,6 +366,10 @@
           return
         }
 
+        // 检测敏感词
+        this.checkSensitiveWord(this.title)
+        this.checkSensitiveWord(this.content)
+
         var data = {
           title: this.title,
           content: this.content,
@@ -472,6 +477,15 @@
         if (this.note.id != undefined) {
           window.location.href = process.env.BASE_API + "/files/download?bid=" + this.note.id
         }
+      },
+      checkSensitiveWord(content) {
+          if (sensitiveWordChecker(this.content)) {
+            this.$message({
+              message: '包含敏感词汇，发送失败：）',
+              type: 'warning'
+            });
+            return
+          }
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))

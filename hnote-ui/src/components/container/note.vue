@@ -385,8 +385,10 @@
               noteType: items[i].noteType,
               folder: items[i].folder
             }
-            tempList.unshift(temp);
+
+            tempList.push(temp);
           }
+   
           this.noteList = tempList
           // load note info by first item
           this.goNoteDetailPage(items[0].id);
@@ -493,7 +495,7 @@
           author: this.name,
           source: ''
         }
-        this.noteList.push(data)
+        this.noteList.unshift(data)
         this.$store.dispatch('SetNote', data)
       },
       search() {
