@@ -322,6 +322,11 @@
               id: id,
               title: title
             }
+            // 检测敏感词
+            if (!this.checkSensitiveWord(title)) {
+              return
+            }
+
             new Promise((resolve, reject) => {
               updateNote(data).then(response => {
                 if (response.status == 204) {
@@ -367,8 +372,10 @@
         }
 
         // 检测敏感词
-        this.checkSensitiveWord(this.title)
-        this.checkSensitiveWord(this.content)
+        if (!(this.checkSensitiveWord(this.title) || 
+            this.checkSensitiveWord(this.content))) {
+          return
+        }
 
         var data = {
           title: this.title,
@@ -479,12 +486,14 @@
         }
       },
       checkSensitiveWord(content) {
-          if (sensitiveWordChecker(this.content)) {
+          if (sensitiveWordChecker(content)) {
             this.$message({
               message: '包含敏感词汇，发送失败：）',
               type: 'warning'
             });
-            return
+            return false;
+          } else {
+            return true;
           }
       },
       test(item) {
