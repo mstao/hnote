@@ -14,6 +14,9 @@ After starting the project, enter the following url (IP and port are replaced), 
 
 http://localhost:8080/druid/index.html
 
+ELK 
+After starting logtsah,  run hnote-mysql.config。
+
 ## Development Environment
 
 - JDK 1.8
