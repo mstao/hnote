@@ -7,14 +7,14 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import me.mingshan.common.annotation.Authorization;
 import me.mingshan.common.annotation.CurrentUser;
+import me.mingshan.facade.model.Token;
 import me.mingshan.facade.model.User;
+import me.mingshan.facade.service.TokenService;
 import me.mingshan.facade.service.UserService;
-import me.mingshan.web.authorization.manager.TokenManager;
 import me.mingshan.web.config.Constants;
 import me.mingshan.common.exception.ParameterException;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.common.model.ResultModel;
-import me.mingshan.web.model.TokenModel;
 import me.mingshan.web.util.MD5Util;
 import me.mingshan.web.vo.TokenVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class TokenController extends BaseController {
     private UserService userService;
 
     @Autowired
-    private TokenManager tokenManager;
+    private TokenService tokenService;
 
     /**
      * Login
@@ -45,7 +45,7 @@ public class TokenController extends BaseController {
      */
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value="Log in", httpMethod="POST", notes="Login")
-    public ResponseEntity<TokenModel> login(@RequestBody TokenVO tokenVO) {
+    public ResponseEntity<Token> login(@RequestBody TokenVO tokenVO) {
         ResultModel result = new ResultModel();
         String userName = tokenVO.getUserName();
         String password = tokenVO.getPassword();
@@ -64,7 +64,7 @@ public class TokenController extends BaseController {
             throw new ServerException(result, HttpStatus.OK);
         }
         
-        TokenModel token = tokenManager.creatToken(user.getId());
+        Token token = tokenService.creatToken(user.getId());
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
@@ -81,7 +81,7 @@ public class TokenController extends BaseController {
                     paramType = "header")
     })
     public ResponseEntity<ResultModel> logout(@CurrentUser User user) {
-        tokenManager.deleteToken(user.getId());
+        tokenService.deleteToken(user.getId());
         ResultModel result = new ResultModel();
         result.setMessage(Constants.RESPONSE_OK);
         return new ResponseEntity<ResultModel>(result, HttpStatus.OK);

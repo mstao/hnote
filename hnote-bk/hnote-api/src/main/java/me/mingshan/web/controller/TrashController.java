@@ -7,7 +7,7 @@ import me.mingshan.facade.model.Note;
 import me.mingshan.facade.service.TrashService;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.common.model.ResultModel;
-import me.mingshan.web.model.SearchResultModel;
+import me.mingshan.web.vo.SearchResultVO;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,10 +46,10 @@ public class TrashController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<SearchResultModel<Note>> listAllNotes(@RequestParam Integer pageNumber,
-                                                                @RequestParam Integer pageSize,
-                                                                @RequestParam String sort,
-                                                                @RequestParam String sortType) {
+    public ResponseEntity<SearchResultVO<Note>> listAllNotes(@RequestParam Integer pageNumber,
+                                                             @RequestParam Integer pageSize,
+                                                             @RequestParam String sort,
+                                                             @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
         PageInfo<Note> pageInfo = trashService.findAll(pageNumber, pageSize, sort, sortType);
@@ -61,7 +61,7 @@ public class TrashController extends BaseController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        SearchResultModel<Note> model = new SearchResultModel<>();
+        SearchResultVO<Note> model = new SearchResultVO<>();
         model.setItems(notes);
         model.setTotal(total);
         return new ResponseEntity<>(model, HttpStatus.OK);

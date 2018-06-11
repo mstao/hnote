@@ -16,7 +16,6 @@
 
     <!-- 扫描包 -->
     <context:component-scan base-package="me.mingshan.web.handler"></context:component-scan>
-    <context:component-scan base-package="me.mingshan.web.authorization.manager"></context:component-scan>
     <context:component-scan base-package="me.mingshan.web.authorization.resolver"></context:component-scan>
     <context:component-scan base-package="me.mingshan.web.authorization.interceptor"></context:component-scan>
     <context:component-scan base-package="me.mingshan.web.interceptor"></context:component-scan>
@@ -27,8 +26,4 @@
     <!-- Dozer mapper -->
     <bean id="mapper" class="org.dozer.spring.DozerBeanMapperFactoryBean"/>
 
-    <!-- 加载配置文件 -->
-    <context:property-placeholder location="classpath*:redis-config.properties" />
-
-    <import resource="classpath*:spring-redis.xml"/>
 </beans>

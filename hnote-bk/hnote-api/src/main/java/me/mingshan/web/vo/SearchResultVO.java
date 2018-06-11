@@ -1,4 +1,4 @@
-package me.mingshan.web.model;
+package me.mingshan.web.vo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SearchResultModel<T> implements Serializable {
+public class SearchResultVO<T> implements Serializable {
     private static final long serialVersionUID = -8259078539400546306L;
 
     private List<T> items;

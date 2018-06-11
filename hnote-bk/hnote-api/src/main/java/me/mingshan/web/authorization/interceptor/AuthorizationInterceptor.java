@@ -3,9 +3,9 @@ package me.mingshan.web.authorization.interceptor;
 
 import me.mingshan.common.annotation.Authorization;
 
-import me.mingshan.web.authorization.manager.TokenManager;
+import me.mingshan.facade.model.Token;
+import me.mingshan.facade.service.TokenService;
 import me.mingshan.web.config.Constants;
-import me.mingshan.web.model.TokenModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private TokenManager tokenManager;
+    private TokenService tokenServicer;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -41,9 +41,9 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         String authorization = request.getHeader(Constants.AUTHORIZATION);
 
         // Gets the model of Token from authorization string.
-        TokenModel token = tokenManager.getToken(authorization);
+        Token token = tokenServicer.getToken(authorization);
         // Checks out the token that is from Redis,
-        if (tokenManager.checkToken(token)) {
+        if (tokenServicer.checkToken(token)) {
             // Puts userId into request.
             request.setAttribute(Constants.CURRENT_USER_ID, token.getUserId());
             return true;

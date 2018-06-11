@@ -15,4 +15,5 @@
     <dubbo:reference id="tagService" interface="me.mingshan.facade.service.TagService"/>
     <dubbo:reference id="trashService" interface="me.mingshan.facade.service.TrashService"/>
     <dubbo:reference id="searchClient" interface="me.mingshan.facade.service.SearchClient"/>
+    <dubbo:reference id="tokenService" interface="me.mingshan.facade.service.TokenService"/>
 </beans>

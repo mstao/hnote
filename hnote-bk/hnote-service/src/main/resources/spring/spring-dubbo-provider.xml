@@ -16,11 +16,13 @@
     <bean id="folderService" class="me.mingshan.service.impl.FolderServiceImpl"/>
     <bean id="tagService" class="me.mingshan.service.impl.TagServiceImpl"/>
     <bean id="trashService" class="me.mingshan.service.impl.TrashServiceImpl"/>
+    <bean id="tokenService" class="me.mingshan.service.impl.RedisTokenServiceImpl"/>
 
     <dubbo:service interface="me.mingshan.facade.service.UserService" ref="userService"/>
     <dubbo:service interface="me.mingshan.facade.service.NoteService" ref="noteService"/>
     <dubbo:service interface="me.mingshan.facade.service.FolderService" ref="folderService"/>
     <dubbo:service interface="me.mingshan.facade.service.TagService" ref="tagService"/>
     <dubbo:service interface="me.mingshan.facade.service.TrashService" ref="trashService"/>
+    <dubbo:service interface="me.mingshan.facade.service.TokenService" ref="tokenService"/>
 
 </beans>

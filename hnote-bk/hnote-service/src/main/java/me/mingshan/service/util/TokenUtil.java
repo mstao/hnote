@@ -1,21 +1,18 @@
-package me.mingshan.web.authorization.check;
+package me.mingshan.service.util;
 
 import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.Claims;
-
 import me.mingshan.facade.model.User;
-import me.mingshan.web.config.Constants;
-import me.mingshan.web.util.JWTUtil;
+import me.mingshan.service.config.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @Author: mingshan
- * @Date: Created in 12:41 2017/12/16
+ * @Date: Created in 22:16 2018/6/11
  */
-public class RequestCheck {
-    protected static final Logger logger = LoggerFactory.getLogger(RequestCheck.class);
+public class TokenUtil {
+    protected static final Logger logger = LoggerFactory.getLogger(TokenUtil.class);
 
     public static User getUserFromToken(String auth) {
         if (auth == null) {

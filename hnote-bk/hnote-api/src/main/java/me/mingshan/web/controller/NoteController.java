@@ -8,7 +8,7 @@ import me.mingshan.facade.service.NoteService;
 import me.mingshan.facade.service.SearchClient;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.common.model.ResultModel;
-import me.mingshan.web.model.SearchResultModel;
+import me.mingshan.web.vo.SearchResultVO;
 import me.mingshan.web.vo.*;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.rowset.serial.SerialException;
 import java.util.List;
 
 /**
@@ -52,11 +51,11 @@ public class NoteController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<SearchResultModel<Note>> listAllNotes(@RequestParam Integer pageNumber,
-                                                                @RequestParam Integer pageSize,
-                                                                @RequestParam Long fid,
-                                                                @RequestParam String sort,
-                                                                @RequestParam String sortType) {
+    public ResponseEntity<SearchResultVO<Note>> listAllNotes(@RequestParam Integer pageNumber,
+                                                             @RequestParam Integer pageSize,
+                                                             @RequestParam Long fid,
+                                                             @RequestParam String sort,
+                                                             @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize + "fid = " + fid);
 
         PageInfo<Note> pageInfo = noteService.findAll(pageNumber, pageSize, fid, sort, sortType);
@@ -68,7 +67,7 @@ public class NoteController extends BaseController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        SearchResultModel<Note> model = new SearchResultModel<>();
+        SearchResultVO<Note> model = new SearchResultVO<>();
         model.setItems(notes);
         model.setTotal(total);
         return new ResponseEntity<>(model, HttpStatus.OK);
@@ -90,10 +89,10 @@ public class NoteController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<SearchResultModel<Note>> listLastestNotes(@RequestParam Integer pageNumber,
-                                                                    @RequestParam Integer pageSize,
-                                                                    @RequestParam String sort,
-                                                                    @RequestParam String sortType) {
+    public ResponseEntity<SearchResultVO<Note>> listLastestNotes(@RequestParam Integer pageNumber,
+                                                                 @RequestParam Integer pageSize,
+                                                                 @RequestParam String sort,
+                                                                 @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
         PageInfo<Note> pageInfo = noteService.findLastestNotes(pageNumber, pageSize, sort, sortType);
@@ -105,7 +104,7 @@ public class NoteController extends BaseController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        SearchResultModel<Note> model = new SearchResultModel<>();
+        SearchResultVO<Note> model = new SearchResultVO<>();
         model.setItems(notes);
         model.setTotal(total);
         return new ResponseEntity<>(model, HttpStatus.OK);
@@ -127,11 +126,11 @@ public class NoteController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<SearchResultModel<Note>> listNotesByFuzzySearch(@RequestParam Integer pageNumber,
-                                                                          @RequestParam Integer pageSize,
-                                                                          @RequestParam String token,
-                                                                          @RequestParam String sort,
-                                                                          @RequestParam String sortType) {
+    public ResponseEntity<SearchResultVO<Note>> listNotesByFuzzySearch(@RequestParam Integer pageNumber,
+                                                                       @RequestParam Integer pageSize,
+                                                                       @RequestParam String token,
+                                                                       @RequestParam String sort,
+                                                                       @RequestParam String sortType) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
 
         List<Note> notes = searchClient.search(token, Note.class);
@@ -143,7 +142,7 @@ public class NoteController extends BaseController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        SearchResultModel<Note> model = new SearchResultModel<>();
+        SearchResultVO<Note> model = new SearchResultVO<>();
         model.setItems(notes);
         model.setTotal(total);
         return new ResponseEntity<>(model, HttpStatus.OK);
@@ -165,11 +164,11 @@ public class NoteController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<SearchResultModel<Note>> listNotesByTid(@RequestParam Integer pageNumber,
-                                                                  @RequestParam Integer pageSize,
-                                                                  @PathVariable Long tid,
-                                                                  @RequestParam String sort,
-                                                                  @RequestParam String sortType) {
+    public ResponseEntity<SearchResultVO<Note>> listNotesByTid(@RequestParam Integer pageNumber,
+                                                               @RequestParam Integer pageSize,
+                                                               @PathVariable Long tid,
+                                                               @RequestParam String sort,
+                                                               @RequestParam String sortType) {
         logger.info("page = " + pageNumber + ",per_page = " + pageSize + ",tid = " + tid);
 
         PageInfo<Note> pageInfo = noteService.findByTid(tid, pageNumber, pageSize, sort, sortType);
@@ -181,7 +180,7 @@ public class NoteController extends BaseController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        SearchResultModel<Note> model = new SearchResultModel<>();
+        SearchResultVO<Note> model = new SearchResultVO<>();
         model.setItems(notes);
         model.setTotal(total);
         return new ResponseEntity<>(model, HttpStatus.OK);

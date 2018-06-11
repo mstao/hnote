@@ -1,25 +1,25 @@
-package me.mingshan.web.authorization.manager.impl;
+package me.mingshan.service.impl;
 
+import me.mingshan.facade.model.Token;
 import me.mingshan.facade.model.User;
-import me.mingshan.web.authorization.check.RequestCheck;
-import me.mingshan.web.authorization.manager.TokenManager;
-import me.mingshan.web.config.Constants;
-import me.mingshan.web.model.TokenModel;
-import me.mingshan.web.util.JWTUtil;
+import me.mingshan.facade.service.TokenService;
+import me.mingshan.service.config.Constants;
+import me.mingshan.service.util.JWTUtil;
+import me.mingshan.service.util.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * The implement class of Token manager.
- * @Author: Minsghan
- * @Date: Created in 23:41 2017/10/13
+ * @Author: mingshan
+ * @Date: Created in 22:11 2018/6/11
  */
-public class RedisTokenManager implements TokenManager {
-    private static final Logger logger = LoggerFactory.getLogger(RedisTokenManager.class);
+@Service
+public class RedisTokenServiceImpl implements TokenService {
+    private static final Logger logger = LoggerFactory.getLogger(RedisTokenServiceImpl.class);
     private RedisTemplate<Long, String> redisTemplate;
 
     public void setRedisTemplate(RedisTemplate<Long, String> redisTemplate) {
@@ -27,12 +27,12 @@ public class RedisTokenManager implements TokenManager {
     }
 
     @Override
-    public TokenModel creatToken(long userId) {
+    public Token creatToken(long userId) {
         User user = new User();
         user.setId(userId);
         String subject = JWTUtil.generalSubject(user);
         String token = JWTUtil.createJWT(userId, subject, Constants.JWT_TTL);
-        TokenModel model = new TokenModel(userId, token);
+        Token model = new Token(userId, token);
         redisTemplate.boundValueOps(userId).set(token, Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
         return model;
     }
@@ -43,7 +43,7 @@ public class RedisTokenManager implements TokenManager {
     }
 
     @Override
-    public boolean checkToken(TokenModel model) {
+    public boolean checkToken(Token model) {
         if (model == null) {
             return false;
         }
@@ -62,20 +62,20 @@ public class RedisTokenManager implements TokenManager {
     }
 
     @Override
-    public TokenModel getToken(String authorization) {
+    public Token getToken(String authorization) {
         if (authorization == null || "".equals(authorization)) {
             return null;
         }
 
-        User user = RequestCheck.getUserFromToken(authorization);
+        User user = TokenUtil.getUserFromToken(authorization);
         if (user == null) {
             return null;
         }
 
         long userId = user.getId();
 
-        String token = RequestCheck.extractJwtTokenFromAuthorizationHeader(authorization);
-        TokenModel model = new TokenModel(userId, token);
+        String token = TokenUtil.extractJwtTokenFromAuthorizationHeader(authorization);
+        Token model = new Token(userId, token);
         return model;
     }
 }

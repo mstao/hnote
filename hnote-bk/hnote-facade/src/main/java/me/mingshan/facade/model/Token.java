@@ -1,4 +1,4 @@
-package me.mingshan.web.model;
+package me.mingshan.facade.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,15 +11,15 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class TokenModel implements Serializable {
+public class Token implements Serializable {
     private static final long serialVersionUID = -4743364335923069447L;
 
     private long userId;
     private String token;
 
-    public TokenModel() { }
+    public Token() { }
 
-    public TokenModel(long userId, String token) {
+    public Token(long userId, String token) {
         this.userId = userId;
         this.token = token;
     }

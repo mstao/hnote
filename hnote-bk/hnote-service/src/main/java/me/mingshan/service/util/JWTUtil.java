@@ -1,4 +1,4 @@
-package me.mingshan.web.util;
+package me.mingshan.service.util;
 
 import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.Claims;
@@ -6,8 +6,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import me.mingshan.facade.model.User;
-import me.mingshan.web.authorization.check.RequestCheck;
-import me.mingshan.web.config.Constants;
+import me.mingshan.service.config.Constants;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -89,11 +88,5 @@ public class JWTUtil {
         JSONObject jo = new JSONObject();
         jo.put("id", user.getId());
         return jo.toJSONString();
-    }
-
-    public static void main(String[] args) {
-        String s  = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxIiwic3ViIjoie1wiaWRcIjoxfSIsImlhdCI6MTUxMzQyOTI4NSwiZXhwIjoxNTEzNjg4NDg1fQ.RhGFPaKsG3deNZIIsPVLdnsllRH88EBo8p7xGbd3WBE";
-        User user = RequestCheck.getUserFromToken(s);
-        System.out.print(user);
     }
 }

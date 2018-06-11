@@ -1,22 +1,18 @@
-package me.mingshan.web.authorization.manager;
+package me.mingshan.facade.service;
 
-
-import me.mingshan.web.model.TokenModel;
+import me.mingshan.facade.model.Token;
 
 /**
- * @Description: The manager of token with Redis.
  * @Author: mingshan
- * @Date: Created in 23:22 2017/10/13
- * @Modified By:
+ * @Date: Created in 22:10 2018/6/11
  */
-public interface TokenManager {
-
+public interface TokenService {
     /**
      * Creates the token of authorization.
      * @param userId
      * @return The model of Token.
      */
-    TokenModel creatToken(long userId);
+    Token creatToken(long userId);
 
     /**
      * Deteles the token of authorization.
@@ -29,12 +25,12 @@ public interface TokenManager {
      * @param token
      * @return
      */
-    boolean checkToken(TokenModel token);
+    boolean checkToken(Token token);
 
     /**
      * Gets the model of Token from authorization string.
      * @param authorization
      * @return The model of Token.
      */
-    TokenModel getToken(String authorization);
+    Token getToken(String authorization);
 }
