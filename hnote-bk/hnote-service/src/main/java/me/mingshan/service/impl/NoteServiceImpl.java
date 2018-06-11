@@ -84,6 +84,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    @RedisEvict
     public void update(Note model) throws ServerException   {
         Integer version = noteDao.selectVersion(model.getId());
         model.setVersion(version);
@@ -94,7 +95,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    @RedisEvict(type = Note.class)
+    @RedisEvict
     public void delete(Long id) throws ServerException {
          Integer version = noteDao.selectVersion(id);
          Integer result = noteDao.delete(id, version);

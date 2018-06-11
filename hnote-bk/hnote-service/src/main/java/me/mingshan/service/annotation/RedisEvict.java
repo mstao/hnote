@@ -12,6 +12,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface RedisEvict {
-    @SuppressWarnings("rawtypes")
-    Class type();
 }

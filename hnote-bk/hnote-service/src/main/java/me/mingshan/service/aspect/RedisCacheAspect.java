@@ -2,6 +2,7 @@ package me.mingshan.service.aspect;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import me.mingshan.service.annotation.RedisCache;
@@ -62,79 +63,79 @@ public class RedisCacheAspect {
         // 得到目标方法
         Method targetMethod = getTargetMethod(pjp);
 
+        // 判断是否有RedisCache注解
+        if (targetMethod.getAnnotation(RedisCache.class) == null) {
+            return pjp.proceed(pjp.getArgs());
+        }
+        // 得到被代理的方法上的注解
+        Class<?> modelType = targetMethod.getAnnotation(RedisCache.class).type();
+        String hashName = modelType.getName();
+
+        // 利用Redis的Hash数据类型（散列）
+        HashOperations opsForHash = redisTemplate.opsForHash();
+        // 检查redis中是否有缓存
+        String value = (String) opsForHash.get(hashName, key);
         // 最终返回结果
         Object result = null;
 
-        // 判断是否有RedisCache注解
-        if (targetMethod.getAnnotation(RedisCache.class) == null) {
-            result = pjp.proceed(pjp.getArgs());
-        } else {
-            // 得到被代理的方法上的注解
-            Class<?> modelType = targetMethod.getAnnotation(RedisCache.class).type();
-            String hashName = modelType.getName();
-
-            // 利用Redis的Hash数据类型（散列）
-            HashOperations opsForHash = redisTemplate.opsForHash();
-            // 检查redis中是否有缓存
-            String value = (String) opsForHash.get(hashName, key);
-
-            // 判断缓存是否命中
-            if (value != null) {
-                // 缓存命中
-                if (logger.isDebugEnabled()) {
-                    logger.debug("缓存命中, value = {}", value);
-                }
-
-                // 得到被代理方法的返回值类型
-                Class<?> returnType = ((MethodSignature) pjp.getSignature()).getReturnType();
-
-                // 反序列化从缓存中拿到的json
-                result = deserialize(value, returnType, modelType);
-
-                if (logger.isDebugEnabled()) {
-                    logger.debug("反序列化结果 = {}", result);
-                }
-            } else {
-                // 缓存未命中
-                if (logger.isDebugEnabled()) {
-                    logger.debug("缓存未命中");
-                }
-
-                // 跳过缓存,到后端查询数据
-                result = pjp.proceed(pjp.getArgs());
-                // 序列化查询结果
-                String jsonStr = serialize(result);
-
-                // 获取设置的缓存时间
-                int timeout = targetMethod.getAnnotation(RedisCache.class).expire();
-                // 如果没有设置过期时间,则无限期缓存(默认-1)
-                if (timeout <= 0) {
-                    opsForHash.put(hashName, key, jsonStr);
-                } else {
-                    final TimeUnit unit = TimeUnit.SECONDS;
-                    final long rawTimeout = TimeoutUtils.toMillis(timeout, unit);
-                    // 设置缓存时间
-                    redisTemplate.execute(new RedisCallback<Object>() {
-                        @Override
-                        public Object doInRedis(RedisConnection redisConn) throws DataAccessException {
-                            // 配置文件中指定了这是一个String类型的连接
-                            // 所以这里向下强制转换一定是安全的
-                            StringRedisConnection conn = (StringRedisConnection) redisConn;
-                            // 判断hash名是否存在
-                            // 如果不存在，创建该hash并设置过期时间
-                            if (!conn.exists(hashName)) {
-                                conn.hSet(hashName, key, jsonStr);
-                                conn.expire(hashName, rawTimeout);
-                            } else {
-                                conn.hSet(hashName, key, jsonStr);
-                            }
-
-                            return null;
-                        }
-                    });
-                }
+        // 判断缓存是否命中
+        if (value != null) {
+            // 缓存命中
+            if (logger.isDebugEnabled()) {
+                logger.debug("缓存命中, value = {}", value);
             }
+
+            // 得到被代理方法的返回值类型
+            Class<?> returnType = ((MethodSignature) pjp.getSignature()).getReturnType();
+
+            // 反序列化从缓存中拿到的json
+            result = deserialize(value, returnType, modelType);
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("反序列化结果 = {}", result);
+            }
+        } else {
+            // 缓存未命中
+            if (logger.isDebugEnabled()) {
+                logger.debug("缓存未命中");
+            }
+
+            // 跳过缓存,到后端查询数据
+            result = pjp.proceed(pjp.getArgs());
+            // 序列化查询结果
+            String jsonStr = serialize(result);
+
+            // 获取设置的缓存时间
+            int timeout = targetMethod.getAnnotation(RedisCache.class).expire();
+            opsForHash.put(hashName, key, jsonStr);
+            // 如果没有设置过期时间,则无限期缓存(默认-1)
+//            if (timeout <= 0) {
+//                opsForHash.put(hashName, key, jsonStr);
+//            } else {
+//                final TimeUnit unit = TimeUnit.SECONDS;
+//                final long rawTimeout = TimeoutUtils.toMillis(timeout, unit);
+//                // 设置缓存时间
+//                redisTemplate.execute(new RedisCallback<Object>() {
+//                    @Override
+//                    public Object doInRedis(RedisConnection redisConn) throws DataAccessException {
+//                        // 配置文件中指定了这是一个String类型的连接
+//                        // 所以这里向下强制转换一定是安全的
+//                        StringRedisConnection conn = (StringRedisConnection) redisConn;
+//                        // 判断hash名是否存在
+//                        // 如果不存在，创建该hash并设置过期时间
+//                        if (!conn.exists(hashName)) {
+//                            conn.hSet(hashName, key, jsonStr);
+//                            conn.expire(hashName, rawTimeout);
+//                        } else {
+//                            conn.hSet(hashName, key, jsonStr);
+//                        }
+//
+//                        return null;
+//                    }
+//                });
+//            }
         }
+
 
         return result;
     }
@@ -146,88 +147,32 @@ public class RedisCacheAspect {
      * @throws Throwable
      */
     @Around("execution(* me.mingshan.service.impl..*Impl.delete*(..))" +
-            "|| execution(* me.mingshan.service.impl..*Impl.remove*(..))")
+            "|| execution(* me.mingshan.service.impl..*Impl.remove*(..))" +
+            "|| execution(* me.mingshan.service.impl..*Impl.update*(..))")
     @SuppressWarnings("rawtypes")
     public Object evictCache(ProceedingJoinPoint pjp) throws Throwable {
         // 得到目标的方法
         Method targetMethod = getTargetMethod(pjp);
 
-        // 得到被代理的方法上的注解
-        Class modelType = targetMethod.getAnnotation(RedisEvict.class).type();
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("清空缓存:{}", modelType.getName());
+        // 判断是否有RedisCache注解
+        if (targetMethod.getAnnotation(RedisEvict.class) == null) {
+            return pjp.proceed(pjp.getArgs());
         }
 
-        // 清除对应缓存
-        redisTemplate.delete(modelType.getName());
+        // 获取类名
+        String clazzName = pjp.getTarget().getClass().getName();
+        String pattern= clazzName + ":*";
+        if (logger.isDebugEnabled()) {
+            logger.debug("清空缓存:{}", pattern);
+        }
+
+        Set<String> keys = redisTemplate.keys(pattern);
+        if (keys.size() > 0) {
+            // 清除对应缓存
+            redisTemplate.delete(keys);
+        }
 
         return pjp.proceed(pjp.getArgs());
-    }
-
-    /**
-     * 更新缓存的数据
-     * @return 新获取的数据
-     */
-    @Around("execution(* me.mingshan.service.impl..*Impl.update*(..))" +
-            "|| execution(* me.mingshan.service.impl..*Impl.insert*(..))" +
-            "|| execution(* me.mingshan.service.impl..*Impl.save*(..))")
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public Object updateCache(ProceedingJoinPoint pjp) throws Throwable {
-        // 生成key
-        String key = getKey(pjp);
-
-        if (logger.isDebugEnabled()){
-            logger.debug("已生成key = {}" + key);
-        }
-
-        // 得到目标方法
-        Method targetMethod = getTargetMethod(pjp);
-        // 得到被代理的方法上的注解
-        Class<?> modelType = targetMethod.getAnnotation(RedisCache.class).type();
-        String hashName = modelType.getName();
-
-        // 利用Redis的Hash数据类型（散列）
-        HashOperations opsForHash = redisTemplate.opsForHash();
-
-        // 跳过缓存,到后端查询数据
-        Object result = pjp.proceed(pjp.getArgs());
-        // 序列化查询结果
-        String jsonStr = serialize(result);
-        if (logger.isDebugEnabled()) {
-            logger.debug("序列化结果 = {}", result);
-        }
-
-        // 获取设置的缓存时间
-        int timeout = targetMethod.getAnnotation(RedisCache.class).expire();
-        // 如果没有设置过期时间,则无限期缓存(默认-1)
-        if (timeout <= 0) {
-            opsForHash.put(hashName, key, jsonStr);
-        } else {
-            final TimeUnit unit = TimeUnit.SECONDS;
-            final long rawTimeout = TimeoutUtils.toMillis(timeout, unit);
-            // 设置缓存时间
-            redisTemplate.execute(new RedisCallback<Object>() {
-                @Override
-                public Object doInRedis(RedisConnection redisConn) throws DataAccessException {
-                    // 配置文件中指定了这是一个String类型的连接
-                    // 所以这里向下强制转换一定是安全的
-                    StringRedisConnection conn = (StringRedisConnection) redisConn;
-                    // 判断hash名是否存在
-                    // 如果不存在，创建该hash并设置过期时间
-                    if (!conn.exists(hashName)) {
-                        conn.hSet(hashName, key, jsonStr);
-                        conn.expire(hashName, rawTimeout);
-                    } else {
-                        conn.hSet(hashName, key, jsonStr);
-                    }
-
-                    return null;
-                }
-            });
-        }
-
-        return result;
     }
 
     /**
@@ -270,7 +215,7 @@ public class RedisCacheAspect {
      * @param clazzName
      * @return 生成的key
      */
-    private String generateKey(String clazzName, String methodName, Object[] args) {
+    private String generateKey(String clazzName, String methodName, Object... args) {
         StringBuffer sb = new StringBuffer(clazzName);
         sb.append(Constants.ELIMITER);
         sb.append(methodName);

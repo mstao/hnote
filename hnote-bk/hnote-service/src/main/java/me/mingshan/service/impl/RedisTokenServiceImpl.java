@@ -8,6 +8,7 @@ import me.mingshan.service.util.JWTUtil;
 import me.mingshan.service.util.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +21,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class RedisTokenServiceImpl implements TokenService {
     private static final Logger logger = LoggerFactory.getLogger(RedisTokenServiceImpl.class);
-    private RedisTemplate<Long, String> redisTemplate;
 
-    public void setRedisTemplate(RedisTemplate<Long, String> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
+    @Autowired
+    private RedisTemplate<Long, String> redisTemplate;
 
     @Override
     public Token creatToken(long userId) {
