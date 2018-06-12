@@ -1,6 +1,5 @@
 package me.mingshan.service.dao;
 
-import me.mingshan.common.dao.BaseDao;
 import me.mingshan.facade.model.Folder;
 import me.mingshan.hnote.cache.annotation.Cache;
 import me.mingshan.hnote.cache.annotation.CacheDelete;

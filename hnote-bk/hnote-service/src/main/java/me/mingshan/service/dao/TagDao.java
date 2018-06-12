@@ -1,7 +1,5 @@
 package me.mingshan.service.dao;
 
-import me.mingshan.common.dao.BaseDao;
-import me.mingshan.facade.model.Note;
 import me.mingshan.facade.model.NoteToTag;
 import me.mingshan.facade.model.Tag;
 import me.mingshan.hnote.cache.annotation.Cache;
