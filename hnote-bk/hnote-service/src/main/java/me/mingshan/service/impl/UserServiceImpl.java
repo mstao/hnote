@@ -4,7 +4,6 @@ import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Folder;
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.UserService;
-import me.mingshan.service.annotation.RedisCache;
 import me.mingshan.service.config.Constants;
 import me.mingshan.service.dao.FolderDao;
 import me.mingshan.service.dao.UserDao;
@@ -26,7 +25,6 @@ public class UserServiceImpl implements UserService {
     private FolderDao folderDao;
 
     @Override
-//    @RedisCache(type = User.class, expire = 3600)
     public User findById(Long id) {
         User user = userDao.selectByPrimaryKey(id);
         return user;

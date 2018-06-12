@@ -18,27 +18,6 @@
         <property name="testWhileIdle" value="false" />
     </bean>
 
-    <!--<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"-->
-          <!--p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.password}" p:pool-config-ref="poolConfig" />-->
-
-    <!--&lt;!&ndash; redis template definition &ndash;&gt;-->
-    <!--<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">-->
-        <!--&lt;!&ndash; 设置 Redis 连接工厂&ndash;&gt;-->
-        <!--<property name="connectionFactory" ref="jedisConnectionFactory"/>-->
-        <!--&lt;!&ndash; 设置默认 Serializer ，包含 keySerializer & valueSerializer &ndash;&gt;-->
-        <!--<property name="defaultSerializer">-->
-            <!--<bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>-->
-        <!--</property>-->
-        <!--&lt;!&ndash; 单独设置 keySerializer &ndash;&gt;-->
-        <!--<property name="keySerializer">-->
-            <!--<bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>-->
-        <!--</property>-->
-        <!--&lt;!&ndash; 单独设置 valueSerializer &ndash;&gt;-->
-        <!--<property name="valueSerializer">-->
-            <!--<bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>-->
-        <!--</property>-->
-    <!--</bean>-->
-
     <!---->
     <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
         <constructor-arg ref="poolConfig" />

@@ -3,7 +3,6 @@ package me.mingshan.service.impl;
 import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Folder;
 import me.mingshan.facade.service.FolderService;
-import me.mingshan.service.annotation.RedisCache;
 import me.mingshan.service.dao.FolderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ public class FolderServiceImpl implements FolderService {
     private FolderDao folderDao;
 
     @Override
-//    @RedisCache(type = Folder.class, expire = 3600)
     public Folder findById(Long id) {
         return folderDao.selectByPrimaryKey(id);
     }
