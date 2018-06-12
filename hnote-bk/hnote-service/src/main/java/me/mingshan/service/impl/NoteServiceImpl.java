@@ -23,7 +23,7 @@ public class NoteServiceImpl implements NoteService {
     private NoteDao noteDao;
 
     @Override
-    @RedisCache(type = Note.class, expire = 3600)
+//    @RedisCache(type = Note.class, expire = 3600)
     public Note findById(Long id) {
         Note note = noteDao.selectByPrimaryKey(id);
         return note;
@@ -84,7 +84,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    @RedisEvict
+//    @RedisEvict
     public void update(Note model) throws ServerException   {
         Integer version = noteDao.selectVersion(model.getId());
         model.setVersion(version);
@@ -95,7 +95,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    @RedisEvict
+//    @RedisEvict
     public void delete(Long id) throws ServerException {
          Integer version = noteDao.selectVersion(id);
          Integer result = noteDao.delete(id, version);

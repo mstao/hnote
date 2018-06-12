@@ -1,35 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+       xsi:schemaLocation="
+              http://www.springframework.org/schema/beans
+              http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
     <!-- redis 相关配置 -->
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxIdle" value="${redis.maxIdle}" />
         <property name="maxWaitMillis" value="${redis.maxWait}" />
-        <property name="testOnBorrow" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="testWhileIdle" value="false" />
     </bean>
 
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-          p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.password}" p:pool-config-ref="poolConfig"/>
+    <!--<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"-->
+          <!--p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.password}" p:pool-config-ref="poolConfig" />-->
 
-    <!-- redis template definition -->
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
-        <!-- 设置 Redis 连接工厂-->
-        <property name="connectionFactory" ref="jedisConnectionFactory"/>
-        <!-- 设置默认 Serializer ，包含 keySerializer & valueSerializer -->
-        <property name="defaultSerializer">
-            <bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>
-        </property>
-        <!-- 单独设置 keySerializer -->
-        <property name="keySerializer">
-            <bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>
-        </property>
-        <!-- 单独设置 valueSerializer -->
-        <property name="valueSerializer">
-            <bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>
+    <!--&lt;!&ndash; redis template definition &ndash;&gt;-->
+    <!--<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">-->
+        <!--&lt;!&ndash; 设置 Redis 连接工厂&ndash;&gt;-->
+        <!--<property name="connectionFactory" ref="jedisConnectionFactory"/>-->
+        <!--&lt;!&ndash; 设置默认 Serializer ，包含 keySerializer & valueSerializer &ndash;&gt;-->
+        <!--<property name="defaultSerializer">-->
+            <!--<bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>-->
+        <!--</property>-->
+        <!--&lt;!&ndash; 单独设置 keySerializer &ndash;&gt;-->
+        <!--<property name="keySerializer">-->
+            <!--<bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>-->
+        <!--</property>-->
+        <!--&lt;!&ndash; 单独设置 valueSerializer &ndash;&gt;-->
+        <!--<property name="valueSerializer">-->
+            <!--<bean class="com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer"/>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!---->
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
+        <constructor-arg ref="poolConfig" />
+        <constructor-arg>
+            <list>
+                <bean class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg value="${redis.host}" />
+                    <constructor-arg type="int" value="${redis.port}" />
+                    <constructor-arg value="instance:01" />
+                    <property name="password" value="${redis.password}"></property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <!--序列化工具：主要用于深度复杂，以及缓存中数据与Java对象的转换-->
+    <!--使用Fastjson时需要注意：返回值中如果是泛型的话，需要指明具体的类型，比如：List，如果是直接返回List则会出错-->
+    <bean id="fastjsonSerializer" class="me.mingshan.hnote.cache.serializer.FastjsonSerializer" />
+
+    <!--缓存管理器-->
+    <bean id="cacheManager" class="me.mingshan.hnote.cache.redis.ShardedJedisCacheManager">
+        <constructor-arg ref="shardedJedisPool"/>
+        <constructor-arg ref="fastjsonSerializer"/>
+    </bean>
+
+    <bean id="autoLoadConfig" class="me.mingshan.hnote.cache.to.AutoLoadConfig">
+        <!--命名空间，在多个模块共用一个缓存环境时，避免key冲突；-->
+        <property name="namespace" value="schedule"/>
+        <!--处理自动加载队列的线程数量-->
+        <property name="threadCnt" value="10"/>
+        <!--自动加载队列中允许存放的最大容量，默认值为20000；-->
+        <property name="maxElement" value="20000"/>
+        <!--是否打印比较耗时的请求，默认值：true；-->
+        <property name="printSlowLog" value="true"/>
+        <!--当请求耗时超过此值时，记录目录（printSlowLog=true 时才有效），单位：毫秒；默认值500；-->
+        <property name="slowLoadTime" value="500"/>
+        <!--自动加载队列排序算法, 0：按在Map中存储的顺序（即无序）；1 ：越接近过期时间，越耗时的排在最前；
+        2：根据请求次数，倒序排序，请求次数越多，说明使用频率越高，造成并发的可能越大；
+        更详细的说明，请查看代码com.jarvis.cache.type.AutoLoadQueueSortType
+        -->
+        <property name="sortType" value="1"/>
+        <!--加载数据之前去缓存服务器中检查，数据是否快过期，
+        如果应用程序部署的服务器数量比较少，设置为false, 如果部署的服务器比较多，可以考虑设置为true-->
+        <property name="checkFromCacheBeforeLoad" value="false"/>
+        <!--单个线程中执行自动加载的时间间隔, 此值越小，遍历自动加载队列频率起高，对CPU会越消耗CPU；-->
+        <property name="autoLoadPeriod" value="50"/>
+        <!--异步刷新缓存线程池的 corePoolSize，默认值：2-->
+        <!--<property name="refreshThreadPoolSize " value="2"/>
+        &lt;!&ndash;异步刷新缓存线程池的 maximumPoolSize ，默认值：20；&ndash;&gt;
+        <property name="refreshThreadPoolMaxSize  " value="10"/>
+        &lt;!&ndash;异步刷新缓存线程池的 keepAliveTime。默认值20，单位分钟；&ndash;&gt;
+        <property name="refreshThreadPoolkeepAliveTime   " value="20"/>
+        &lt;!&ndash;异步刷新缓存队列容量，默认值：2000；&ndash;&gt;
+        <property name="refreshQueueCapacity" value="2000"/>-->
+        <!--加载数据重试次数，默认值为1（即不尝试）-->
+        <!--<property name="loadDataTryCnt" value="2"/>-->
+        <property name="functions">
+            <map>
+                <entry key="isEmpty" value="me.mingshan.hnote.cache.CacheUtil" />
+            </map>
         </property>
     </bean>
 
+    <!--表达式解析器:缓存Key及一些条件表达式，都是通过表达式与Java对象进行交互的-->
+    <bean id="scriptParser" class="me.mingshan.hnote.cache.script.SpringELParser" />
+
+    <!--缓存处理器-->
+    <bean id="cacheHandler" class="me.mingshan.hnote.cache.CacheHandler" destroy-method="destroy">
+        <constructor-arg ref="cacheManager" />
+        <constructor-arg ref="scriptParser" />
+        <constructor-arg ref="autoLoadConfig" />
+        <constructor-arg ref="fastjsonSerializer" />
+    </bean>
+
+    <!-- 缓存拦截器 -->
+    <bean id="cacheInterceptor" class="me.mingshan.hnote.cache.aop.aspectj.AspectjAopInterceptor">
+        <constructor-arg ref="cacheHandler" />
+    </bean>
+
+    <!-- proxy-target-class=false为jdk代理，为true的话，会导致拦截不了mybatis的mapper -->
+    <aop:config proxy-target-class="false">
+        <!-- 拦截mybatis的mapper -->
+        <aop:aspect ref="cacheInterceptor">
+            <aop:pointcut id="daoCachePointcut1" expression="execution(public !void me.mingshan.service.dao..*.*(..))" />
+            <aop:around pointcut-ref="daoCachePointcut1" method="checkAndProceed" />
+        </aop:aspect>
+        <aop:aspect ref="cacheInterceptor" order="1000"><!-- order 参数控制 aop通知的优先级，值越小，优先级越高 ，在事务提交后删除缓存 -->
+            <aop:pointcut id="deleteCachePointcut1" expression="execution(* me.mingshan.service.dao..*.*(..))" />
+            <aop:after-returning pointcut-ref="deleteCachePointcut1" method="checkAndDeleteCache" returning="retVal" />
+        </aop:aspect>
+    </aop:config>
 </beans>

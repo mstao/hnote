@@ -3,6 +3,7 @@ package me.mingshan.service.impl;
 import me.mingshan.facade.model.Token;
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.TokenService;
+import me.mingshan.hnote.cache.redis.ShardedJedisCacheManager;
 import me.mingshan.service.config.Constants;
 import me.mingshan.service.util.JWTUtil;
 import me.mingshan.service.util.TokenUtil;
@@ -11,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,8 +26,11 @@ import java.util.concurrent.TimeUnit;
 public class RedisTokenServiceImpl implements TokenService {
     private static final Logger logger = LoggerFactory.getLogger(RedisTokenServiceImpl.class);
 
+//    @Autowired
+//    private RedisTemplate<Long, String> redisTemplate;
+
     @Autowired
-    private RedisTemplate<Long, String> redisTemplate;
+    private ShardedJedisPool shardedJedisPool;
 
     @Override
     public Token creatToken(long userId) {
@@ -32,13 +39,51 @@ public class RedisTokenServiceImpl implements TokenService {
         String subject = JWTUtil.generalSubject(user);
         String token = JWTUtil.createJWT(userId, subject, Constants.JWT_TTL);
         Token model = new Token(userId, token);
-        redisTemplate.boundValueOps(userId).set(token, Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
+
+        // jedis实例是否已不能使用
+        boolean broken = false;
+        ShardedJedis shardedJedis = null;
+        try {
+            logger.info("create token -> userId: {}", userId);
+            shardedJedis = shardedJedisPool.getResource();
+            shardedJedis.set(String.valueOf(userId), token);
+            shardedJedis.expire(String.valueOf(userId), Constants.TOKEN_EXPIRES_HOUR);
+        } catch (Exception e) {
+            broken = true;
+        } finally {
+            if (broken) {
+                // 无法正常使用，将jedis实例返回到池中,标识该jedis实例不能使用
+                shardedJedisPool.returnBrokenResource(shardedJedis);
+            } else {
+                // 正常使用完后，将jedis实例返回到池中
+                shardedJedisPool.returnResource(shardedJedis);
+            }
+        }
+
+        //redisTemplate.boundValueOps(userId).set(token, Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
         return model;
     }
 
     @Override
     public void deleteToken(long userId) {
-        redisTemplate.delete(userId);
+        boolean broken = false; //jedis实例是否已不能使用
+        ShardedJedis shardedJedis = null;
+        try{
+            logger.info("delete token -> userId: {}", userId);
+            shardedJedis = shardedJedisPool.getResource();  //从池中获取jedis实例
+            shardedJedis.del(String.valueOf(userId));
+        }catch (Exception e){
+            broken=true;
+        }finally {
+            if(broken){
+                shardedJedisPool.returnBrokenResource(shardedJedis);  //无法正常使用，将jedis实例返回到池中,标识该jedis实例不能使用
+            }else{
+                shardedJedisPool.returnResource(shardedJedis);  //正常使用完后，将jedis实例返回到池中
+
+            }
+        }
+
+       // redisTemplate.delete(userId);
     }
 
     @Override
@@ -46,17 +91,39 @@ public class RedisTokenServiceImpl implements TokenService {
         if (model == null) {
             return false;
         }
-        Object source = redisTemplate.boundValueOps(model.getUserId()).get();
-        if (source == null) {
-            return false;
+
+        boolean broken = false; //jedis实例是否已不能使用
+        ShardedJedis shardedJedis = null;
+        try{
+            logger.info("check token -> userId: {}", model.getUserId());
+            shardedJedis = shardedJedisPool.getResource();  //从池中获取jedis实例
+            String source = shardedJedis.get(String.valueOf(model.getUserId()));
+            if (StringUtils.isEmpty(source) || !source.equals(model.getToken())) {
+                return false;
+            }
+
+            shardedJedis.expire(String.valueOf(model.getUserId()), Constants.TOKEN_EXPIRES_HOUR);
+        }catch (Exception e){
+            broken=true;
+        }finally {
+            if(broken){
+                shardedJedisPool.returnBrokenResource(shardedJedis);  //无法正常使用，将jedis实例返回到池中,标识该jedis实例不能使用
+            }else{
+                shardedJedisPool.returnResource(shardedJedis);  //正常使用完后，将jedis实例返回到池中
+            }
         }
 
-        String token = source.toString();
-        if ("".equals(token) || !token.equals(model.getToken())) {
-            return false;
-        }
-
-        redisTemplate.boundValueOps(model.getUserId()).expire(Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
+        //Object source = redisTemplate.boundValueOps(model.getUserId()).get();
+//        if (source == null) {
+//            return false;
+//        }
+//
+//        String token = source.toString();
+//        if ("".equals(token) || !token.equals(model.getToken())) {
+//            return false;
+//        }
+//
+//        redisTemplate.boundValueOps(model.getUserId()).expire(Constants.TOKEN_EXPIRES_HOUR, TimeUnit.HOURS);
         return true;
     }
 
@@ -77,4 +144,5 @@ public class RedisTokenServiceImpl implements TokenService {
         Token model = new Token(userId, token);
         return model;
     }
+
 }

@@ -2,6 +2,9 @@ package me.mingshan.service.dao;
 
 import me.mingshan.common.dao.BaseDao;
 import me.mingshan.facade.model.Note;
+import me.mingshan.hnote.cache.annotation.Cache;
+import me.mingshan.hnote.cache.annotation.CacheDelete;
+import me.mingshan.hnote.cache.annotation.CacheDeleteKey;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,8 +13,39 @@ import java.util.List;
  * @Author: mingshan
  * @Date: Created in 15:05 2018/4/29
  */
-public interface NoteDao extends BaseDao<Note> {
+public interface NoteDao {
 
+    /**
+     * Delete by id and version.
+     * @param id
+     * @param version
+     * @return
+     */
+    @CacheDelete({@CacheDeleteKey(value="'note_mapper_selectNoteById_'+#args[0]")})
+    Integer delete(@Param("id") Long id, @Param("version") Integer version);
+
+    /**
+     * Inserts model to database.
+     * @param note
+     * @return
+     */
+    Long insert(Note note);
+
+    /**
+     * Selects model by id.
+     * @param id
+     * @return
+     */
+    @Cache(expire=600, autoload=true, key="'note_mapper_selectNoteById_'+#args[0]", condition="#args[0]>0")
+    Note selectByPrimaryKey(Long id);
+
+    /**
+     * Update model information.
+     * @param note
+     * @return
+     */
+    @CacheDelete({@CacheDeleteKey(value="'note_mapper_selectNoteById_'+#args[0].id")})
+    Integer update(Note note);
 
     /**
      * Select by paignation.

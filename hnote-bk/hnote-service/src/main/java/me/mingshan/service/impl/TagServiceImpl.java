@@ -20,7 +20,7 @@ public class TagServiceImpl implements TagService {
     private TagDao tagDao;
 
     @Override
-    @RedisCache(type = Tag.class, expire = 3600)
+//    @RedisCache(type = Tag.class, expire = 3600)
     public Tag findById(Long id) {
         return tagDao.selectByPrimaryKey(id);
     }

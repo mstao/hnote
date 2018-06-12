@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private FolderDao folderDao;
 
     @Override
-    @RedisCache(type = User.class, expire = 3600)
+//    @RedisCache(type = User.class, expire = 3600)
     public User findById(Long id) {
         User user = userDao.selectByPrimaryKey(id);
         return user;

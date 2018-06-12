@@ -153,6 +153,11 @@
             <artifactId>hnote-facade</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>me.mingshan</groupId>
+            <artifactId>hnote-cache</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

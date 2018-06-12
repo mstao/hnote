@@ -4,6 +4,7 @@ import me.mingshan.common.dao.BaseDao;
 import me.mingshan.facade.model.Note;
 import me.mingshan.facade.model.NoteToTag;
 import me.mingshan.facade.model.Tag;
+import me.mingshan.hnote.cache.annotation.Cache;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -12,7 +13,22 @@ import java.util.List;
  * @Author: mingshan
  * @Date: Created in 20:21 2018/4/30
  */
-public interface TagDao extends BaseDao<Tag> {
+public interface TagDao {
+
+    /**
+     * Inserts model to database.
+     * @param tag
+     * @return
+     */
+    Long insert(Tag tag);
+
+    /**
+     * Selects model by id.
+     * @param id
+     * @return
+     */
+    @Cache(expire=600, autoload=true, key="'tag_mapper_selectTagById_'+#args[0]", condition="#args[0]>0")
+    Tag selectByPrimaryKey(Long id);
 
     /**
      * Select all tags by note id.

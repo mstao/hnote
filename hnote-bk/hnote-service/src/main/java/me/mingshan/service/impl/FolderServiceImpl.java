@@ -20,7 +20,7 @@ public class FolderServiceImpl implements FolderService {
     private FolderDao folderDao;
 
     @Override
-    @RedisCache(type = Folder.class, expire = 3600)
+//    @RedisCache(type = Folder.class, expire = 3600)
     public Folder findById(Long id) {
         return folderDao.selectByPrimaryKey(id);
     }
