@@ -1,5 +1,6 @@
 package me.mingshan.facade.service;
 
+import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Token;
 
 /**
@@ -12,7 +13,7 @@ public interface TokenService {
      * @param userId
      * @return The model of Token.
      */
-    Token creatToken(long userId);
+    Token creatToken(long userId) throws ServerException;
 
     /**
      * Deteles the token of authorization.

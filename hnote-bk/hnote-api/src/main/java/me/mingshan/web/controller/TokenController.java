@@ -63,7 +63,7 @@ public class TokenController extends BaseController {
             logger.info("UserName or password is incorrect.");
             throw new ServerException(result, HttpStatus.OK);
         }
-        
+
         Token token = tokenService.creatToken(user.getId());
         return new ResponseEntity<>(token, HttpStatus.OK);
     }

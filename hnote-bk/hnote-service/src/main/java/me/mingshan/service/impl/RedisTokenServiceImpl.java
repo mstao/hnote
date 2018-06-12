@@ -1,21 +1,22 @@
 package me.mingshan.service.impl;
 
+import me.mingshan.common.exception.ServerException;
 import me.mingshan.facade.model.Token;
 import me.mingshan.facade.model.User;
 import me.mingshan.facade.service.TokenService;
-import me.mingshan.hnote.cache.redis.ShardedJedisCacheManager;
 import me.mingshan.service.config.Constants;
 import me.mingshan.service.util.JWTUtil;
 import me.mingshan.service.util.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,7 +31,7 @@ public class RedisTokenServiceImpl implements TokenService {
     private ShardedJedisPool shardedJedisPool;
 
     @Override
-    public Token creatToken(long userId) {
+    public Token creatToken(long userId) throws ServerException {
         User user = new User();
         user.setId(userId);
         String subject = JWTUtil.generalSubject(user);
@@ -47,6 +48,7 @@ public class RedisTokenServiceImpl implements TokenService {
             shardedJedis.expire(String.valueOf(userId), Constants.TOKEN_EXPIRES_HOUR);
         } catch (Exception e) {
             broken = true;
+            throw new ServerException(null, HttpStatus.BAD_REQUEST);
         } finally {
             if (broken) {
                 // 无法正常使用，将jedis实例返回到池中,标识该jedis实例不能使用
@@ -81,9 +83,9 @@ public class RedisTokenServiceImpl implements TokenService {
 
     @Override
     public boolean checkToken(Token model) {
-        if (model == null) {
-            return false;
-        }
+        boolean isValid = false;
+
+        Objects.requireNonNull(model);
 
         boolean broken = false;
         ShardedJedis shardedJedis = null;
@@ -92,12 +94,14 @@ public class RedisTokenServiceImpl implements TokenService {
             shardedJedis = shardedJedisPool.getResource();
             String source = shardedJedis.get(String.valueOf(model.getUserId()));
             if (StringUtils.isEmpty(source) || !source.equals(model.getToken())) {
-                return false;
+                isValid = false;
+            } else {
+                isValid = true;
+                shardedJedis.expire(String.valueOf(model.getUserId()), Constants.TOKEN_EXPIRES_HOUR);
             }
-
-            shardedJedis.expire(String.valueOf(model.getUserId()), Constants.TOKEN_EXPIRES_HOUR);
         } catch (Exception e) {
             broken=true;
+            isValid = false;
         } finally {
             if (broken) {
                 shardedJedisPool.returnBrokenResource(shardedJedis);
@@ -106,7 +110,7 @@ public class RedisTokenServiceImpl implements TokenService {
             }
         }
 
-        return true;
+        return isValid;
     }
 
     @Override
