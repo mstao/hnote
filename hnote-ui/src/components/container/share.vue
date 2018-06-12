@@ -1,6 +1,6 @@
 <template>
     <el-container id="share-content">
-        <el-main width="100%">
+        <el-main width="100%" id="share-content">
             <router-view class="view"></router-view>
         </el-main>
     </el-container>

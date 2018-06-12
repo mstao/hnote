@@ -99,7 +99,7 @@ export default {
 }
 </script>
 
-<style  scoped>
+<style>
 .el-header {
   background-color: #3091F2;
   color: #ffffff;
