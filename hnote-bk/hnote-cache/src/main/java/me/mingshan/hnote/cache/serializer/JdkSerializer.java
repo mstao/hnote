@@ -1,6 +1,6 @@
 package me.mingshan.hnote.cache.serializer;
 
-import me.mingshan.common.util.BeanUtil;
+import me.mingshan.hnote.common.util.BeanUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

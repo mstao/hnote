@@ -1,6 +1,6 @@
 package me.mingshan.hnote.cache;
 
-import me.mingshan.common.util.BeanUtil;
+import me.mingshan.hnote.common.util.BeanUtil;
 
 import java.lang.reflect.Array;
 import java.util.Collection;

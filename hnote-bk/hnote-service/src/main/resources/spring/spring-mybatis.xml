@@ -78,7 +78,7 @@
     <!-- Spring aop事务管理 -->
     <aop:config>
         <aop:pointcut id="transactionPointcut"
-            expression="execution(* me.mingshan.service.impl..*Impl.*(..))" />
+            expression="execution(* me.mingshan.hnote.service.impl..*Impl.*(..))" />
         <aop:advisor pointcut-ref="transactionPointcut"
             advice-ref="transactionAdvice" />
     </aop:config>

@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import me.mingshan.common.util.BeanUtil;
+import me.mingshan.hnote.common.util.BeanUtil;
 import me.mingshan.hnote.cache.reflect.generics.ParameterizedTypeImpl;
 import me.mingshan.hnote.cache.to.CacheWrapper;
 import org.springframework.util.StringUtils;

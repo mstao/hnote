@@ -2,7 +2,7 @@ package me.mingshan.hnote.cache.clone;
 
 
 import com.rits.cloning.Cloner;
-import me.mingshan.common.util.BeanUtil;
+import me.mingshan.hnote.common.util.BeanUtil;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;

@@ -15,13 +15,13 @@
     <context:annotation-config/>
 
     <!-- 扫描包 -->
-    <context:component-scan base-package="me.mingshan.web.handler"></context:component-scan>
-    <context:component-scan base-package="me.mingshan.web.authorization.resolver"></context:component-scan>
-    <context:component-scan base-package="me.mingshan.web.authorization.interceptor"></context:component-scan>
-    <context:component-scan base-package="me.mingshan.web.interceptor"></context:component-scan>
+    <context:component-scan base-package="me.mingshan.hnote.web.handler"></context:component-scan>
+    <context:component-scan base-package="me.mingshan.hnote.web.authorization.resolver"></context:component-scan>
+    <context:component-scan base-package="me.mingshan.hnote.web.authorization.interceptor"></context:component-scan>
+    <context:component-scan base-package="me.mingshan.hnote.web.interceptor"></context:component-scan>
 
     <!-- 将 springSwaggerConfig加载到spring容器 -->
-    <bean class="me.mingshan.web.config.SwaggerConfig" id="swagger2Config"/>
+    <bean class="me.mingshan.hnote.web.config.SwaggerConfig" id="swagger2Config"/>
 
     <!-- Dozer mapper -->
     <bean id="mapper" class="org.dozer.spring.DozerBeanMapperFactoryBean"/>

@@ -13,7 +13,7 @@ import com.caucho.hessian.io.AbstractSerializerFactory;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
-import me.mingshan.common.util.BeanUtil;
+import me.mingshan.hnote.common.util.BeanUtil;
 import me.mingshan.hnote.cache.serializer.hession.HessionBigDecimalSerializerFactory;
 import me.mingshan.hnote.cache.serializer.hession.HessionSoftReferenceSerializerFactory;
 

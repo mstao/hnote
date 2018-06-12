@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="me.mingshan.service.dao.FolderDao">
-    <resultMap id="folderResultMap" type="me.mingshan.facade.model.Folder">
+<mapper namespace="me.mingshan.hnote.service.dao.FolderDao">
+    <resultMap id="folderResultMap" type="me.mingshan.hnote.facade.model.Folder">
         <id column="id" property="id"/>
         <result column="label" property="label"/>
         <result column="level" property="level"/>
@@ -64,7 +64,7 @@
     </select>
 
     <!-- 添加-->
-    <insert id="insert" parameterType="me.mingshan.facade.model.Folder" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="me.mingshan.hnote.facade.model.Folder" useGeneratedKeys="true" keyProperty="id">
         insert into hn_folder (
             label,
             level,
@@ -86,7 +86,7 @@
         update hn_folder set is_deleted = 1, gmt_modified = NOW() where is_deleted = 0 and id = #{id}
     </update>
 
-    <update id="rename" parameterType="me.mingshan.facade.model.Folder">
+    <update id="rename" parameterType="me.mingshan.hnote.facade.model.Folder">
         update hn_folder set label = #{label}, gmt_modified = NOW() where id = #{id}
     </update>
 

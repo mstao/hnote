@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="me.mingshan.service.dao.NoteDao">
-    <resultMap id="noteResultMap" type="me.mingshan.facade.model.Note">
+<mapper namespace="me.mingshan.hnote.service.dao.NoteDao">
+    <resultMap id="noteResultMap" type="me.mingshan.hnote.facade.model.Note">
         <id column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="content" property="content"/>
@@ -14,25 +14,25 @@
         <result column="gmt_create" property="gmtCreate"/>
         <result column="gmt_modified" property="gmtModified"/>
 
-        <association property="noteType" javaType="me.mingshan.facade.model.NoteType">
+        <association property="noteType" javaType="me.mingshan.hnote.facade.model.NoteType">
             <id column="nt_id" property="id"/>
             <result column="nt_name" property="name"/>
         </association>
 
-        <association property="folder" javaType="me.mingshan.facade.model.Folder">
+        <association property="folder" javaType="me.mingshan.hnote.facade.model.Folder">
             <id column="folder_id" property="id"/>
             <result column="folder_name" property="label"/>
             <result column="folder_level" property="level"/>
             <result column="folder_pid" property="pid"/>
         </association>
 
-        <collection property="tags" ofType="me.mingshan.facade.model.Tag">
+        <collection property="tags" ofType="me.mingshan.hnote.facade.model.Tag">
             <id column="tag_id" property="id"/>
             <result column="tag_name" property="name"/>
         </collection>
     </resultMap>
 
-    <resultMap id="simpleNoteResultMap" type="me.mingshan.facade.model.Note">
+    <resultMap id="simpleNoteResultMap" type="me.mingshan.hnote.facade.model.Note">
         <id column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="source" property="source"/>
@@ -40,12 +40,12 @@
         <result column="gmt_create" property="gmtCreate"/>
         <result column="is_deleted" property="deleted"/>
 
-        <association property="noteType" javaType="me.mingshan.facade.model.NoteType">
+        <association property="noteType" javaType="me.mingshan.hnote.facade.model.NoteType">
             <id column="nt_id" property="id"/>
             <result column="nt_name" property="name"/>
         </association>
 
-        <association property="folder" javaType="me.mingshan.facade.model.Folder">
+        <association property="folder" javaType="me.mingshan.hnote.facade.model.Folder">
             <id column="folder_id" property="id"/>
             <result column="folder_name" property="label"/>
             <result column="folder_level" property="level"/>
@@ -176,7 +176,7 @@
     </select>
 
     <!-- 添加-->
-    <insert id="insert" parameterType="me.mingshan.facade.model.Note" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="me.mingshan.hnote.facade.model.Note" useGeneratedKeys="true" keyProperty="id">
         insert into hn_note (
             title,
             content,
@@ -200,7 +200,7 @@
     </insert>
 
     <!--逻辑删除-->
-    <update id="delete" parameterType="me.mingshan.facade.model.Note">
+    <update id="delete" parameterType="me.mingshan.hnote.facade.model.Note">
         update hn_note set is_deleted = 1, version = version + 1  where is_deleted = 0 and id = #{id} and version = #{version}
     </update>
 
@@ -208,7 +208,7 @@
         delete from hn_note_to_tag  where is_deleted = 0 and tag_id = #{tid} and note_id = #{nid}
     </update>
 
-    <update id="update" parameterType="me.mingshan.facade.model.Note">
+    <update id="update" parameterType="me.mingshan.hnote.facade.model.Note">
         update hn_note
         <set>
             <if test="title !=null and title !=''">

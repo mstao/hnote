@@ -9,11 +9,11 @@
 
     <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
 
-    <dubbo:reference id="userService" interface="me.mingshan.facade.service.UserService"/>
-    <dubbo:reference id="noteService" interface="me.mingshan.facade.service.NoteService"/>
-    <dubbo:reference id="folderService" interface="me.mingshan.facade.service.FolderService"/>
-    <dubbo:reference id="tagService" interface="me.mingshan.facade.service.TagService"/>
-    <dubbo:reference id="trashService" interface="me.mingshan.facade.service.TrashService"/>
-    <dubbo:reference id="searchClient" interface="me.mingshan.facade.service.SearchClient"/>
-    <dubbo:reference id="tokenService" interface="me.mingshan.facade.service.TokenService"/>
+    <dubbo:reference id="userService" interface="me.mingshan.hnote.facade.service.UserService"/>
+    <dubbo:reference id="noteService" interface="me.mingshan.hnote.facade.service.NoteService"/>
+    <dubbo:reference id="folderService" interface="me.mingshan.hnote.facade.service.FolderService"/>
+    <dubbo:reference id="tagService" interface="me.mingshan.hnote.facade.service.TagService"/>
+    <dubbo:reference id="trashService" interface="me.mingshan.hnote.facade.service.TrashService"/>
+    <dubbo:reference id="searchClient" interface="me.mingshan.hnote.facade.service.SearchClient"/>
+    <dubbo:reference id="tokenService" interface="me.mingshan.hnote.facade.service.TokenService"/>
 </beans>

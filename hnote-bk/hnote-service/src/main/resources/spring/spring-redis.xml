@@ -101,11 +101,11 @@
     <aop:config proxy-target-class="false">
         <!-- 拦截mybatis的mapper -->
         <aop:aspect ref="cacheInterceptor">
-            <aop:pointcut id="daoCachePointcut1" expression="execution(public !void me.mingshan.service.dao..*.*(..))" />
+            <aop:pointcut id="daoCachePointcut1" expression="execution(public !void me.mingshan.hnote.service.dao..*.*(..))" />
             <aop:around pointcut-ref="daoCachePointcut1" method="checkAndProceed" />
         </aop:aspect>
         <aop:aspect ref="cacheInterceptor" order="1000"><!-- order 参数控制 aop通知的优先级，值越小，优先级越高 ，在事务提交后删除缓存 -->
-            <aop:pointcut id="deleteCachePointcut1" expression="execution(* me.mingshan.service.dao..*.*(..))" />
+            <aop:pointcut id="deleteCachePointcut1" expression="execution(* me.mingshan.hnote.service.dao..*.*(..))" />
             <aop:after-returning pointcut-ref="deleteCachePointcut1" method="checkAndDeleteCache" returning="retVal" />
         </aop:aspect>
     </aop:config>

@@ -3,10 +3,10 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
 
-<mapper namespace="me.mingshan.service.dao.UserDao">
+<mapper namespace="me.mingshan.hnote.service.dao.UserDao">
 
     <!-- 用户信息 resultMap -->
-    <resultMap type="me.mingshan.facade.model.User" id="userResultMap">
+    <resultMap type="me.mingshan.hnote.facade.model.User" id="userResultMap">
 
        <id column="id" property="id"/>
        <result column="name" property="name"/>
@@ -45,7 +45,7 @@
     </select>
 
     <!-- 添加用户 -->
-    <insert id="insert" parameterType="me.mingshan.facade.model.User" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="me.mingshan.hnote.facade.model.User" useGeneratedKeys="true" keyProperty="id">
         insert into hn_user (
           name,
           password,
@@ -65,12 +65,12 @@
     </insert>
 
     <!-- 删除用户 -批量-->
-    <delete id="delete" parameterType="me.mingshan.facade.model.User">
+    <delete id="delete" parameterType="me.mingshan.hnote.facade.model.User">
        update hn_user set is_deleted = 1 where is_deleted = 0 and id = #{id}
     </delete>
 
     <!-- 修改用户 -->
-    <update id="update" parameterType="me.mingshan.facade.model.User">
+    <update id="update" parameterType="me.mingshan.hnote.facade.model.User">
         update hn_user
         <set>
               <if test="name !=null and name !=''">

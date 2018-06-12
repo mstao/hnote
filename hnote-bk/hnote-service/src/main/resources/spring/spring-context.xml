@@ -14,8 +14,8 @@
 
     <context:annotation-config />
 
-    <context:component-scan base-package="me.mingshan.service.impl" />
-    <context:component-scan base-package="me.mingshan.service.dao" />
+    <context:component-scan base-package="me.mingshan.hnote.service.impl" />
+    <context:component-scan base-package="me.mingshan.hnote.service.dao" />
     <!--<context:component-scan base-package="me.mingshan.service.aspect" />-->
 
     <!-- 当proxy-target-class为false时使用JDK动态代理 -->

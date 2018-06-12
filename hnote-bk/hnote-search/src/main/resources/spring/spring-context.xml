@@ -25,7 +25,7 @@
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
     <!--引入JavaConfing配置类-->
-    <bean id="esConfig" class="me.mingshan.search.config.ESConfig"/>
+    <bean id="esConfig" class="me.mingshan.hnote.search.config.ESConfig"/>
 
     <import resource="classpath*:spring/spring-dubbo-provider.xml"/>
 </beans>

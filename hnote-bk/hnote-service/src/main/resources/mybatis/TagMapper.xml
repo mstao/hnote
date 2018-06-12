@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="me.mingshan.service.dao.TagDao">
-    <resultMap id="tagResultMap" type="me.mingshan.facade.model.Tag">
+<mapper namespace="me.mingshan.hnote.service.dao.TagDao">
+    <resultMap id="tagResultMap" type="me.mingshan.hnote.facade.model.Tag">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="is_deleted" property="deleted"/>
@@ -47,7 +47,7 @@
         from hn_tag t where t.uid = #{uid} and t.is_deleted = 0
     </select>
 
-    <insert id="insert" parameterType="me.mingshan.facade.model.Tag" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="me.mingshan.hnote.facade.model.Tag" useGeneratedKeys="true" keyProperty="id">
         insert into hn_tag(
           name,
           uid,
@@ -60,7 +60,7 @@
           NOW())
     </insert>
 
-    <insert id="insertNoteToTag" parameterType="me.mingshan.facade.model.NoteToTag">
+    <insert id="insertNoteToTag" parameterType="me.mingshan.hnote.facade.model.NoteToTag">
         insert into hn_note_to_tag(
           note_id,
           tag_id,
