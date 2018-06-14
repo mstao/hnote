@@ -15,7 +15,7 @@
     <context:annotation-config />
 
     <context:component-scan base-package="me.mingshan.hnote.service.impl" />
-    <!--<context:component-scan base-package="me.mingshan.service.aspect" />-->
+    <context:component-scan base-package="me.mingshan.hnote.service.cache.sharded" />
 
     <!-- 当proxy-target-class为false时使用JDK动态代理 -->
     <!-- 为true时使用cglib -->
