@@ -75,6 +75,9 @@
     <div v-else class="html-content markdown-body" v-html="htmlContent">
     </div>
     
+    <!-- share dialog -->
+    <share-dialog :noteId="note.id == undefined ? 0 : note.id" />
+
     <el-dialog
       title="删除提示"
       :visible.sync="deleteNoteDialogVisible"
@@ -101,6 +104,7 @@
   import { deleteTagByNidTid, updateNote, createNote, deleteNote } from '@/api/note'
   import { uploadImage } from '@/api/file'
   import sensitiveWordChecker from '@/utils/sensitiveWordChecker'
+  import share_dialog from '../dialog/shareDialog.vue'
 
   const marked = require('marked');
 
@@ -204,7 +208,8 @@
       }
     },
     components: {
-      'mavon-editor': mavonEditor
+      'mavon-editor': mavonEditor,
+      'share-dialog': share_dialog
     },
     mounted() {
       this.init()
@@ -459,7 +464,7 @@
       },
       shareNote() {
         if (this.note.id != undefined) {
-          this.$router.push('/share/index/' + this.note.id)
+          this.$store.dispatch('ChangeShareDialogVisible', true)
         }
       },
       openFullScreen() {

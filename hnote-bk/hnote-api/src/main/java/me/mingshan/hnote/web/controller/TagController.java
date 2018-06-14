@@ -69,7 +69,7 @@ public class TagController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<TagVO> getNoteById(@PathVariable Long id) {
+    public ResponseEntity<TagVO> getTagById(@PathVariable Long id) {
         Tag tag = tagService.findById(id);
         if (tag == null) {
             ResultModel result = new ResultModel();

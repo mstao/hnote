@@ -37,26 +37,26 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         HandlerMethod handlerMethod = (HandlerMethod)handler;
         Method method = handlerMethod.getMethod();
 
+        if (method.getAnnotation(Authorization.class) == null) {
+            return true;
+        }
+
         // Gets authorization string from request header.
         String authorization = request.getHeader(Constants.AUTHORIZATION);
 
         // Gets the model of Token from authorization string.
         Token token = tokenServicer.getToken(authorization);
-        // Checks out the token that is from Redis,
+        // Checks out the token that is from Redis.
         if (tokenServicer.checkToken(token)) {
             // Puts userId into request.
             request.setAttribute(Constants.CURRENT_USER_ID, token.getUserId());
             return true;
-        }
-
-        // If verify token failed, and the current method has the annotation of authorization,
-        // sets the response code to 401.
-        // The 401 code means unauthorized.
-        if (method.getAnnotation(Authorization.class) != null) {
+        } else {
+            // If verify token failed, and the current method has the annotation of authorization,
+            // sets the response code to 401.
+            // The 401 code means unauthorized.
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
-
-        return true;
     }
 }

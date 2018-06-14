@@ -4,6 +4,7 @@ const getters = {
   name: state => state.user.name,
   errorLogs: state => state.errorLog.logs,
   fileDialogVisible: state => state.dialog.fileDialogVisible,
+  shareDialogVisible: state => state.dialog.shareDialogVisible,
   note: state => state.note.note,
   currentSelectedNote: state => state.note.currentSelectedNote,
   selectedFolder: state => state.folder.selectedFolder

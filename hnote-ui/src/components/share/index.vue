@@ -37,7 +37,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getNoteById } from '@/api/note'
+import { getShareInfoByCode } from '@/api/share'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
 import BackToTop from '@/components/BackToTop'
@@ -48,7 +48,7 @@ const marked = require('marked');
 export default {
   data() {
     return {
-      nid: this.$route.params.id,
+      code: this.$route.params.code,
       note: '',
       htmlContent: '',
       options: {
@@ -101,19 +101,20 @@ export default {
 
         // start progress bar
         NProgress.start()
-        this.fetchNoteById()
+        this.fetchShareByCode()
 
         NProgress.done()
         loading.close()
     },
-    fetchNoteById() {
+    fetchShareByCode() {
+        console.log(this.code)
         new Promise(() => {
-            getNoteById(this.nid).then(response => {
+          getShareInfoByCode(this.code).then(response => {
                 if (response.status == 200) {
-                    this.note = response.data;
+                    this.note = response.data.note;
                     this.htmlContent = marked(this.note.content) 
                 }
-            })
+            }) 
         })
     }
   }

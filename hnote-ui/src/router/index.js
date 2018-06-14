@@ -26,9 +26,9 @@ export default new Router({
           path: 'share',
           component: resolve => require(['../components/container/share.vue'], resolve),
           children: [
-            { path: '/', redirect: 'index'},  
+            { path: '/', redirect: 'doc'},  
             {
-              path: 'index/:id',
+              path: 'doc/:code',
               component: resolve => require(['../components/share/index.vue'], resolve),
               props: true
             }

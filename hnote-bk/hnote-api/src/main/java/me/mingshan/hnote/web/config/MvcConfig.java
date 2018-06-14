@@ -22,7 +22,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 //指明controller所在的包名
-@ComponentScan(basePackages = {"me.mingshan.web.controller"})
+@ComponentScan(basePackages = {"me.mingshan.hnote.web.controller"})
 public class MvcConfig extends WebMvcConfigurerAdapter {
     @Autowired
     private AuthorizationInterceptor authorizationInterceptor;

@@ -72,26 +72,28 @@ public class CacheHandler {
      * @throws Throwable 异常
      */
     private Object writeOnly(CacheAopProxyChain pjp, Cache cache) throws Throwable {
-        DataLoaderFactory factory=DataLoaderFactory.getInstance();
-        DataLoader dataLoader=factory.getDataLoader();
+        DataLoaderFactory factory = DataLoaderFactory.getInstance();
+        DataLoader dataLoader = factory.getDataLoader();
         CacheWrapper<Object> cacheWrapper;
         try {
-            cacheWrapper=dataLoader.init(pjp, cache, this).getData().getCacheWrapper();
+            cacheWrapper = dataLoader.init(pjp, cache, this).getData().getCacheWrapper();
         } catch(Throwable e) {
             throw e;
         } finally {
             factory.returnObject(dataLoader);
         }
-        Object result=cacheWrapper.getCacheObject();
-        Object[] arguments=pjp.getArgs();
+        Object result = cacheWrapper.getCacheObject();
+        Object[] arguments = pjp.getArgs();
         if(scriptParser.isCacheable(cache, pjp.getTarget(), arguments, result)) {
-            CacheKeyTO cacheKey=getCacheKey(pjp, cache, result);
-            AutoLoadTO autoLoadTO=autoLoadHandler.getAutoLoadTO(cacheKey);// 注意：这里只能获取AutoloadTO，不能生成AutoloadTO
+            CacheKeyTO cacheKey = getCacheKey(pjp, cache, result);
+            // 注意：这里只能获取AutoloadTO，不能生成AutoloadTO
+            AutoLoadTO autoLoadTO = autoLoadHandler.getAutoLoadTO(cacheKey);
             try {
                 writeCache(pjp, pjp.getArgs(), cache, cacheKey, cacheWrapper);
-                if(null != autoLoadTO) {
-                    autoLoadTO.setLastLoadTime(cacheWrapper.getLastLoadTime())// 同步加载时间
-                        .setExpire(cacheWrapper.getExpire());// 同步过期时间
+                if (null != autoLoadTO) {
+                    // 同步加载时间和过期时间
+                    autoLoadTO.setLastLoadTime(cacheWrapper.getLastLoadTime())
+                        .setExpire(cacheWrapper.getExpire());
                 }
             } catch(Exception ex) {
                 log.error(ex.getMessage(), ex);
@@ -223,24 +225,24 @@ public class CacheHandler {
      * @param retVal 返回值
      */
     public void deleteCache(DeleteCacheAopProxyChain jp, CacheDelete cacheDelete, Object retVal) throws Throwable {
-        Object[] arguments=jp.getArgs();
-        CacheDeleteKey[] keys=cacheDelete.value();
-        if(null == keys || keys.length == 0) {
+        Object[] arguments = jp.getArgs();
+        CacheDeleteKey[] keys = cacheDelete.value();
+        if (null == keys || keys.length == 0) {
             return;
         }
-        Object target=jp.getTarget();
-        String methodName=jp.getMethod().getName();
+        Object target = jp.getTarget();
+        String methodName = jp.getMethod().getName();
         try {
             for(int i=0; i < keys.length; i++) {
-                CacheDeleteKey keyConfig=keys[i];
-                String[] tempKeys=keyConfig.value();
-                String tempHfield=keyConfig.hfield();
-                if(!scriptParser.isCanDelete(keyConfig, arguments, retVal)) {
+                CacheDeleteKey keyConfig = keys[i];
+                String[] tempKeys = keyConfig.value();
+                String tempHfield = keyConfig.hfield();
+                if (!scriptParser.isCanDelete(keyConfig, arguments, retVal)) {
                     continue;
                 }
-                for(String tempKey: tempKeys) {
-                    CacheKeyTO key=getCacheKey(target, methodName, arguments, tempKey, tempHfield, retVal, true);
-                    if(null != key && !CacheHelper.addDeleteCacheKey(key)) {
+                for (String tempKey: tempKeys) {
+                    CacheKeyTO key = getCacheKey(target, methodName, arguments, tempKey, tempHfield, retVal, true);
+                    if (null != key && !CacheHelper.addDeleteCacheKey(key)) {
                         this.delete(key);
                         this.getAutoLoadHandler().resetAutoLoadLastLoadTime(key);
                     }
@@ -274,7 +276,7 @@ public class CacheHandler {
         } finally {
             CacheHelper.clearCacheOpType();
         }
-        Set<CacheKeyTO> set=CacheHelper.getDeleteCacheKeysSet();
+        Set<CacheKeyTO> set = CacheHelper.getDeleteCacheKeysSet();
         if(isStart) {
             try {
                 if(null != set && set.size() > 0) {

@@ -126,6 +126,9 @@
     <!-- move to folder -->
     <file-dailog :folders="folders"/>
 
+    <!-- share dialog -->
+    <share-dialog :noteId="currentSelectedNote.id == undefined ? 0 : currentSelectedNote.id" />
+
     <!-- 刪除提示 -->
     <el-dialog
       title="删除提示"
@@ -176,6 +179,7 @@
   import NProgress from 'nprogress' // progress bar
   import 'nprogress/nprogress.css'// progress bar style
   import file_dialog from '../dialog/fileDialog.vue'
+  import share_dialog from '../dialog/shareDialog.vue'
   import { toJsonTree, getNode } from '@/utils/json'
   import { folderFilter, saveFolder } from '@/api/folder'
   import { getNotesByPage, getLastestNotes, deleteNote, getNoteByToken, getNoteByTid, updateNoteFolder } from '@/api/note'
@@ -215,7 +219,8 @@
       };
     },
     components: {
-      'file-dailog': file_dialog
+      'file-dailog': file_dialog,
+      'share-dialog': share_dialog
     },
     computed: {
       ...mapGetters([
@@ -225,7 +230,7 @@
       ]),
     },
     created() {
-      this.init()
+      this.init() 
     },
     watch: {
       '$route': 'init'
@@ -396,7 +401,10 @@
         } else if (response.status == 204) {
           this.noteList = tempList
           this.$store.dispatch('ClearNoteInfo')
-        } 
+        }
+
+        // clear other useless data in current view.
+        this.clearData()
       },
       goNoteDetailPage(id) {
         this.$store.dispatch('GetNoteInfoById', id)
@@ -532,7 +540,9 @@
       },
       shareNote() {
         if (this.currentSelectedNote.id != undefined) {
-          this.$router.push('/share/index/' + this.currentSelectedNote.id)
+          console.log(this.currentSelectedNote.id)
+          //this.$router.push('/share/index/' + this.currentSelectedNote.id)
+          this.$store.dispatch('ChangeShareDialogVisible', true)
         }
       },
       downloadNote() {
@@ -727,6 +737,9 @@
         setTimeout(() => {
           loading.close();
         }, 2000);
+      },
+      clearData() {
+        this.token = ''
       },
       test(item) {
         console.log("item = " + JSON.stringify(item))

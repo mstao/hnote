@@ -16,4 +16,5 @@
     <dubbo:reference id="trashService" interface="me.mingshan.hnote.facade.service.TrashService"/>
     <dubbo:reference id="searchClient" interface="me.mingshan.hnote.facade.service.SearchClient"/>
     <dubbo:reference id="tokenService" interface="me.mingshan.hnote.facade.service.TokenService"/>
+    <dubbo:reference id="shareService" interface="me.mingshan.hnote.facade.service.ShareService"/>
 </beans>

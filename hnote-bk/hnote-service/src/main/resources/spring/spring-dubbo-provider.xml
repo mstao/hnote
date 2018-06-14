@@ -17,6 +17,7 @@
     <bean id="tagService" class="me.mingshan.hnote.service.impl.TagServiceImpl"/>
     <bean id="trashService" class="me.mingshan.hnote.service.impl.TrashServiceImpl"/>
     <bean id="tokenService" class="me.mingshan.hnote.service.impl.RedisTokenServiceImpl"/>
+    <bean id="shareService" class="me.mingshan.hnote.service.impl.ShareServiceImpl"/>
 
     <dubbo:service interface="me.mingshan.hnote.facade.service.UserService" ref="userService"/>
     <dubbo:service interface="me.mingshan.hnote.facade.service.NoteService" ref="noteService"/>
@@ -24,5 +25,6 @@
     <dubbo:service interface="me.mingshan.hnote.facade.service.TagService" ref="tagService"/>
     <dubbo:service interface="me.mingshan.hnote.facade.service.TrashService" ref="trashService"/>
     <dubbo:service interface="me.mingshan.hnote.facade.service.TokenService" ref="tokenService"/>
+    <dubbo:service interface="me.mingshan.hnote.facade.service.ShareService" ref="shareService"/>
 
 </beans>

@@ -31,7 +31,7 @@ public class SwaggerConfig {
                 //return ApiSelectorBuilder
                 .select()
                 //Predicate that matches RequestHandler with given base package name for the class of the handler method.
-                .apis(RequestHandlerSelectors.basePackage("me.mingshan.web.controller"))
+                .apis(RequestHandlerSelectors.basePackage("me.mingshan.hnote.web.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());

@@ -1,5 +1,7 @@
 package me.mingshan.hnote.service.dao;
 
+import me.mingshan.hnote.cache.annotation.Cache;
+import me.mingshan.hnote.facade.model.Note;
 import me.mingshan.hnote.facade.model.Share;
 
 /**
@@ -7,6 +9,13 @@ import me.mingshan.hnote.facade.model.Share;
  * @Date: Created in 19:17 2018/6/12
  */
 public interface ShareDao {
+
+    /**
+     * Selects model by id.
+     * @param noteId
+     * @return
+     */
+    Share selectByNoteId(Long noteId);
 
     /**
      *
@@ -20,7 +29,7 @@ public interface ShareDao {
      * @param share
      * @return
      */
-    Long inset(Share share);
+    Long insert(Share share);
 
     /**
      *
@@ -28,4 +37,12 @@ public interface ShareDao {
      * @return
      */
     Integer update(Share share);
+
+    /**
+     * Get vesion by id.
+     *
+     * @param id
+     * @return
+     */
+    Integer selectVersion(Long id);
 }

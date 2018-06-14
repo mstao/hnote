@@ -44,7 +44,7 @@ public class RedisTokenServiceImpl implements TokenService {
             logger.info("create token -> userId: {}", userId);
             shardedJedis = shardedJedisPool.getResource();
             shardedJedis.set(String.valueOf(userId), token);
-            shardedJedis.expire(String.valueOf(userId), Constants.TOKEN_EXPIRES_HOUR);
+            shardedJedis.expire(String.valueOf(userId), Constants.TOKEN_EXPIRES_HOUR * 3600);
         } catch (Exception e) {
             broken = true;
             throw new ServerException(null, HttpStatus.BAD_REQUEST);
