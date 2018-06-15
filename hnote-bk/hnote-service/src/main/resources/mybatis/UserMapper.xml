@@ -52,6 +52,7 @@
           email,
           salt,
           age,
+          avatar_url,
           gmt_create,
           gmt_modified )
         values (
@@ -60,6 +61,7 @@
           #{email},
           #{salt},
           #{age},
+          #{avatarUrl},
           NOW(),
           NOW() )
     </insert>
@@ -80,7 +82,10 @@
                 password=#{password},
               </if>
               <if test="email != null and email != ''">
-              email=#{email}
+                email=#{email},
+              </if>
+              <if test="avatarUrl != null and avatarUrl != ''">
+                avatarUrl=#{avatarUrl}
               </if>
               <!-- 自行添加其他 -->
         </set>

@@ -45,7 +45,7 @@ public class UserController extends BaseController {
             @ApiImplicitParam(name = "authorization", value = "authorization", required = true, dataType = "String",
                     paramType = "header")
     })
-    public ResponseEntity<UserVO> getNoteById(@PathVariable Long id) {
+    public ResponseEntity<UserVO> getUserById(@PathVariable Long id) {
         User user = userService.findById(id);
         if (user == null) {
             ResultModel result = new ResultModel();
@@ -56,6 +56,7 @@ public class UserController extends BaseController {
         }
 
         UserVO userVO = mapper.map(user, UserVO.class);
+
         return new ResponseEntity<>(userVO, HttpStatus.OK);
     }
 
@@ -93,7 +94,7 @@ public class UserController extends BaseController {
                                           @RequestBody CreateUserVO userVO, UriComponentsBuilder ucBuilder) {
 
         User user = mapper.map(userVO, User.class);
-        user.setPassword(MD5Util.md5(user.getName(), user.getName()));
+        user.setPassword(MD5Util.md5(user.getPassword(), user.getName()));
         user.setSalt(user.getName());
         user.setAvatarUrl(Constants.DEFAULT_AVATAR);
 
