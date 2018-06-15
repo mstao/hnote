@@ -59,6 +59,7 @@
       </div>
     </el-aside>
     <el-aside width="20%" class="aside-list">
+      <img src="http://jxnblk.com/loading/loading-cylon-red.svg" v-show="isShowSearchLoading" class="search-loading" width="256" height="10"/>
       <div class="navi-list-container">
         <div class="navi-list">
           <img src="/static/img/back.png" @click="fetchNotesByParentFolder" class="back" />
@@ -84,6 +85,7 @@
           </el-dropdown>
         </div>
       </div>
+      
       <div class="list-content-container" v-if="noteList.length != 0">
         <div class="list-content" @mouseover="handleSetCurrentNote(item)" @click="goNoteDetailPage(item.id)" :data-nid="item.id" :key="item.id" v-for="item in noteList">
           <div>
@@ -215,7 +217,8 @@
           inputFolderNameValid: false,
           isShowCheckFolderLoading: false,
           folderNameValidTips: ''
-        }
+        },
+        isShowSearchLoading: false
       };
     },
     components: {
@@ -335,11 +338,13 @@
         }
       },
       fetchLastestNotes() {
+        this.isShowSearchLoading = true
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
           getLastestNotes(pageNumber, pageSize, this.sortItem.sort, this.sortItem.sortType).then(response => {
-            this.handleFetchNotes(response)  
+            this.handleFetchNotes(response)
+            this.isShowSearchLoading = false  
           })
         })
       },
@@ -366,12 +371,14 @@
         this.$store.dispatch('SetSelectedFolder', data)
       },
       fetchNotesByFolderId(folder) {
+        this.isShowSearchLoading = true
         var fid = folder.id
         var pageNumber = 1;
         var pageSize = 20;
         new Promise((resolve, reject) => {
           getNotesByPage(pageNumber, pageSize, fid, this.sortItem.sort, this.sortItem.sortType).then(response => {
               this.handleFetchNotes(response)
+              this.isShowSearchLoading = false
           })
         })
         
@@ -402,9 +409,6 @@
           this.noteList = tempList
           this.$store.dispatch('ClearNoteInfo')
         }
-
-        // clear other useless data in current view.
-        this.clearData()
       },
       goNoteDetailPage(id) {
         this.$store.dispatch('GetNoteInfoById', id)
@@ -508,19 +512,23 @@
       },
       search() {
         if (this.token.replace(/(^s*)|(s*$)/g, "").length == 0) {
-          this.$message({
-              message: '请输入要搜索的内容！',
-              type: 'warning'
-          });
+          // this.$message({
+          //     message: '请输入要搜索的内容！',
+          //     type: 'warning'
+          // });
+          this.fetchLastestNotes()
         } else {
+          this.isShowSearchLoading = true
           var pageNumber = 1
           var pageSize = 20
           
           new Promise((resolve, reject) => {
             getNoteByToken(this.token, pageNumber, pageSize, this.sortItem.sort, this.sortItem.sortType).then(response => {
               this.handleFetchNotes(response)
+              this.isShowSearchLoading = false
               resolve()
             }).catch(error => {
+              this.isShowSearchLoading = false
               reject(error)
             })
           })
@@ -1006,6 +1014,11 @@
 }
 .folder-valid-true {
   color: #67C23A;
+}
+
+.search-loading {
+  float: left;
+  margin: 5px auto;
 }
 </style>
 
