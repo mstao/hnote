@@ -11,23 +11,34 @@
 
     <!-- redis 相关配置 -->
     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxIdle" value="${redis.maxIdle}" />
-        <property name="maxWaitMillis" value="${redis.maxWait}" />
+        <property name="maxTotal" value="${redis.pool.maxTotal}" />
+        <property name="maxIdle" value="${redis.pool.maxIdle}" />
+        <property name="minIdle" value="${redis.pool.minIdle}"/>
+        <property name="maxWaitMillis" value="${redis.pool.maxWait}" />
+        <!--对拿到的connection进行validateObject校验-->
         <property name="testOnBorrow" value="false" />
+        <!--在进行returnObject对返回的connection进行validateObject校验-->
         <property name="testOnReturn" value="false" />
+        <!--定时对线程池中空闲的链接进行validateObject校验-->
         <property name="testWhileIdle" value="false" />
     </bean>
 
-    <!---->
+    <!--shardedJedisPool-->
     <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">
         <constructor-arg ref="poolConfig" />
         <constructor-arg>
             <list>
-                <bean class="redis.clients.jedis.JedisShardInfo">
-                    <constructor-arg value="${redis.host}" />
-                    <constructor-arg type="int" value="${redis.port}" />
-                    <constructor-arg value="instance:01" />
-                    <property name="password" value="${redis.password}"></property>
+                <bean name="master" class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg value="${redis.master.host}" />
+                    <constructor-arg type="int" value="${redis.master.port}" />
+                    <constructor-arg type="java.lang.String" value="instance:01" />
+                    <property name="password" value="${redis.master.password}"></property>
+                </bean>
+                <bean name="salver" class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg value="${redis.salver1.host}" />
+                    <constructor-arg type="int" value="${redis.salver1.port}" />
+                    <constructor-arg type="java.lang.String" value="instance:02" />
+                    <property name="password" value="${redis.salver1.password}"></property>
                 </bean>
             </list>
         </constructor-arg>
