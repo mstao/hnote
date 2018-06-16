@@ -69,7 +69,7 @@ public interface NoteService {
      * @param sortType
      * @return
      */
-    PageInfo<Note> findLastestNotes(Integer pageNumber, Integer pageSize, String sort, String sortType);
+    PageInfo<Note> findLastestNotes(Long uid, Integer pageNumber, Integer pageSize, String sort, String sortType);
 
     /**
      * Fuzzy search.

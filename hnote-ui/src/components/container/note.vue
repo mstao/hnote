@@ -587,6 +587,7 @@
         })
       },
       fetchNotesByTid(tag) {
+        this.isShowSearchLoading = true
         // Get tag id
         var x;
         var tagId;
@@ -604,6 +605,7 @@
           getNoteByTid(tagId, pageNumber, pageSize, this.sortItem.sort, this.sortItem.sortType).then(response => {
             if (response.status == 200) {
               this.handleFetchNotes(response)
+              this.isShowSearchLoading = false
             }
           })
         })

@@ -8,6 +8,7 @@ import me.mingshan.hnote.common.model.ResultModel;
 import me.mingshan.hnote.facade.model.Note;
 import me.mingshan.hnote.facade.service.NoteService;
 import me.mingshan.hnote.facade.service.SearchClient;
+import me.mingshan.hnote.web.config.Constants;
 import me.mingshan.hnote.web.vo.*;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -91,10 +93,11 @@ public class NoteController extends BaseController {
     public ResponseEntity<SearchResultVO<Note>> listLastestNotes(@RequestParam Integer pageNumber,
                                                                  @RequestParam Integer pageSize,
                                                                  @RequestParam String sort,
-                                                                 @RequestParam String sortType) {
+                                                                 @RequestParam String sortType,
+                                                                 HttpServletRequest request) {
         logger.info("page = " + pageNumber + "per_page = " + pageSize);
-
-        PageInfo<Note> pageInfo = noteService.findLastestNotes(pageNumber, pageSize, sort, sortType);
+        Long userId = (Long) request.getAttribute(Constants.CURRENT_USER_ID);
+        PageInfo<Note> pageInfo = noteService.findLastestNotes(userId, pageNumber, pageSize, sort, sortType);
         List<Note> notes = pageInfo.getList();
         // 总记录数
         Long total = pageInfo.getTotal();

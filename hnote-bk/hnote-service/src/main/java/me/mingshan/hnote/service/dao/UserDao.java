@@ -34,7 +34,7 @@ public interface UserDao {
      * @param id
      * @return
      */
-    @Cache(expire=600, key="'user_mapper_selectUserById_'+#args[0]", exCache={@ExCache(expire=600, key="'user_mapper_selectByUserName_'+#retVal.name")})
+    @Cache(expire=600, key="'user_mapper_selectUserById_'+#args[0]")
     User selectByPrimaryKey(Long id);
 
     /**
@@ -49,7 +49,7 @@ public interface UserDao {
      * @param name
      * @return
      */
-    @Cache(expire=600, key="'user_mapper_selectByUserName_'+#args[0]", exCache={@ExCache(expire=600, key="'user_mapper_selectUserById_'+#retVal.id")})
+    @Cache(expire=600, key="'user_mapper_selectByUserName_'+#args[0]")
     User selectByUserName(@Param("name") String name);
 
     /**

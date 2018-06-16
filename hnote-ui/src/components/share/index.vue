@@ -56,8 +56,8 @@ export default {
         owner: 'mstao',// github用户名
         repo: 'mstao.github.io', // 用于存放评论的仓库
         oauth: {
-          client_id: '4f52e3e9028babbfbf16', 
-          client_secret: 'b1ac6b350a69341326c15a876fb37ba339ad3b96',
+          client_id: '53cc2b146d10bcfc17d1', 
+          client_secret: '49891d90dcf8b9edc18dcbd29b405bc988fa6a92',
         } 
       },
       myBackToTopStyle: {

@@ -70,7 +70,7 @@
                         createShare(share).then(response => {
                             if (response.status == 201) {
                                 var data = response.data
-                                this.shareUrl = "localhost:8081" + '/share/doc/' + data.code
+                                this.shareUrl = "localhost:8088" + '/share/doc/' + data.code
                             }
                         })
                     })

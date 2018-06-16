@@ -56,7 +56,7 @@ public class UserController extends BaseController {
         }
 
         UserVO userVO = mapper.map(user, UserVO.class);
-
+        userVO.setPassword("");
         return new ResponseEntity<>(userVO, HttpStatus.OK);
     }
 

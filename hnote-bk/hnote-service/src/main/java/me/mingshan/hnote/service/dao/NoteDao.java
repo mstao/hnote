@@ -67,11 +67,14 @@ public interface NoteDao {
 
     /**
      * Select the lastest notes.
+     * @param uid
      * @param sort
      * @param sortType
      * @return
      */
-    List<Note> selectLastestNotes(@Param("sort") String sort, @Param("sortType") String sortType);
+    List<Note> selectLastestNotes(@Param("uid") Long uid,
+                                  @Param("sort") String sort,
+                                  @Param("sortType") String sortType);
 
     /**
      * Fuzzy search.

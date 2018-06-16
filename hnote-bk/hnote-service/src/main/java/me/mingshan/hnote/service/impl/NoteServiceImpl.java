@@ -40,9 +40,9 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public PageInfo<Note> findLastestNotes(Integer pageNumber, Integer pageSize, String sort, String sortType) {
+    public PageInfo<Note> findLastestNotes(Long uid, Integer pageNumber, Integer pageSize, String sort, String sortType) {
         PageHelper.startPage(pageNumber, pageSize);
-        List<Note> notes = noteDao.selectLastestNotes(sort, sortType);
+        List<Note> notes = noteDao.selectLastestNotes(uid, sort, sortType);
         PageInfo<Note> page = new PageInfo<>(notes);
         return page;
     }
