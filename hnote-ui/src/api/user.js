@@ -33,7 +33,7 @@ export function checkUser(userName) {
   return request({
     url: '/users/check',
     method: 'get',
-    parms: { userName }
+    params: { userName }
   })
 }
 
