@@ -1,4 +1,7 @@
 # hnote
+
+[![Build Status](https://travis-ci.org/mstao/hnote.svg?branch=master)](https://travis-ci.org/mstao/hnote) 
+
 A note with vue and rpc
 
 ![image](http://p8rape2j2.bkt.clouddn.com/hnote_main.png)
