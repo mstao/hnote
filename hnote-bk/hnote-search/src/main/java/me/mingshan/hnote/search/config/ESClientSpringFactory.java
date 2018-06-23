@@ -73,6 +73,7 @@ public class ESClientSpringFactory {
             }
         });
     }
+
     /**
      *  使用异步httpclient时设置并发连接数
      */
