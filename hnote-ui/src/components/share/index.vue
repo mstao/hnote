@@ -121,14 +121,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 @import "../../lib/css/markdown.css";
 @import "../../lib/css/md.css";
 @import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.9.0/github-markdown.min.css');
 </style>
 
-<style scoped>
+<style>
 #share-main-container {
     padding-top: 10px;
     overflow-y: auto;
