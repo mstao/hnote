@@ -13,23 +13,23 @@ export default new Router({
         { path: '/', redirect: 'note'},  
         {
           path: 'note',
-          component: resolve => require(['../components/container/note.vue'], resolve),
+          component: resolve => require(['../views/container/note.vue'], resolve),
           children: [
             { path: '/', redirect: 'detail'},  
             {
               path: 'detail',
-              component: resolve => require(['../components/content/edit.vue'], resolve)
+              component: resolve => require(['../views/content/edit.vue'], resolve)
             }
           ]
         },
         {
           path: 'share',
-          component: resolve => require(['../components/container/share.vue'], resolve),
+          component: resolve => require(['../views/container/share.vue'], resolve),
           children: [
             { path: '/', redirect: 'doc'},  
             {
               path: 'doc/:code',
-              component: resolve => require(['../components/share/index.vue'], resolve),
+              component: resolve => require(['../views/share/index.vue'], resolve),
               props: true
             }
           ]
@@ -38,11 +38,11 @@ export default new Router({
     },
     {
       path: '/login',
-      component: resolve => require(['../components/login/login.vue'], resolve)
+      component: resolve => require(['../views/login/login.vue'], resolve)
     },
     {
       path: '/register',
-      component: resolve => require(['../components/login/register.vue'], resolve)
+      component: resolve => require(['../views/login/register.vue'], resolve)
     },
     { path: '/404', component: resolve => require(['../components/errorPage/404.vue'], resolve) },
     { path: '/401', component: resolve => require(['../components/errorPage/401.vue'], resolve) }

@@ -33,7 +33,7 @@
               </el-tree>
               <div class="folder-item-operation-box item-operation-box">
                 <ul>
-                  <li  @mouseover="showExpandNewDiv = true"  @mouseout="showExpandNewDiv = false">新建<img src="/static/img/right-expand.png" />
+                  <li  @mouseover="showExpandNewDiv = true" @mouseout="showExpandNewDiv = false">新建<img src="/static/img/right-expand.png" />
                     <div v-if="showExpandNewDiv" class="expand-new-div">
                       <ul>
                         <li @click="handNodeClickForAddFolder">文件夾</li>
