@@ -13,7 +13,7 @@
     <module>hnote-facade</module>
     <module>hnote-search</module>
     <module>hnote-cache</module>
-      <module>hnote-authserver</module>
+    <module>hnote-authserver</module>
   </modules>
   <packaging>pom</packaging>
 
